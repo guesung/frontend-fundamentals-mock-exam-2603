@@ -4,13 +4,19 @@ import { colors } from '_tosslib/constants/colors';
 import { EQUIPMENT_LABELS } from '_tosslib/constants/equipment';
 import { TIME_SLOTS, timeToMinutes } from '_tosslib/utils/time';
 import { TIMELINE_END, TIMELINE_START } from '_tosslib/constants/time';
+import { Reservation } from '_tosslib/server/types';
 
 const HOUR_LABELS = TIME_SLOTS.filter(t => t.endsWith(':00'));
 const TOTAL_MINUTES = (TIMELINE_END - TIMELINE_START) * 60;
 
+interface Room {
+  id: string;
+  name: string;
+}
+
 interface ReservationTimelineProps {
-  rooms: Array<{ id: string; name: string }>;
-  reservations: Array<{ id: string; roomId: string; start: string; end: string; attendees: number; equipment: string[] }>;
+  rooms: Array<Room>;
+  reservations: Array<Reservation>;
   activeReservation: string | null;
   onActiveReservationChange: (id: string | null) => void;
 }
