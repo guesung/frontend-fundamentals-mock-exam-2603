@@ -52,7 +52,8 @@ export function ReservationStatusPage() {
     initialData: [],
   });
 
-  const cancelMutation = useMutation((id: string) => cancelReservation(id), {
+  const cancelMutation = useMutation({
+    mutationFn: (id: string) => cancelReservation(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reservations'] });
       queryClient.invalidateQueries({ queryKey: ['myReservations'] });

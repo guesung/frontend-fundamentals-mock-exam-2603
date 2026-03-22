@@ -52,16 +52,20 @@ export function RoomBookingPage() {
     enabled: !!date,
   });
 
-  const createMutation = useMutation(
-    (data: { roomId: string; date: string; start: string; end: string; attendees: number; equipment: string[] }) =>
-      createReservation(data),
-    {
-      onSuccess: (_data, variables) => {
-        queryClient.invalidateQueries({ queryKey: ['reservations', variables.date] });
-        queryClient.invalidateQueries({ queryKey: ['myReservations'] });
-      },
-    }
-  );
+  const createMutation = useMutation({
+    mutationFn: (data: {
+      roomId: string;
+      date: string;
+      start: string;
+      end: string;
+      attendees: number;
+      equipment: string[];
+    }) => createReservation(data),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['reservations', variables.date] });
+      queryClient.invalidateQueries({ queryKey: ['myReservations'] });
+    },
+  });
 
   // 필터 변경 시 선택 초기화
   const handleFilterChange = () => {
