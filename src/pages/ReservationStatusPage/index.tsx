@@ -12,6 +12,7 @@ import { DateSelector } from './components/DateSelector';
 import { ReservationTimeline } from './components/ReservationTimeline';
 import { MessageBanner, Message } from './components/MessageBanner';
 import { MyReservationList } from './components/MyReservationList';
+import { Room } from '_tosslib/server/types';
 
 export function ReservationStatusPage() {
   const navigate = useNavigate();
@@ -44,8 +45,7 @@ export function ReservationStatusPage() {
     }
   };
 
-  const getRoomName = (roomId: string) =>
-    rooms.find((r: { id: string; name: string }) => r.id === roomId)?.name ?? roomId;
+  const getRoomName = (roomId: string) => rooms.find((r: Room) => r.id === roomId)?.name ?? roomId;
 
   return (
     <div
@@ -84,11 +84,7 @@ export function ReservationStatusPage() {
 
       {message && <MessageBanner message={message} />}
 
-      <MyReservationList
-        reservations={myReservationList}
-        getRoomName={getRoomName}
-        onCancel={handleCancel}
-      />
+      <MyReservationList reservations={myReservationList} getRoomName={getRoomName} onCancel={handleCancel} />
 
       <Spacing size={24} />
       <Border size={8} />

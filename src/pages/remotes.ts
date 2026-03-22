@@ -1,8 +1,8 @@
-import { Reservation } from '_tosslib/server/types';
+import { Equipment, Reservation, Room } from '_tosslib/server/types';
 import { http } from 'pages/http';
 
 export function getRooms() {
-  return http.get<{ id: string; name: string; floor: number; capacity: number; equipment: string[] }[]>('/api/rooms');
+  return http.get<Room[]>(`/api/rooms`);
 }
 
 export function getReservations(date: string) {
@@ -15,7 +15,7 @@ export function createReservation(data: {
   start: string;
   end: string;
   attendees: number;
-  equipment: string[];
+  equipment: Equipment[];
 }) {
   return http.post<typeof data, { ok: boolean; reservation?: unknown; code?: string; message?: string }>(
     '/api/reservations',

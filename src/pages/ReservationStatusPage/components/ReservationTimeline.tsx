@@ -91,8 +91,8 @@ export function ReservationTimeline({
         </div>
 
         {/* 회의실별 타임라인 */}
-        {rooms.map((room: { id: string; name: string }, index: number) => {
-          const roomReservations = reservations.filter((r: { roomId: string }) => r.roomId === room.id);
+        {rooms.map((room: Room, index: number) => {
+          const roomReservations = reservations.filter(reservation => reservation.roomId === room.id);
           return (
             <div
               key={room.id}
@@ -132,71 +132,72 @@ export function ReservationTimeline({
                   overflow: visible;
                 `}
               >
-                {roomReservations.map(
-                  (res: { id: string; start: string; end: string; attendees: number; equipment: string[] }) => {
-                    const left = (timeToMinutes(res.start) / TOTAL_MINUTES) * 100;
-                    const width = ((timeToMinutes(res.end) - timeToMinutes(res.start)) / TOTAL_MINUTES) * 100;
-                    const isActive = activeReservation === res.id;
-                    return (
+                {roomReservations.map(roomReservation => {
+                  const left = (timeToMinutes(roomReservation.start) / TOTAL_MINUTES) * 100;
+                  const width =
+                    ((timeToMinutes(roomReservation.end) - timeToMinutes(roomReservation.start)) / TOTAL_MINUTES) * 100;
+                  const isActive = activeReservation === roomReservation.id;
+                  return (
+                    <div
+                      key={roomReservation.id}
+                      css={css`
+                        position: absolute;
+                        left: ${left}%;
+                        width: ${width}%;
+                        height: 100%;
+                      `}
+                    >
                       <div
-                        key={res.id}
+                        role="button"
+                        aria-label={`${room.name} ${roomReservation.start}-${roomReservation.end} 예약 상세`}
+                        onClick={() => onActiveReservationChange(isActive ? null : roomReservation.id)}
                         css={css`
-                          position: absolute;
-                          left: ${left}%;
-                          width: ${width}%;
+                          width: 100%;
                           height: 100%;
+                          background: ${colors.blue400};
+                          border-radius: 4px;
+                          opacity: ${isActive ? 1 : 0.75};
+                          cursor: pointer;
+                          transition: opacity 0.15s;
+                          &:hover {
+                            opacity: 1;
+                          }
                         `}
-                      >
+                      />
+                      {isActive && (
                         <div
-                          role="button"
-                          aria-label={`${room.name} ${res.start}-${res.end} 예약 상세`}
-                          onClick={() => onActiveReservationChange(isActive ? null : res.id)}
+                          role="tooltip"
                           css={css`
-                            width: 100%;
-                            height: 100%;
-                            background: ${colors.blue400};
-                            border-radius: 4px;
-                            opacity: ${isActive ? 1 : 0.75};
-                            cursor: pointer;
-                            transition: opacity 0.15s;
-                            &:hover {
-                              opacity: 1;
-                            }
+                            position: absolute;
+                            top: 100%;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            margin-top: 6px;
+                            background: ${colors.grey900};
+                            color: ${colors.white};
+                            padding: 8px 12px;
+                            border-radius: 8px;
+                            font-size: 12px;
+                            white-space: nowrap;
+                            z-index: 10;
+                            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+                            line-height: 1.6;
                           `}
-                        />
-                        {isActive && (
-                          <div
-                            role="tooltip"
-                            css={css`
-                              position: absolute;
-                              top: 100%;
-                              left: 50%;
-                              transform: translateX(-50%);
-                              margin-top: 6px;
-                              background: ${colors.grey900};
-                              color: ${colors.white};
-                              padding: 8px 12px;
-                              border-radius: 8px;
-                              font-size: 12px;
-                              white-space: nowrap;
-                              z-index: 10;
-                              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-                              line-height: 1.6;
-                            `}
-                          >
-                            <div>
-                              {res.start} ~ {res.end}
-                            </div>
-                            <div>{res.attendees}명</div>
-                            {res.equipment.length > 0 && (
-                              <div>{res.equipment.map((e: string) => EQUIPMENT_LABELS[e]).join(', ')}</div>
-                            )}
+                        >
+                          <div>
+                            {roomReservation.start} ~ {roomReservation.end}
                           </div>
-                        )}
-                      </div>
-                    );
-                  }
-                )}
+                          <div>{roomReservation.attendees}명</div>
+                          {roomReservation.equipment.length > 0 && (
+                            <div>
+                              {roomReservation.equipment.map(equipment => EQUIPMENT_LABELS[equipment]).join(', ')}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           );

@@ -2,17 +2,10 @@ import { css } from '@emotion/react';
 import { Text, Spacing, Button, ListRow } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { EQUIPMENT_LABELS } from '_tosslib/constants/equipment';
+import { Reservation } from '_tosslib/server/types';
 
 interface MyReservationListProps {
-  reservations: Array<{
-    id: string;
-    roomId: string;
-    date: string;
-    start: string;
-    end: string;
-    attendees: number;
-    equipment: string[];
-  }>;
+  reservations: Array<Reservation>;
   getRoomName: (roomId: string) => string;
   onCancel: (id: string) => void;
 }
@@ -63,9 +56,9 @@ export function MyReservationList({ reservations, getRoomName, onCancel }: MyRes
             gap: 10px;
           `}
         >
-          {reservations.map(res => (
+          {reservations.map(reservation => (
             <div
-              key={res.id}
+              key={reservation.id}
               css={css`
                 padding: 14px 16px;
                 border-radius: 14px;
@@ -76,11 +69,11 @@ export function MyReservationList({ reservations, getRoomName, onCancel }: MyRes
               <ListRow
                 contents={
                   <ListRow.Text2Rows
-                    top={getRoomName(res.roomId)}
+                    top={getRoomName(reservation.roomId)}
                     topProps={{ typography: 't6', fontWeight: 'bold', color: colors.grey900 }}
-                    bottom={`${res.date} ${res.start}~${res.end} · ${res.attendees}명 · ${
-                      res.equipment.map((e: string) => EQUIPMENT_LABELS[e]).join(', ') || '장비 없음'
-                    }`}
+                    bottom={`${reservation.date} ${reservation.start}~${reservation.end} · ${
+                      reservation.attendees
+                    }명 · ${reservation.equipment.map((e: string) => EQUIPMENT_LABELS[e]).join(', ') || '장비 없음'}`}
                     bottomProps={{ typography: 't7', color: colors.grey600 }}
                   />
                 }
@@ -92,7 +85,7 @@ export function MyReservationList({ reservations, getRoomName, onCancel }: MyRes
                     onClick={e => {
                       e.stopPropagation();
                       if (window.confirm('정말 취소하시겠습니까?')) {
-                        onCancel(res.id);
+                        onCancel(reservation.id);
                       }
                     }}
                   >

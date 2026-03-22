@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { Text, Spacing, Select } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { ALL_EQUIPMENT, EQUIPMENT_LABELS } from '_tosslib/constants/equipment';
+import { Equipment } from '_tosslib/server/types';
 import { formatDate } from '_tosslib/utils/date';
 import { TIME_SLOTS } from '_tosslib/utils/time';
 
@@ -10,14 +11,14 @@ interface BookingConditionFormProps {
   startTime: string;
   endTime: string;
   attendees: number;
-  equipment: string[];
+  equipment: Equipment[];
   preferredFloor: number | null;
   floors: number[];
   onDateChange: (date: string) => void;
   onStartTimeChange: (time: string) => void;
   onEndTimeChange: (time: string) => void;
   onAttendeesChange: (count: number) => void;
-  onEquipmentChange: (equipment: string[]) => void;
+  onEquipmentChange: (equipment: Equipment[]) => void;
   onPreferredFloorChange: (floor: number | null) => void;
 }
 
@@ -104,11 +105,7 @@ export function BookingConditionForm({
           <Text as="label" typography="t7" fontWeight="medium" color={colors.grey600}>
             시작 시간
           </Text>
-          <Select
-            value={startTime}
-            onChange={e => onStartTimeChange(e.target.value)}
-            aria-label="시작 시간"
-          >
+          <Select value={startTime} onChange={e => onStartTimeChange(e.target.value)} aria-label="시작 시간">
             <option value="">선택</option>
             {TIME_SLOTS.slice(0, -1).map(t => (
               <option key={t} value={t}>
@@ -128,11 +125,7 @@ export function BookingConditionForm({
           <Text as="label" typography="t7" fontWeight="medium" color={colors.grey600}>
             종료 시간
           </Text>
-          <Select
-            value={endTime}
-            onChange={e => onEndTimeChange(e.target.value)}
-            aria-label="종료 시간"
-          >
+          <Select value={endTime} onChange={e => onEndTimeChange(e.target.value)} aria-label="종료 시간">
             <option value="">선택</option>
             {TIME_SLOTS.slice(1).map(t => (
               <option key={t} value={t}>
