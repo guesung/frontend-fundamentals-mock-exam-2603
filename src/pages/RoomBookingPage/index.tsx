@@ -45,10 +45,12 @@ export function RoomBookingPage() {
     setErrorMessage(null);
   };
 
-  const withFilterReset = <T,>(setter: (v: T) => void) => (v: T) => {
-    setter(v);
-    handleFilterChange();
-  };
+  const withFilterReset =
+    <T,>(setter: (value: T) => void) =>
+    (value: T) => {
+      setter(value);
+      handleFilterChange();
+    };
 
   // 입력 검증
   let validationError: string | null = null;

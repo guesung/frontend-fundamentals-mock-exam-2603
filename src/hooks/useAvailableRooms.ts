@@ -16,7 +16,7 @@ function hasTimeConflict(
   );
 }
 
-export function useAvailableRooms(params: {
+interface UseAvailableRoomsParams {
   rooms: Room[];
   reservations: Reservation[];
   date: string;
@@ -26,30 +26,30 @@ export function useAvailableRooms(params: {
   equipment: Equipment[];
   preferredFloor: number | null;
   isFilterComplete: boolean;
-}): { availableRooms: Room[]; floors: number[] } {
+}
+
+export function useAvailableRooms(params: UseAvailableRoomsParams): { availableRooms: Room[]; floors: number[] } {
   const { rooms, reservations, date, startTime, endTime, attendees, equipment, preferredFloor, isFilterComplete } =
     params;
 
-  const floors = useMemo(() => [...new Set(rooms.map((room: Room) => room.floor))].sort((a, b) => a - b), [rooms]);
+  const floors = useMemo(
+    () => [...new Set(rooms.map((room: Room) => room.floor))].sort((a: number, b: number) => a - b),
+    [rooms]
+  );
 
   const availableRooms = useMemo(() => {
     if (!isFilterComplete) return [];
-
     return rooms
       .filter((room: Room) => {
-        if (room.capacity < attendees) return false;
-        if (!equipment.every(eq => room.equipment.includes(eq))) return false;
-        if (preferredFloor !== null && room.floor !== preferredFloor) return false;
-        const hasConflict = reservations.some(reservation =>
+        const isCapacitySatisfied = room.capacity >= attendees;
+        const isEquipmentSatisfied = equipment.every(equipment => room.equipment.includes(equipment));
+        const isPreferredFloorSatisfied = preferredFloor === null || room.floor === preferredFloor;
+        const isTimeConflict = reservations.some(reservation =>
           hasTimeConflict(reservation, room.id, date, startTime, endTime)
         );
-        if (hasConflict) return false;
-        return true;
+        return isCapacitySatisfied && isEquipmentSatisfied && isPreferredFloorSatisfied && !isTimeConflict;
       })
-      .sort((a: Room, b: Room) => {
-        if (a.floor !== b.floor) return a.floor - b.floor;
-        return a.name.localeCompare(b.name);
-      });
+      .sort((a: Room, b: Room) => a.floor - b.floor || a.name.localeCompare(b.name));
   }, [rooms, reservations, date, startTime, endTime, attendees, equipment, preferredFloor, isFilterComplete]);
 
   return { availableRooms, floors };
