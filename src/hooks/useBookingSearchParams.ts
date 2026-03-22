@@ -1,33 +1,43 @@
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import qs from 'qs';
 import { Equipment } from '_tosslib/server/types';
 import { formatDate } from '_tosslib/utils/date';
 
 export function useBookingSearchParams() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [date, setDate] = useState(searchParams.get('date') || formatDate(new Date()));
-  const [startTime, setStartTime] = useState(searchParams.get('startTime') || '');
-  const [endTime, setEndTime] = useState(searchParams.get('endTime') || '');
-  const [attendees, setAttendees] = useState(Number(searchParams.get('attendees')) || 1);
-  const [equipment, setEquipment] = useState<Equipment[]>(
-    searchParams.get('equipment') ? (searchParams.get('equipment')!.split(',').filter(Boolean) as Equipment[]) : []
-  );
-  const [preferredFloor, setPreferredFloor] = useState<number | null>(
-    searchParams.get('floor') ? Number(searchParams.get('floor')) : null
+  const parsed = qs.parse(searchParams.toString());
+
+  const date = (parsed.date as string) || formatDate(new Date());
+  const startTime = (parsed.startTime as string) || '';
+  const endTime = (parsed.endTime as string) || '';
+  const attendees = Number(parsed.attendees) || 1;
+  const equipment = parsed.equipment
+    ? ((Array.isArray(parsed.equipment) ? parsed.equipment : [parsed.equipment]) as Equipment[])
+    : [];
+  const preferredFloor = parsed.floor ? Number(parsed.floor) : null;
+
+  const update = useCallback(
+    (partial: Record<string, unknown>) => {
+      setSearchParams(prev => {
+        const current = qs.parse(prev.toString());
+        const next = qs.stringify(
+          { ...current, ...partial },
+          { skipNulls: true, arrayFormat: 'comma' }
+        );
+        return new URLSearchParams(next);
+      }, { replace: true });
+    },
+    [setSearchParams]
   );
 
-  // URL 쿼리 파라미터 동기화
-  useEffect(() => {
-    const params: Record<string, string> = {};
-    if (date) params.date = date;
-    if (startTime) params.startTime = startTime;
-    if (endTime) params.endTime = endTime;
-    if (attendees > 1) params.attendees = String(attendees);
-    if (equipment.length > 0) params.equipment = equipment.join(',');
-    if (preferredFloor !== null) params.floor = String(preferredFloor);
-    setSearchParams(params, { replace: true });
-  }, [date, startTime, endTime, attendees, equipment, preferredFloor, setSearchParams]);
+  const setDate = useCallback((v: string) => update({ date: v }), [update]);
+  const setStartTime = useCallback((v: string) => update({ startTime: v }), [update]);
+  const setEndTime = useCallback((v: string) => update({ endTime: v }), [update]);
+  const setAttendees = useCallback((v: number) => update({ attendees: v > 1 ? v : null }), [update]);
+  const setEquipment = useCallback((v: Equipment[]) => update({ equipment: v.length ? v : null }), [update]);
+  const setPreferredFloor = useCallback((v: number | null) => update({ floor: v }), [update]);
 
   return {
     date,
