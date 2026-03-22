@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Top, Spacing, Border, Button } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
+import { MESSAGES } from '_tosslib/constants/messages';
 import { formatDate } from '_tosslib/utils/date';
 import { useRooms } from 'hooks/queries/useRooms';
 import { useReservations } from 'hooks/queries/useReservations';
@@ -39,13 +40,13 @@ export function ReservationStatusPage() {
   const handleCancel = async (id: string) => {
     try {
       await cancelMutation.mutateAsync(id);
-      setMessage({ type: 'success', text: '예약이 취소되었습니다.' });
+      setMessage({ type: 'success', text: MESSAGES.CANCEL.SUCCESS });
     } catch {
-      setMessage({ type: 'error', text: '취소에 실패했습니다.' });
+      setMessage({ type: 'error', text: MESSAGES.CANCEL.FAILURE });
     }
   };
 
-  const getRoomName = (roomId: string) => rooms.find((r: Room) => r.id === roomId)?.name ?? roomId;
+  const getRoomName = (roomId: string) => rooms.find((room: Room) => room.id === roomId)?.name ?? roomId;
 
   return (
     <div
@@ -90,7 +91,6 @@ export function ReservationStatusPage() {
       <Border size={8} />
       <Spacing size={24} />
 
-      {/* 예약하기 버튼 */}
       <div
         css={css`
           padding: 0 24px;

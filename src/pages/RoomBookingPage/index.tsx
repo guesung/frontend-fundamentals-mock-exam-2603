@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Top, Spacing, Border } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
+import { MESSAGES } from '_tosslib/constants/messages';
 import axios from 'axios';
 import { useRooms } from 'hooks/queries/useRooms';
 import { useReservations } from 'hooks/queries/useReservations';
@@ -17,12 +18,18 @@ import { AvailableRoomList } from './components/AvailableRoomList';
 export function RoomBookingPage() {
   const navigate = useNavigate();
   const {
-    date, setDate,
-    startTime, setStartTime,
-    endTime, setEndTime,
-    attendees, setAttendees,
-    equipment, setEquipment,
-    preferredFloor, setPreferredFloor,
+    date,
+    setDate,
+    startTime,
+    setStartTime,
+    endTime,
+    setEndTime,
+    attendees,
+    setAttendees,
+    equipment,
+    setEquipment,
+    preferredFloor,
+    setPreferredFloor,
   } = useBookingSearchParams();
 
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
@@ -43,9 +50,9 @@ export function RoomBookingPage() {
   const hasTimeInputs = startTime !== '' && endTime !== '';
   if (hasTimeInputs) {
     if (endTime <= startTime) {
-      validationError = '종료 시간은 시작 시간보다 늦어야 합니다.';
+      validationError = MESSAGES.VALIDATION.END_TIME_BEFORE_START;
     } else if (attendees < 1) {
-      validationError = '참석 인원은 1명 이상이어야 합니다.';
+      validationError = MESSAGES.VALIDATION.MIN_ATTENDEES;
     }
   }
   const isFilterComplete = hasTimeInputs && !validationError;
@@ -65,11 +72,11 @@ export function RoomBookingPage() {
 
   const handleBook = async () => {
     if (!selectedRoomId) {
-      setErrorMessage('회의실을 선택해주세요.');
+      setErrorMessage(MESSAGES.VALIDATION.SELECT_ROOM);
       return;
     }
     if (!startTime || !endTime) {
-      setErrorMessage('시작 시간과 종료 시간을 선택해주세요.');
+      setErrorMessage(MESSAGES.VALIDATION.SELECT_TIME);
       return;
     }
 
@@ -84,17 +91,17 @@ export function RoomBookingPage() {
       });
 
       if ('ok' in result && result.ok) {
-        navigate('/', { state: { message: '예약이 완료되었습니다!' } });
+        navigate('/', { state: { message: MESSAGES.BOOKING.SUCCESS } });
         return;
       }
 
       const errResult = result as { message?: string };
-      setErrorMessage(errResult.message ?? '예약에 실패했습니다.');
+      setErrorMessage(errResult.message ?? MESSAGES.BOOKING.FAILURE);
       setSelectedRoomId(null);
-    } catch (err: unknown) {
-      let serverMessage = '예약에 실패했습니다.';
-      if (axios.isAxiosError(err)) {
-        const data = err.response?.data as { message?: string } | undefined;
+    } catch (error: unknown) {
+      let serverMessage: string = MESSAGES.BOOKING.FAILURE;
+      if (axios.isAxiosError(error)) {
+        const data = error.response?.data as { message?: string } | undefined;
         serverMessage = data?.message ?? serverMessage;
       }
       setErrorMessage(serverMessage);
