@@ -15,6 +15,15 @@ import { BookingConditionForm } from './components/BookingConditionForm';
 import { ValidationError } from './components/ValidationError';
 import { AvailableRoomList } from './components/AvailableRoomList';
 
+function getBookingValidationError(startTime: string, endTime: string, attendees: number): string | null {
+  const hasTimeInputs = startTime !== '' && endTime !== '';
+  if (!hasTimeInputs) return null;
+
+  if (endTime <= startTime) return MESSAGES.VALIDATION.END_TIME_BEFORE_START;
+  if (attendees < 1) return MESSAGES.VALIDATION.MIN_ATTENDEES;
+  return null;
+}
+
 export function RoomBookingPage() {
   const navigate = useNavigate();
   const {
@@ -53,16 +62,8 @@ export function RoomBookingPage() {
     };
 
   // 입력 검증
-  let validationError: string | null = null;
-  const hasTimeInputs = startTime !== '' && endTime !== '';
-  if (hasTimeInputs) {
-    if (endTime <= startTime) {
-      validationError = MESSAGES.VALIDATION.END_TIME_BEFORE_START;
-    } else if (attendees < 1) {
-      validationError = MESSAGES.VALIDATION.MIN_ATTENDEES;
-    }
-  }
-  const isFilterComplete = hasTimeInputs && !validationError;
+  const validationError = getBookingValidationError(startTime, endTime, attendees);
+  const isFilterComplete = startTime !== '' && endTime !== '' && !validationError;
 
   // 필터링
   const { availableRooms, floors } = useAvailableRooms({
@@ -161,19 +162,16 @@ export function RoomBookingPage() {
       <Spacing size={24} />
 
       <BookingConditionForm
-        date={date}
-        startTime={startTime}
-        endTime={endTime}
-        attendees={attendees}
-        equipment={equipment}
-        preferredFloor={preferredFloor}
+        condition={{ date, startTime, endTime, attendees, equipment, preferredFloor }}
         floors={floors}
-        onDateChange={withFilterReset(setDate)}
-        onStartTimeChange={withFilterReset(setStartTime)}
-        onEndTimeChange={withFilterReset(setEndTime)}
-        onAttendeesChange={withFilterReset(setAttendees)}
-        onEquipmentChange={withFilterReset(setEquipment)}
-        onPreferredFloorChange={withFilterReset(setPreferredFloor)}
+        onChange={{
+          date: withFilterReset(setDate),
+          startTime: withFilterReset(setStartTime),
+          endTime: withFilterReset(setEndTime),
+          attendees: withFilterReset(setAttendees),
+          equipment: withFilterReset(setEquipment),
+          preferredFloor: withFilterReset(setPreferredFloor),
+        }}
       />
 
       {validationError && <ValidationError message={validationError} />}

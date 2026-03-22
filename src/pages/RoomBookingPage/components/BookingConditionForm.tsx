@@ -7,37 +7,30 @@ import { inputStyle } from '_tosslib/styles/input';
 import { formatDate } from '_tosslib/utils/date';
 import { TIME_SLOTS } from '_tosslib/utils/time';
 
-interface BookingConditionFormProps {
+export interface BookingCondition {
   date: string;
   startTime: string;
   endTime: string;
   attendees: number;
   equipment: Equipment[];
   preferredFloor: number | null;
-  floors: number[];
-  onDateChange: (date: string) => void;
-  onStartTimeChange: (time: string) => void;
-  onEndTimeChange: (time: string) => void;
-  onAttendeesChange: (count: number) => void;
-  onEquipmentChange: (equipment: Equipment[]) => void;
-  onPreferredFloorChange: (floor: number | null) => void;
 }
 
-export function BookingConditionForm({
-  date,
-  startTime,
-  endTime,
-  attendees,
-  equipment,
-  preferredFloor,
-  floors,
-  onDateChange,
-  onStartTimeChange,
-  onEndTimeChange,
-  onAttendeesChange,
-  onEquipmentChange,
-  onPreferredFloorChange,
-}: BookingConditionFormProps) {
+interface BookingConditionFormProps {
+  condition: BookingCondition;
+  floors: number[];
+  onChange: {
+    date: (date: string) => void;
+    startTime: (time: string) => void;
+    endTime: (time: string) => void;
+    attendees: (count: number) => void;
+    equipment: (equipment: Equipment[]) => void;
+    preferredFloor: (floor: number | null) => void;
+  };
+}
+
+export function BookingConditionForm({ condition, floors, onChange }: BookingConditionFormProps) {
+  const { date, startTime, endTime, attendees, equipment, preferredFloor } = condition;
   return (
     <div
       css={css`
@@ -64,7 +57,7 @@ export function BookingConditionForm({
           type="date"
           value={date}
           min={formatDate(new Date())}
-          onChange={e => onDateChange(e.target.value)}
+          onChange={e => onChange.date(e.target.value)}
           aria-label="날짜"
           css={inputStyle}
         />
@@ -89,7 +82,7 @@ export function BookingConditionForm({
           <Text as="label" typography="t7" fontWeight="medium" color={colors.grey600}>
             시작 시간
           </Text>
-          <Select value={startTime} onChange={e => onStartTimeChange(e.target.value)} aria-label="시작 시간">
+          <Select value={startTime} onChange={e => onChange.startTime(e.target.value)} aria-label="시작 시간">
             <option value="">선택</option>
             {TIME_SLOTS.slice(0, -1).map(t => (
               <option key={t} value={t}>
@@ -109,7 +102,7 @@ export function BookingConditionForm({
           <Text as="label" typography="t7" fontWeight="medium" color={colors.grey600}>
             종료 시간
           </Text>
-          <Select value={endTime} onChange={e => onEndTimeChange(e.target.value)} aria-label="종료 시간">
+          <Select value={endTime} onChange={e => onChange.endTime(e.target.value)} aria-label="종료 시간">
             <option value="">선택</option>
             {TIME_SLOTS.slice(1).map(t => (
               <option key={t} value={t}>
@@ -143,7 +136,7 @@ export function BookingConditionForm({
             type="number"
             min={1}
             value={attendees}
-            onChange={e => onAttendeesChange(Math.max(1, Number(e.target.value)))}
+            onChange={e => onChange.attendees(Math.max(1, Number(e.target.value)))}
             aria-label="참석 인원"
             css={inputStyle}
           />
@@ -163,7 +156,7 @@ export function BookingConditionForm({
             value={preferredFloor ?? ''}
             onChange={e => {
               const val = e.target.value;
-              onPreferredFloorChange(val === '' ? null : Number(val));
+              onChange.preferredFloor(val === '' ? null : Number(val));
             }}
             aria-label="선호 층"
           >
@@ -199,7 +192,7 @@ export function BookingConditionForm({
                 type="button"
                 onClick={() => {
                   const next = selected ? equipment.filter(e => e !== eq) : [...equipment, eq];
-                  onEquipmentChange(next);
+                  onChange.equipment(next);
                 }}
                 aria-label={EQUIPMENT_LABELS[eq]}
                 aria-pressed={selected}
