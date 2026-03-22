@@ -22,7 +22,7 @@ export function ReservationStatusPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
-  const [date, setDate] = useState(formatDate(new Date()));
+  const [date, setDate] = useState(() => formatDate(new Date()));
 
   const locationState = location.state as { message?: string } | null;
   const [message, setMessage] = useState<Message | null>(
