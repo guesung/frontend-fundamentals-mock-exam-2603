@@ -45,6 +45,11 @@ export function RoomBookingPage() {
     setErrorMessage(null);
   };
 
+  const withFilterReset = <T,>(setter: (v: T) => void) => (v: T) => {
+    setter(v);
+    handleFilterChange();
+  };
+
   // 입력 검증
   let validationError: string | null = null;
   const hasTimeInputs = startTime !== '' && endTime !== '';
@@ -161,30 +166,12 @@ export function RoomBookingPage() {
         equipment={equipment}
         preferredFloor={preferredFloor}
         floors={floors}
-        onDateChange={v => {
-          setDate(v);
-          handleFilterChange();
-        }}
-        onStartTimeChange={v => {
-          setStartTime(v);
-          handleFilterChange();
-        }}
-        onEndTimeChange={v => {
-          setEndTime(v);
-          handleFilterChange();
-        }}
-        onAttendeesChange={v => {
-          setAttendees(v);
-          handleFilterChange();
-        }}
-        onEquipmentChange={v => {
-          setEquipment(v);
-          handleFilterChange();
-        }}
-        onPreferredFloorChange={v => {
-          setPreferredFloor(v);
-          handleFilterChange();
-        }}
+        onDateChange={withFilterReset(setDate)}
+        onStartTimeChange={withFilterReset(setStartTime)}
+        onEndTimeChange={withFilterReset(setEndTime)}
+        onAttendeesChange={withFilterReset(setAttendees)}
+        onEquipmentChange={withFilterReset(setEquipment)}
+        onPreferredFloorChange={withFilterReset(setPreferredFloor)}
       />
 
       {validationError && <ValidationError message={validationError} />}
