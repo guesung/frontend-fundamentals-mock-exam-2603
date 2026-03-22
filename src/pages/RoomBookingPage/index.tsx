@@ -12,7 +12,7 @@ import { ErrorBanner } from './components/ErrorBanner';
 import { BookingConditionForm } from './components/BookingConditionForm';
 import { ValidationError } from './components/ValidationError';
 import { AvailableRoomList } from './components/AvailableRoomList';
-import { Equipment } from '_tosslib/server/types';
+import { Equipment, Reservation, Room } from '_tosslib/server/types';
 
 export function RoomBookingPage() {
   const navigate = useNavigate();
@@ -66,22 +66,22 @@ export function RoomBookingPage() {
   const isFilterComplete = hasTimeInputs && !validationError;
 
   // 필터링
-  const floors = [...new Set(rooms.map((r: { floor: number }) => r.floor))].sort((a: number, b: number) => a - b);
+  const floors = [...new Set(rooms.map((r: Room) => r.floor))].sort((a: number, b: number) => a - b);
 
   const availableRooms = isFilterComplete
     ? rooms
-        .filter((room: { id: string; capacity: number; equipment: string[]; floor: number }) => {
+        .filter((room: Room) => {
           if (room.capacity < attendees) return false;
           if (!equipment.every(eq => room.equipment.includes(eq))) return false;
           if (preferredFloor !== null && room.floor !== preferredFloor) return false;
           const hasConflict = reservations.some(
-            (r: { roomId: string; date: string; start: string; end: string }) =>
+            (r: Reservation) =>
               r.roomId === room.id && r.date === date && r.start < endTime && r.end > startTime
           );
           if (hasConflict) return false;
           return true;
         })
-        .sort((a: { floor: number; name: string }, b: { floor: number; name: string }) => {
+        .sort((a: Room, b: Room) => {
           if (a.floor !== b.floor) return a.floor - b.floor;
           return a.name.localeCompare(b.name);
         })
