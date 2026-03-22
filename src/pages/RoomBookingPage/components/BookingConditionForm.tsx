@@ -6,15 +6,7 @@ import { Equipment } from '_tosslib/server/types';
 import { inputStyle } from '_tosslib/styles/input';
 import { formatDate } from '_tosslib/utils/date';
 import { TIME_SLOTS } from '_tosslib/utils/time';
-
-export interface BookingCondition {
-  date: string;
-  startTime: string;
-  endTime: string;
-  attendees: number;
-  equipment: Equipment[];
-  preferredFloor: number | null;
-}
+import { BookingCondition } from 'types/booking';
 
 interface BookingConditionFormProps {
   condition: BookingCondition;

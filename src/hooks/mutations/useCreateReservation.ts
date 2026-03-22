@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Equipment } from '_tosslib/server/types';
 import { createReservation } from 'pages/remotes';
+import { QUERY_KEYS } from 'constants/queryKeys';
 
 export function useCreateReservation() {
   const queryClient = useQueryClient();
@@ -14,8 +15,8 @@ export function useCreateReservation() {
       equipment: Equipment[];
     }) => createReservation(data),
     onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['reservations', variables.date] });
-      queryClient.invalidateQueries({ queryKey: ['myReservations'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.reservationsByDate(variables.date) });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.myReservations() });
     },
   });
 }

@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { Equipment, Reservation, Room } from '_tosslib/server/types';
+import { Reservation, Room } from '_tosslib/server/types';
+import { BookingCondition } from 'types/booking';
 
 function hasTimeConflict(
   reservation: Reservation,
@@ -16,19 +17,13 @@ function hasTimeConflict(
   );
 }
 
-interface UseAvailableRoomsParams {
+interface UseAvailableRoomsParams extends BookingCondition {
   rooms: Room[];
   reservations: Reservation[];
-  date: string;
-  startTime: string;
-  endTime: string;
-  attendees: number;
-  equipment: Equipment[];
-  preferredFloor: number | null;
   isFilterComplete: boolean;
 }
 
-export function useAvailableRooms(params: UseAvailableRoomsParams): { availableRooms: Room[]; floors: number[] } {
+export function useAvailableRooms(params: UseAvailableRoomsParams) {
   const { rooms, reservations, date, startTime, endTime, attendees, equipment, preferredFloor, isFilterComplete } =
     params;
 

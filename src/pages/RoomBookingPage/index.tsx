@@ -1,117 +1,42 @@
 import { css } from '@emotion/react';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Top, Spacing, Border } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { MESSAGES } from '_tosslib/constants/messages';
-import axios from 'axios';
 import { useRooms } from 'hooks/queries/useRooms';
 import { useReservations } from 'hooks/queries/useReservations';
-import { useCreateReservation } from 'hooks/mutations/useCreateReservation';
-import { useAvailableRooms } from 'hooks/useAvailableRooms';
-import { useBookingSearchParams } from 'hooks/useBookingSearchParams';
+import { useAvailableRooms } from 'pages/RoomBookingPage/hooks/useAvailableRooms';
+import { useBookingCondition } from './hooks/useBookingCondition';
+import { useBookRoom } from './hooks/useBookRoom';
 import { StatusBanner } from 'components/StatusBanner';
 import { BookingConditionForm } from './components/BookingConditionForm';
 import { ValidationError } from './components/ValidationError';
 import { AvailableRoomList } from './components/AvailableRoomList';
 
-function getBookingValidationError(startTime: string, endTime: string, attendees: number): string | null {
-  const hasTimeInputs = startTime !== '' && endTime !== '';
-  if (!hasTimeInputs) return null;
-
-  if (endTime <= startTime) return MESSAGES.VALIDATION.END_TIME_BEFORE_START;
-  if (attendees < 1) return MESSAGES.VALIDATION.MIN_ATTENDEES;
-  return null;
-}
-
 export function RoomBookingPage() {
   const navigate = useNavigate();
+  const { book, errorMessage, clearError, isBooking } = useBookRoom();
   const {
-    date,
-    setDate,
-    startTime,
-    setStartTime,
-    endTime,
-    setEndTime,
-    attendees,
-    setAttendees,
-    equipment,
-    setEquipment,
-    preferredFloor,
-    setPreferredFloor,
-  } = useBookingSearchParams();
-
-  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    condition,
+    onChange,
+    selectedRoomId,
+    setSelectedRoomId,
+    validationError,
+    isFilterComplete,
+  } = useBookingCondition(clearError);
 
   const { data: rooms } = useRooms();
-  const { data: reservations } = useReservations(date);
-  const createMutation = useCreateReservation();
+  const { data: reservations } = useReservations(condition.date);
 
-  // 필터 변경 시 선택 초기화
-  const handleFilterChange = () => {
-    setSelectedRoomId(null);
-    setErrorMessage(null);
-  };
-
-  const withFilterReset =
-    <T,>(setter: (value: T) => void) =>
-    (value: T) => {
-      setter(value);
-      handleFilterChange();
-    };
-
-  // 입력 검증
-  const validationError = getBookingValidationError(startTime, endTime, attendees);
-  const isFilterComplete = startTime !== '' && endTime !== '' && !validationError;
-
-  // 필터링
   const { availableRooms, floors } = useAvailableRooms({
     rooms,
     reservations,
-    date,
-    startTime,
-    endTime,
-    attendees,
-    equipment,
-    preferredFloor,
+    ...condition,
     isFilterComplete,
   });
 
   const handleBook = async () => {
-    if (!selectedRoomId) {
-      setErrorMessage(MESSAGES.VALIDATION.SELECT_ROOM);
-      return;
-    }
-    if (!startTime || !endTime) {
-      setErrorMessage(MESSAGES.VALIDATION.SELECT_TIME);
-      return;
-    }
-
-    try {
-      const result = await createMutation.mutateAsync({
-        roomId: selectedRoomId,
-        date,
-        start: startTime,
-        end: endTime,
-        attendees,
-        equipment,
-      });
-
-      if ('ok' in result && result.ok) {
-        navigate('/', { state: { message: MESSAGES.BOOKING.SUCCESS } });
-        return;
-      }
-
-      setErrorMessage(result.message ?? MESSAGES.BOOKING.FAILURE);
-    } catch (error) {
-      let serverMessage: string = MESSAGES.BOOKING.FAILURE;
-      if (axios.isAxiosError(error)) {
-        const data = error.response?.data as { message?: string } | undefined;
-        serverMessage = data?.message ?? serverMessage;
-      }
-      setErrorMessage(serverMessage);
-    } finally {
+    const attempted = await book({ roomId: selectedRoomId, ...condition });
+    if (attempted) {
       setSelectedRoomId(null);
     }
   };
@@ -161,16 +86,9 @@ export function RoomBookingPage() {
       <Spacing size={24} />
 
       <BookingConditionForm
-        condition={{ date, startTime, endTime, attendees, equipment, preferredFloor }}
+        condition={condition}
         floors={floors}
-        onChange={{
-          date: withFilterReset(setDate),
-          startTime: withFilterReset(setStartTime),
-          endTime: withFilterReset(setEndTime),
-          attendees: withFilterReset(setAttendees),
-          equipment: withFilterReset(setEquipment),
-          preferredFloor: withFilterReset(setPreferredFloor),
-        }}
+        onChange={onChange}
       />
 
       {validationError && <ValidationError message={validationError} />}
@@ -185,7 +103,7 @@ export function RoomBookingPage() {
           selectedRoomId={selectedRoomId}
           onRoomSelect={setSelectedRoomId}
           onBook={handleBook}
-          isBooking={createMutation.isPending}
+          isBooking={isBooking}
         />
       )}
 

@@ -20,14 +20,14 @@ export function useBookingSearchParams() {
 
   const update = useCallback(
     (partial: Record<string, unknown>) => {
-      setSearchParams(prev => {
-        const current = qs.parse(prev.toString());
-        const next = qs.stringify(
-          { ...current, ...partial },
-          { skipNulls: true, arrayFormat: 'comma' }
-        );
-        return new URLSearchParams(next);
-      }, { replace: true });
+      setSearchParams(
+        prev => {
+          const current = qs.parse(prev.toString());
+          const next = qs.stringify({ ...current, ...partial }, { skipNulls: true, arrayFormat: 'comma' });
+          return new URLSearchParams(next);
+        },
+        { replace: true }
+      );
     },
     [setSearchParams]
   );
