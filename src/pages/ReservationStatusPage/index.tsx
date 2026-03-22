@@ -11,9 +11,14 @@ import { useMyReservations } from 'hooks/queries/useMyReservations';
 import { useCancelReservation } from 'hooks/mutations/useCancelReservation';
 import { DateSelector } from './components/DateSelector';
 import { ReservationTimeline } from './components/ReservationTimeline';
-import { MessageBanner, Message } from './components/MessageBanner';
+import { StatusBanner } from 'components/StatusBanner';
 import { MyReservationList } from './components/MyReservationList';
 import { Room } from '_tosslib/server/types';
+
+interface Message {
+  type: 'success' | 'error';
+  text: string;
+}
 
 export function ReservationStatusPage() {
   const navigate = useNavigate();
@@ -83,7 +88,7 @@ export function ReservationStatusPage() {
       <Border size={8} />
       <Spacing size={24} />
 
-      {message && <MessageBanner message={message} />}
+      {message && <StatusBanner type={message.type} message={message.text} />}
 
       <MyReservationList reservations={myReservationList} getRoomName={getRoomName} onCancel={handleCancel} />
 

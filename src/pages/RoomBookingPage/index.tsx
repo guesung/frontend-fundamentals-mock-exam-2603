@@ -10,7 +10,7 @@ import { useReservations } from 'hooks/queries/useReservations';
 import { useCreateReservation } from 'hooks/mutations/useCreateReservation';
 import { useAvailableRooms } from 'hooks/useAvailableRooms';
 import { useBookingSearchParams } from 'hooks/useBookingSearchParams';
-import { ErrorBanner } from './components/ErrorBanner';
+import { StatusBanner } from 'components/StatusBanner';
 import { BookingConditionForm } from './components/BookingConditionForm';
 import { ValidationError } from './components/ValidationError';
 import { AvailableRoomList } from './components/AvailableRoomList';
@@ -103,16 +103,15 @@ export function RoomBookingPage() {
         return;
       }
 
-      const errResult = result as { message?: string };
-      setErrorMessage(errResult.message ?? MESSAGES.BOOKING.FAILURE);
-      setSelectedRoomId(null);
-    } catch (error: unknown) {
+      setErrorMessage(result.message ?? MESSAGES.BOOKING.FAILURE);
+    } catch (error) {
       let serverMessage: string = MESSAGES.BOOKING.FAILURE;
       if (axios.isAxiosError(error)) {
         const data = error.response?.data as { message?: string } | undefined;
         serverMessage = data?.message ?? serverMessage;
       }
       setErrorMessage(serverMessage);
+    } finally {
       setSelectedRoomId(null);
     }
   };
@@ -157,7 +156,7 @@ export function RoomBookingPage() {
         예약하기
       </Top.Top03>
 
-      {errorMessage && <ErrorBanner message={errorMessage} />}
+      {errorMessage && <StatusBanner type="error" message={errorMessage} />}
 
       <Spacing size={24} />
 
