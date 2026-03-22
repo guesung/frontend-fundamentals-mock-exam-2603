@@ -1,5 +1,7 @@
+import { Equipment } from '_tosslib/server/types';
+
 export const ALL_EQUIPMENT = ['tv', 'whiteboard', 'video', 'speaker'] as const;
-export const EQUIPMENT_LABELS: Record<string, string> = {
+export const EQUIPMENT_LABELS: Record<Equipment, string> = {
   tv: 'TV',
   whiteboard: '화이트보드',
   video: '화상장비',

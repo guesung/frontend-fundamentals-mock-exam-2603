@@ -2,9 +2,10 @@ import { css } from '@emotion/react';
 import { Text, Spacing, Button, ListRow } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { EQUIPMENT_LABELS } from '_tosslib/constants/equipment';
+import { Room } from '_tosslib/server/types';
 
 interface AvailableRoomListProps {
-  rooms: Array<{ id: string; name: string; floor: number; capacity: number; equipment: string[] }>;
+  rooms: Room[];
   selectedRoomId: string | null;
   onRoomSelect: (roomId: string) => void;
   onBook: () => void;
@@ -88,7 +89,7 @@ export function AvailableRoomList({
                       top={room.name}
                       topProps={{ typography: 't6', fontWeight: 'bold', color: colors.grey900 }}
                       bottom={`${room.floor}층 · ${room.capacity}명 · ${room.equipment
-                        .map((e: string) => EQUIPMENT_LABELS[e])
+                        .map(e => EQUIPMENT_LABELS[e])
                         .join(', ')}`}
                       bottomProps={{ typography: 't7', color: colors.grey600 }}
                     />

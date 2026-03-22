@@ -24,14 +24,14 @@ interface UseAvailableRoomsParams extends BookingCondition {
 }
 
 export function useAvailableRooms({
-  rooms,
-  reservations,
   date,
   startTime,
   endTime,
   attendees,
   equipment,
   preferredFloor,
+  rooms,
+  reservations,
   isFilterComplete,
 }: UseAvailableRoomsParams) {
   const floors = useMemo(
@@ -45,7 +45,7 @@ export function useAvailableRooms({
     return rooms
       .filter((room: Room) => {
         const isCapacitySatisfied = room.capacity >= attendees;
-        const isEquipmentSatisfied = equipment.every(equipment => room.equipment.includes(equipment));
+        const isEquipmentSatisfied = equipment.every(eq => room.equipment.includes(eq));
         const isPreferredFloorSatisfied = preferredFloor === null || room.floor === preferredFloor;
         const isTimeConflict = reservations.some(reservation =>
           hasTimeConflict(reservation, room.id, date, startTime, endTime)

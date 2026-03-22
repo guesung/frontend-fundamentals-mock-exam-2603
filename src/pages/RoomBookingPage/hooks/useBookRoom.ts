@@ -45,6 +45,7 @@ export function useBookRoom() {
       }
 
       setErrorMessage(result.message ?? MESSAGES.BOOKING.FAILURE);
+      return false;
     } catch (error) {
       let serverMessage: string = MESSAGES.BOOKING.FAILURE;
       if (axios.isAxiosError(error)) {
@@ -52,9 +53,8 @@ export function useBookRoom() {
         serverMessage = data?.message ?? serverMessage;
       }
       setErrorMessage(serverMessage);
+      return false;
     }
-
-    return true;
   };
 
   return {

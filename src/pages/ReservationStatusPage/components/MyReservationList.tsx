@@ -73,7 +73,7 @@ export function MyReservationList({ reservations, getRoomName, onCancel }: MyRes
                     topProps={{ typography: 't6', fontWeight: 'bold', color: colors.grey900 }}
                     bottom={`${reservation.date} ${reservation.start}~${reservation.end} · ${
                       reservation.attendees
-                    }명 · ${reservation.equipment.map((e: string) => EQUIPMENT_LABELS[e]).join(', ') || '장비 없음'}`}
+                    }명 · ${reservation.equipment.map(e => EQUIPMENT_LABELS[e]).join(', ') || '장비 없음'}`}
                     bottomProps={{ typography: 't7', color: colors.grey600 }}
                   />
                 }
