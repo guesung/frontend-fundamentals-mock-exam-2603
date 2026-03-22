@@ -21,7 +21,7 @@ export function RoomBookingPage() {
     setSelectedRoomId,
     validationError,
     isFilterComplete,
-  } = useBookingCondition(clearError);
+  } = useBookingCondition({ onFilterChange: clearError });
 
   const { data: rooms } = useRooms();
   const { data: reservations } = useReservations(condition.date);

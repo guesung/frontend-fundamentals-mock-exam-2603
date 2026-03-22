@@ -10,8 +10,11 @@ function getValidationError(startTime: string, endTime: string, attendees: numbe
   if (attendees < 1) return MESSAGES.VALIDATION.MIN_ATTENDEES;
   return null;
 }
+interface UseBookingConditionParams {
+  onFilterChange?: () => void;
+}
 
-export function useBookingCondition(onFilterChange?: () => void) {
+export function useBookingCondition({ onFilterChange }: UseBookingConditionParams) {
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
 
   const {
