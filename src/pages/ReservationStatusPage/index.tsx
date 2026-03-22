@@ -35,18 +35,21 @@ export function ReservationStatusPage() {
     }
   }, [locationState]);
 
-  const { data: rooms = [] } = useQuery({
+  const { data: rooms } = useQuery({
     queryKey: ['rooms'],
     queryFn: getRooms,
+    initialData: [],
   });
-  const { data: reservations = [] } = useQuery({
+  const { data: reservations } = useQuery({
     queryKey: ['reservations', date],
     queryFn: () => getReservations(date),
     enabled: !!date,
+    initialData: [],
   });
-  const { data: myReservationList = [] } = useQuery({
+  const { data: myReservationList } = useQuery({
     queryKey: ['myReservations'],
     queryFn: getMyReservations,
+    initialData: [],
   });
 
   const cancelMutation = useMutation((id: string) => cancelReservation(id), {
