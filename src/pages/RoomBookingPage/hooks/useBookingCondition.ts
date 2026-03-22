@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MESSAGES } from '_tosslib/constants/messages';
-import { useBookingSearchParams } from 'hooks/useBookingSearchParams';
+import { useBookingSearchParams } from './useBookingSearchParams';
 
 function getValidationError(startTime: string, endTime: string, attendees: number): string | null {
   const hasTimeInputs = startTime !== '' && endTime !== '';
@@ -12,6 +12,8 @@ function getValidationError(startTime: string, endTime: string, attendees: numbe
 }
 
 export function useBookingCondition(onFilterChange?: () => void) {
+  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+
   const {
     date,
     setDate,
@@ -27,10 +29,8 @@ export function useBookingCondition(onFilterChange?: () => void) {
     setPreferredFloor,
   } = useBookingSearchParams();
 
-  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
-
   const withFilterReset =
-    <T,>(setter: (value: T) => void) =>
+    <T>(setter: (value: T) => void) =>
     (value: T) => {
       setter(value);
       setSelectedRoomId(null);

@@ -15,14 +15,8 @@ import { AvailableRoomList } from './components/AvailableRoomList';
 export function RoomBookingPage() {
   const navigate = useNavigate();
   const { book, errorMessage, clearError, isBooking } = useBookRoom();
-  const {
-    condition,
-    onChange,
-    selectedRoomId,
-    setSelectedRoomId,
-    validationError,
-    isFilterComplete,
-  } = useBookingCondition(clearError);
+  const { condition, onChange, selectedRoomId, setSelectedRoomId, validationError, isFilterComplete } =
+    useBookingCondition(clearError);
 
   const { data: rooms } = useRooms();
   const { data: reservations } = useReservations(condition.date);
@@ -55,7 +49,7 @@ export function RoomBookingPage() {
       >
         <button
           type="button"
-          onClick={() => navigate('/')}
+          onClick={() => navigate(-1)}
           aria-label="뒤로가기"
           css={css`
             background: none;
@@ -85,11 +79,7 @@ export function RoomBookingPage() {
 
       <Spacing size={24} />
 
-      <BookingConditionForm
-        condition={condition}
-        floors={floors}
-        onChange={onChange}
-      />
+      <BookingConditionForm condition={condition} floors={floors} onChange={onChange} />
 
       {validationError && <ValidationError message={validationError} />}
 

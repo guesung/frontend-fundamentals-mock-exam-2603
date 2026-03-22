@@ -23,10 +23,17 @@ interface UseAvailableRoomsParams extends BookingCondition {
   isFilterComplete: boolean;
 }
 
-export function useAvailableRooms(params: UseAvailableRoomsParams) {
-  const { rooms, reservations, date, startTime, endTime, attendees, equipment, preferredFloor, isFilterComplete } =
-    params;
-
+export function useAvailableRooms({
+  rooms,
+  reservations,
+  date,
+  startTime,
+  endTime,
+  attendees,
+  equipment,
+  preferredFloor,
+  isFilterComplete,
+}: UseAvailableRoomsParams) {
   const floors = useMemo(
     () => [...new Set(rooms.map((room: Room) => room.floor))].sort((a: number, b: number) => a - b),
     [rooms]
@@ -34,6 +41,7 @@ export function useAvailableRooms(params: UseAvailableRoomsParams) {
 
   const availableRooms = useMemo(() => {
     if (!isFilterComplete) return [];
+
     return rooms
       .filter((room: Room) => {
         const isCapacitySatisfied = room.capacity >= attendees;
