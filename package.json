@@ -27,7 +27,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "type-check": "tsc --noEmit"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.1.2",
