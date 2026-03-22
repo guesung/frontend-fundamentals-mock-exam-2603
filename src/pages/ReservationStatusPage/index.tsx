@@ -7,16 +7,15 @@ import { colors } from '_tosslib/constants/colors';
 import { getRooms, getReservations, getMyReservations, cancelReservation } from 'pages/remotes';
 import { EQUIPMENT_LABELS } from '_tosslib/constants/equipment';
 import { formatDate } from '_tosslib/utils/date';
-import { TIME_SLOTS } from '_tosslib/utils/time';
+import { TIME_SLOTS, timeToMinutes } from '_tosslib/utils/time';
+import { TIMELINE_END, TIMELINE_START } from '_tosslib/constants/time';
 
 const HOUR_LABELS = TIME_SLOTS.filter(t => t.endsWith(':00'));
-const TIMELINE_START = 9;
-const TIMELINE_END = 20;
 const TOTAL_MINUTES = (TIMELINE_END - TIMELINE_START) * 60;
 
-function timeToMinutes(time: string): number {
-  const [h, m] = time.split(':').map(Number);
-  return (h - TIMELINE_START) * 60 + m;
+interface Message {
+  type: 'success' | 'error';
+  text: string;
 }
 
 export function ReservationStatusPage() {
@@ -26,7 +25,7 @@ export function ReservationStatusPage() {
   const [date, setDate] = useState(formatDate(new Date()));
 
   const locationState = location.state as { message?: string } | null;
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(
+  const [message, setMessage] = useState<Message | null>(
     locationState?.message ? { type: 'success', text: locationState.message } : null
   );
 
