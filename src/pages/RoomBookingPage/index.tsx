@@ -6,15 +6,10 @@ import { Top, Spacing, Border, Button, Text, Select, ListRow } from '_tosslib/co
 import { colors } from '_tosslib/constants/colors';
 import { getRooms, getReservations, createReservation } from 'pages/remotes';
 import axios from 'axios';
+import { ALL_EQUIPMENT, EQUIPMENT_LABELS } from '_tosslib/constants/equipment';
 
-const EQUIPMENT_LABELS: Record<string, string> = {
-  tv: 'TV',
-  whiteboard: '화이트보드',
-  video: '화상장비',
-  speaker: '스피커',
-};
 
-const ALL_EQUIPMENT = ['tv', 'whiteboard', 'video', 'speaker'];
+
 
 const TIME_SLOTS: string[] = [];
 for (let h = 9; h <= 20; h++) {
