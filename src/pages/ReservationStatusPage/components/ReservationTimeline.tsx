@@ -1,17 +1,23 @@
 import { css } from '@emotion/react';
+import { useState } from 'react';
 import { Text, Spacing } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { EQUIPMENT_LABELS } from '_tosslib/constants/equipment';
 import { TIME_SLOTS, timeToMinutes } from '_tosslib/utils/time';
 import { TIMELINE_END, TIMELINE_START } from '_tosslib/constants/time';
 import { Room } from '_tosslib/server/types';
-import { useReservationContext } from '../context/ReservationContext';
+import { useRooms } from 'hooks/queries/useRooms';
+import { useReservations } from 'hooks/queries/useReservations';
+import { useDateContext } from '../context/ReservationContext';
 
 const HOUR_LABELS = TIME_SLOTS.filter(t => t.endsWith(':00'));
 const TOTAL_MINUTES = (TIMELINE_END - TIMELINE_START) * 60;
 
 export function ReservationTimeline() {
-  const { rooms, reservations, activeReservation, setActiveReservation } = useReservationContext();
+  const { date } = useDateContext();
+  const { data: rooms } = useRooms();
+  const { data: reservations } = useReservations(date);
+  const [activeReservation, setActiveReservation] = useState<string | null>(null);
 
   return (
     <div

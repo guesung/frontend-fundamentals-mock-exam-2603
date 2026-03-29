@@ -3,10 +3,10 @@ import { Text, Spacing } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { inputStyle } from '_tosslib/styles/input';
 import { formatDate } from '_tosslib/utils/date';
-import { useReservationContext } from '../context/ReservationContext';
+import { useDateContext } from '../context/ReservationContext';
 
 export function DateSelector() {
-  const { date, setDate } = useReservationContext();
+  const { date, setDate } = useDateContext();
 
   return (
     <div css={css`padding: 0 24px;`}>

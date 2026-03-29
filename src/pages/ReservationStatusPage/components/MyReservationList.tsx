@@ -1,11 +1,37 @@
 import { css } from '@emotion/react';
+import { useState } from 'react';
 import { Text, Spacing, Button, ListRow } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { EQUIPMENT_LABELS } from '_tosslib/constants/equipment';
-import { useReservationContext } from '../context/ReservationContext';
+import { MESSAGES } from '_tosslib/constants/messages';
+import { Room } from '_tosslib/server/types';
+import { useRooms } from 'hooks/queries/useRooms';
+import { useMyReservations } from 'hooks/queries/useMyReservations';
+import { useCancelReservation } from 'hooks/mutations/useCancelReservation';
+import { StatusBanner } from 'components/StatusBanner';
+
+interface Message {
+  type: 'success' | 'error';
+  text: string;
+}
 
 export function MyReservationList() {
-  const { myReservationList: reservations, getRoomName, handleCancel: onCancel } = useReservationContext();
+  const { data: reservations } = useMyReservations();
+  const { data: rooms } = useRooms();
+  const cancelMutation = useCancelReservation();
+  const [message, setMessage] = useState<Message | null>(null);
+
+  const getRoomName = (roomId: string) =>
+    rooms.find((room: Room) => room.id === roomId)?.name ?? roomId;
+
+  const handleCancel = async (id: string) => {
+    try {
+      await cancelMutation.mutateAsync(id);
+      setMessage({ type: 'success', text: MESSAGES.CANCEL.SUCCESS });
+    } catch {
+      setMessage({ type: 'error', text: MESSAGES.CANCEL.FAILURE });
+    }
+  };
 
   return (
     <div
@@ -30,6 +56,9 @@ export function MyReservationList() {
         )}
       </div>
       <Spacing size={16} />
+
+      {message && <StatusBanner type={message.type} message={message.text} />}
+      {message && <Spacing size={16} />}
 
       {reservations.length === 0 ? (
         <div
@@ -81,7 +110,7 @@ export function MyReservationList() {
                     onClick={e => {
                       e.stopPropagation();
                       if (window.confirm('정말 취소하시겠습니까?')) {
-                        onCancel(reservation.id);
+                        handleCancel(reservation.id);
                       }
                     }}
                   >
