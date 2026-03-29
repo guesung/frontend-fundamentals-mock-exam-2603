@@ -4,24 +4,15 @@ import { colors } from '_tosslib/constants/colors';
 import { EQUIPMENT_LABELS } from '_tosslib/constants/equipment';
 import { TIME_SLOTS, timeToMinutes } from '_tosslib/utils/time';
 import { TIMELINE_END, TIMELINE_START } from '_tosslib/constants/time';
-import { Reservation, Room } from '_tosslib/server/types';
+import { Room } from '_tosslib/server/types';
+import { useReservationContext } from '../context/ReservationContext';
 
 const HOUR_LABELS = TIME_SLOTS.filter(t => t.endsWith(':00'));
 const TOTAL_MINUTES = (TIMELINE_END - TIMELINE_START) * 60;
 
-interface ReservationTimelineProps {
-  rooms: Room[];
-  reservations: Array<Reservation>;
-  activeReservation: string | null;
-  onActiveReservationChange: (id: string | null) => void;
-}
+export function ReservationTimeline() {
+  const { rooms, reservations, activeReservation, setActiveReservation } = useReservationContext();
 
-export function ReservationTimeline({
-  rooms,
-  reservations,
-  activeReservation,
-  onActiveReservationChange,
-}: ReservationTimelineProps) {
   return (
     <div
       css={css`
@@ -145,7 +136,7 @@ export function ReservationTimeline({
                       <div
                         role="button"
                         aria-label={`${room.name} ${roomReservation.start}-${roomReservation.end} 예약 상세`}
-                        onClick={() => onActiveReservationChange(isActive ? null : roomReservation.id)}
+                        onClick={() => setActiveReservation(isActive ? null : roomReservation.id)}
                         css={css`
                           width: 100%;
                           height: 100%;

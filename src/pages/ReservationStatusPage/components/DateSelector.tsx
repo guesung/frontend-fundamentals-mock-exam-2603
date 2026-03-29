@@ -3,13 +3,11 @@ import { Text, Spacing } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { inputStyle } from '_tosslib/styles/input';
 import { formatDate } from '_tosslib/utils/date';
+import { useReservationContext } from '../context/ReservationContext';
 
-interface DateSelectorProps {
-  date: string;
-  onDateChange: (date: string) => void;
-}
+export function DateSelector() {
+  const { date, setDate } = useReservationContext();
 
-export function DateSelector({ date, onDateChange }: DateSelectorProps) {
   return (
     <div css={css`padding: 0 24px;`}>
       <Text typography="t5" fontWeight="bold" color={colors.grey900}>
@@ -27,7 +25,7 @@ export function DateSelector({ date, onDateChange }: DateSelectorProps) {
           type="date"
           value={date}
           min={formatDate(new Date())}
-          onChange={e => onDateChange(e.target.value)}
+          onChange={e => setDate(e.target.value)}
           aria-label="날짜"
           css={inputStyle}
         />

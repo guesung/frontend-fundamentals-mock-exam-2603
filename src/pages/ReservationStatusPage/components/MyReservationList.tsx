@@ -2,15 +2,11 @@ import { css } from '@emotion/react';
 import { Text, Spacing, Button, ListRow } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { EQUIPMENT_LABELS } from '_tosslib/constants/equipment';
-import { Reservation } from '_tosslib/server/types';
+import { useReservationContext } from '../context/ReservationContext';
 
-interface MyReservationListProps {
-  reservations: Array<Reservation>;
-  getRoomName: (roomId: string) => string;
-  onCancel: (id: string) => void;
-}
+export function MyReservationList() {
+  const { myReservationList: reservations, getRoomName, handleCancel: onCancel } = useReservationContext();
 
-export function MyReservationList({ reservations, getRoomName, onCancel }: MyReservationListProps) {
   return (
     <div
       css={css`
