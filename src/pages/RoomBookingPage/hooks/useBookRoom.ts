@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MESSAGES } from '_tosslib/constants/messages';
 import { Equipment } from '_tosslib/server/types';
@@ -57,10 +57,12 @@ export function useBookRoom() {
     }
   };
 
+  const clearError = useCallback(() => setErrorMessage(null), []);
+
   return {
     book,
     errorMessage,
-    clearError: () => setErrorMessage(null),
+    clearError,
     isBooking: createMutation.isPending,
   };
 }

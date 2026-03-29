@@ -1,6 +1,4 @@
-import { css } from '@emotion/react';
 import { Spacing, Border } from '_tosslib/components';
-import { colors } from '_tosslib/constants/colors';
 import { ReservationHeader } from './components/ReservationHeader';
 import { DateSelector } from './components/DateSelector';
 import { ReservationTimeline } from './components/ReservationTimeline';
