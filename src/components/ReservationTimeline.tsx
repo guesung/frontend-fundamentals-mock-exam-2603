@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
+import { useQuery } from '@tanstack/react-query';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { EQUIPMENT_LABELS } from '../constants';
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { getReservations, getRooms } from 'pages/remotes';
+import { useState } from 'react';
+import { EQUIPMENT_LABELS } from '../constants';
 
 const TIME_SLOTS: string[] = [];
 const HOUR_LABELS = TIME_SLOTS.filter(t => t.endsWith(':00'));
