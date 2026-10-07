@@ -39,3 +39,10 @@ yarn test
 
 1. typescript - deprecated 오류
 2. tsconfig 파일 - 자동완성
+
+## 고민
+
+1. formatDate의 위치
+
+- '포매팅이 필요한가' -> input의 value에는 string | number만 들어갈 수 있음. 즉, Date 객체가 그대로 못들어감 -> 타입 변환이 필욯마 -> formateDate는 필요함.
+- 위치 : formatDate의 반환값은 yyyy-mm-dd로, 범용적으로 쓸 수 있는 형태임 -> src/utils

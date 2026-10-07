@@ -1,9 +1,10 @@
 import { css } from '@emotion/react';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { reservations, rooms } from '_tosslib/server/data/rooms';
 import { EQUIPMENT_LABELS } from '../constants';
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getReservations, getRooms } from 'pages/remotes';
 
 const TIME_SLOTS: string[] = [];
 const HOUR_LABELS = TIME_SLOTS.filter(t => t.endsWith(':00'));
@@ -23,9 +24,15 @@ function timeToMinutes(time: string): number {
   const [h, m] = time.split(':').map(Number);
   return (h - TIMELINE_START) * 60 + m;
 }
-
-export function ReservationTimeline() {
+interface ReservationTimelineProps {
+  date: string;
+}
+export function ReservationTimeline({ date }: ReservationTimelineProps) {
   const [activeReservation, setActiveReservation] = useState<string | null>(null);
+  const { data: reservations = [] } = useQuery(['reservations', date], () => getReservations(date), {
+    enabled: !!date,
+  });
+  const { data: rooms = [] } = useQuery(['rooms'], getRooms);
 
   return (
     <div
