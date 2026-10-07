@@ -4,29 +4,14 @@ import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { getReservations, getRooms } from 'pages/remotes';
 import { useState } from 'react';
-import { EQUIPMENT_LABELS } from '../constants';
+import { EQUIPMENT_LABELS } from 'constants/equipment';
+import { timeToMinutes } from '../utils';
+import { HOUR_LABELS, TOTAL_MINUTES } from '../constants';
 
-const TIME_SLOTS: string[] = [];
-const HOUR_LABELS = TIME_SLOTS.filter(t => t.endsWith(':00'));
-
-const TIMELINE_START = 9;
-const TIMELINE_END = 20;
-const TOTAL_MINUTES = (TIMELINE_END - TIMELINE_START) * 60;
-
-for (let h = 9; h <= 20; h++) {
-  TIME_SLOTS.push(`${String(h).padStart(2, '0')}:00`);
-  if (h < 20) {
-    TIME_SLOTS.push(`${String(h).padStart(2, '0')}:30`);
-  }
-}
-
-function timeToMinutes(time: string): number {
-  const [h, m] = time.split(':').map(Number);
-  return (h - TIMELINE_START) * 60 + m;
-}
 interface ReservationTimelineProps {
   date: string;
 }
+
 export function ReservationTimeline({ date }: ReservationTimelineProps) {
   const [activeReservation, setActiveReservation] = useState<string | null>(null);
   const { data: reservations = [] } = useQuery(['reservations', date], () => getReservations(date), {
