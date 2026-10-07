@@ -6,6 +6,7 @@ import { Top, Spacing, Border, Button, Text, ListRow } from '_tosslib/components
 import { colors } from '_tosslib/constants/colors';
 import { getRooms, getReservations, getMyReservations, cancelReservation } from 'pages/remotes';
 import { Header } from '../../components';
+import { formatDate, ReservationDateSelector } from 'components/ReservationDateSelector';
 
 const EQUIPMENT_LABELS: Record<string, string> = {
   tv: 'TV',
@@ -26,13 +27,6 @@ const HOUR_LABELS = TIME_SLOTS.filter(t => t.endsWith(':00'));
 const TIMELINE_START = 9;
 const TIMELINE_END = 20;
 const TOTAL_MINUTES = (TIMELINE_END - TIMELINE_START) * 60;
-
-function formatDate(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
-}
 
 function timeToMinutes(time: string): number {
   const [h, m] = time.split(':').map(Number);
@@ -101,51 +95,10 @@ export function ReservationStatusPage() {
       <Spacing size={24} />
 
       {/* 날짜 선택 */}
-      <div
-        css={css`
-          padding: 0 24px;
-        `}
-      >
-        <Text typography="t5" fontWeight="bold" color={colors.grey900}>
-          날짜 선택
-        </Text>
-        <Spacing size={16} />
-        <div
-          css={css`
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-          `}
-        >
-          <input
-            type="date"
-            value={date}
-            min={formatDate(new Date())}
-            onChange={e => setDate(e.target.value)}
-            aria-label="날짜"
-            css={css`
-              box-sizing: border-box;
-              font-size: 16px;
-              font-weight: 500;
-              line-height: 1.5;
-              height: 48px;
-              background-color: ${colors.grey50};
-              border-radius: 12px;
-              color: ${colors.grey800};
-              width: 100%;
-              border: 1px solid ${colors.grey200};
-              padding: 0 16px;
-              outline: none;
-              transition: border-color 0.15s;
-              &:focus {
-                border-color: ${colors.blue500};
-              }
-            `}
-          />
-        </div>
-      </div>
+      <ReservationDateSelector date={date} setDate={setDate} />
 
       <Spacing size={24} />
+
       <Border size={8} />
       <Spacing size={24} />
 
