@@ -4,15 +4,15 @@ import { colors } from '_tosslib/constants/colors';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { formatDate } from 'utils/date';
+import { Header } from 'components';
 import {
-  Header,
   MessageBanner,
   MyReservation,
   ReservationButton,
   ReservationDateSelector,
   ReservationTimeline,
   type Message,
-} from '../../components';
+} from './components';
 
 export function ReservationStatusPage() {
   const location = useLocation();

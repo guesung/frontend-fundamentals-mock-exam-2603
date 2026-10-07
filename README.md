@@ -39,6 +39,7 @@ yarn test
 
 1. typescript - deprecated 오류
 2. tsconfig 파일 - 자동완성
+3. 'constants'에서 import하면 이상한 타입으로 가네?
 
 ## 고민
 
