@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { Dispatch, SetStateAction } from 'react';
+import { formatDate } from 'utils';
 
 interface ReservationDateSelectorProps {
   date: string;
@@ -48,11 +49,4 @@ export function ReservationDateSelector({ date, setDate }: ReservationDateSelect
       />
     </div>
   );
-}
-
-export function formatDate(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
 }
