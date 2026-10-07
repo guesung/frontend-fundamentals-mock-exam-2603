@@ -19,9 +19,7 @@ export function ReservationDateSelector({ date, setDate }: ReservationDateSelect
       <Text typography="t5" fontWeight="bold" color={colors.grey900}>
         날짜 선택
       </Text>
-
       <Spacing size={16} />
-
       <input
         type="date"
         value={date}
