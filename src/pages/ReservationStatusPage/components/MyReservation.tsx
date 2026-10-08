@@ -6,8 +6,7 @@ import { useMyReservationList, useRooms } from 'apis/queries';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { useContext } from 'react';
 import { Reservation, Room } from 'types';
-import { MessageContext } from '../contexts';
-import { Message } from './MessageBanner';
+import { Message, MessageContext } from '../contexts';
 
 export function MyReservation() {
   const { data: myReservationList = [] } = useMyReservationList();

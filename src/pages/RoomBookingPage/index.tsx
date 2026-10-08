@@ -40,7 +40,7 @@ export function RoomBookingPage() {
   const [preferredFloor, setPreferredFloor] = useState<number | null>(
     searchParams.get('floor') ? Number(searchParams.get('floor')) : 3
   );
-  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+  const [selectedRoomId, setSelectedRoomId] = useState<string | null>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // URL 쿼리 파라미터 동기화

@@ -10,8 +10,7 @@ import {
   ReservationDateSelector,
   ReservationTimeline,
 } from './components';
-import { MessageContextProvider } from './contexts';
-import { DateContextProvider } from './contexts/DateContext';
+import { DateContextProvider, MessageContextProvider } from './contexts';
 
 export function ReservationStatusPage() {
   return (

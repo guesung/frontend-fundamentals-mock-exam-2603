@@ -1,8 +1,10 @@
 import { createContext, PropsWithChildren, useState } from 'react';
-import { Message } from '../components';
 import { useLocation } from 'react-router-dom';
 
 interface MessageContextProviderProps {}
+
+export type MessageType = 'success' | 'error';
+export type Message = { type: MessageType; text: string };
 
 type MessageContextType = {
   message: Message | null;
