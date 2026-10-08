@@ -1,5 +1,5 @@
-import { http } from 'modules/http';
-import {
+import { http } from 'modules';
+import type {
   CancelReservationResponse,
   CreateReservationPayload,
   CreateReservationResponse,

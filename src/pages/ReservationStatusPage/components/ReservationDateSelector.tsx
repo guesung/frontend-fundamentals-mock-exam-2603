@@ -26,6 +26,7 @@ export function ReservationDateSelector({ date, setDate }: ReservationDateSelect
         min={formatDate(new Date())}
         onChange={e => setDate(e.target.value)}
         aria-label="날짜"
+        id="date-select"
         css={css`
           box-sizing: border-box;
           font-size: 16px;
@@ -40,6 +41,7 @@ export function ReservationDateSelector({ date, setDate }: ReservationDateSelect
           padding: 0 16px;
           outline: none;
           transition: border-color 0.15s;
+          cursor: pointer;
           &:focus {
             border-color: ${colors.blue500};
           }

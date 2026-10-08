@@ -24,6 +24,7 @@ yarn test
 - 재사용성 측면에서도, 시작 시간과 끝 시간, 시간을 변환하는 로직은 가능성이 있어서 분리.
 
 3. 컴포넌트가 길다 -> 컴포넌트 분리
+4. ReservationTimeline 컴포넌트가 무겁다. => 각 컴포넌트는 어디에 둘 것인가?
 
 ### UX
 
@@ -49,10 +50,9 @@ yarn test
 ## 고민
 
 1. formatDate의 위치
+1. '포매팅이 필요한가' -> input의 value에는 string | number만 들어갈 수 있음. 즉, Date 객체가 그대로 못들어감 -> 타입 변환이 필욯마 -> formateDate는 필요함.
+1. 위치 : formatDate의 반환값은 yyyy-mm-dd로, 범용적으로 쓸 수 있는 형태임 -> src/utils
 
-- '포매팅이 필요한가' -> input의 value에는 string | number만 들어갈 수 있음. 즉, Date 객체가 그대로 못들어감 -> 타입 변환이 필욯마 -> formateDate는 필요함.
-- 위치 : formatDate의 반환값은 yyyy-mm-dd로, 범용적으로 쓸 수 있는 형태임 -> src/utils
-
-2. `-Response` Postfix를 붙이는게 맞나.
+1. `-Response` Postfix를 붙이는게 맞나.
 
 - 붙이면, 응답값에 한정됨. 하지만 이를 떼면 범용적으로 활용할 수 있는 Reservation, Room 타입이 됨.

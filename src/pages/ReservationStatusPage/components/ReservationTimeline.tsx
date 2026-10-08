@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { useQuery } from '@tanstack/react-query';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { getReservations, getRooms } from 'apis/api';
+import { getReservations, getRooms } from 'apis';
 import { useState } from 'react';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { timeToMinutes } from '../utils';
@@ -17,7 +17,7 @@ export function ReservationTimeline({ date }: ReservationTimelineProps) {
   const { data: reservations = [] } = useQuery(['reservations', date], () => getReservations(date), {
     enabled: !!date,
   });
-  const { data: rooms = [] } = useQuery(['rooms'], getRooms);
+  const { data: rooms = [] } = useQuery(['rooms'], () => getRooms());
 
   return (
     <div
@@ -28,6 +28,7 @@ export function ReservationTimeline({ date }: ReservationTimelineProps) {
       <Text typography="t5" fontWeight="bold" color={colors.grey900}>
         예약 현황
       </Text>
+
       <Spacing size={16} />
 
       <div
@@ -39,8 +40,10 @@ export function ReservationTimeline({ date }: ReservationTimelineProps) {
       >
         <TimelineHeader />
 
-        {rooms.map((room: Room, index: number) => (
-          <ReservationTimelineRoom index={index} reservations={reservations} room={room} />
+        <Spacing size={4} />
+
+        {rooms.map((room: Room) => (
+          <TimelineRoom key={room.id} reservations={reservations} room={room} />
         ))}
       </div>
     </div>
@@ -95,15 +98,14 @@ function TimelineHeader() {
   );
 }
 
-interface ReservationTimelineRoomProps {
-  index: number;
+interface TimelineRoomProps {
   reservations: Reservation[];
   room: Room;
 }
 
-function ReservationTimelineRoom({ index, reservations, room }: ReservationTimelineRoomProps) {
-  const roomReservations = reservations.filter((r: { roomId: string }) => r.roomId === room.id);
-  const [activeReservation, setActiveReservation] = useState<string | null>(null);
+function TimelineRoom({ reservations, room }: TimelineRoomProps) {
+  const roomReservations = reservations.filter((reservation: Reservation) => reservation.roomId === room.id);
+  const [activeReservationId, setActiveReservationId] = useState<string | null>(null);
 
   return (
     <div
@@ -112,7 +114,6 @@ function ReservationTimelineRoom({ index, reservations, room }: ReservationTimel
         display: flex;
         align-items: center;
         height: 32px;
-        ${index > 0 ? 'margin-top: 4px;' : ''}
       `}
     >
       <div
@@ -144,71 +145,68 @@ function ReservationTimelineRoom({ index, reservations, room }: ReservationTimel
           overflow: visible;
         `}
       >
-        {roomReservations.map(
-          (res: { id: string; start: string; end: string; attendees: number; equipment: string[] }) => {
-            const left = (timeToMinutes(res.start) / TOTAL_MINUTES) * 100;
-            const width = ((timeToMinutes(res.end) - timeToMinutes(res.start)) / TOTAL_MINUTES) * 100;
-            const isActive = activeReservation === res.id;
-            return (
+        {roomReservations.map((reservation: Reservation) => {
+          const isActive = activeReservationId === reservation.id;
+
+          return (
+            <div
+              key={reservation.id}
+              css={css`
+                position: absolute;
+                left: ${(timeToMinutes(reservation.start) / TOTAL_MINUTES) * 100}%;
+                width: ${((timeToMinutes(reservation.end) - timeToMinutes(reservation.start)) / TOTAL_MINUTES) * 100}%;
+                height: 100%;
+              `}
+            >
               <div
-                key={res.id}
+                role="button"
+                aria-label={`${room.name} ${reservation.start}-${reservation.end} 예약 상세`}
+                onClick={() => setActiveReservationId(isActive ? null : reservation.id)}
                 css={css`
-                  position: absolute;
-                  left: ${left}%;
-                  width: ${width}%;
+                  width: 100%;
                   height: 100%;
+                  background: ${colors.blue400};
+                  border-radius: 4px;
+                  opacity: ${isActive ? 1 : 0.75};
+                  cursor: pointer;
+                  transition: opacity 0.15s;
+                  &:hover {
+                    opacity: 1;
+                  }
                 `}
-              >
+              />
+              {isActive && (
                 <div
-                  role="button"
-                  aria-label={`${room.name} ${res.start}-${res.end} 예약 상세`}
-                  onClick={() => setActiveReservation(isActive ? null : res.id)}
+                  role="tooltip"
                   css={css`
-                    width: 100%;
-                    height: 100%;
-                    background: ${colors.blue400};
-                    border-radius: 4px;
-                    opacity: ${isActive ? 1 : 0.75};
-                    cursor: pointer;
-                    transition: opacity 0.15s;
-                    &:hover {
-                      opacity: 1;
-                    }
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    margin-top: 6px;
+                    background: ${colors.grey900};
+                    color: ${colors.white};
+                    padding: 8px 12px;
+                    border-radius: 8px;
+                    font-size: 12px;
+                    white-space: nowrap;
+                    z-index: 10;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+                    line-height: 1.6;
                   `}
-                />
-                {isActive && (
-                  <div
-                    role="tooltip"
-                    css={css`
-                      position: absolute;
-                      top: 100%;
-                      left: 50%;
-                      transform: translateX(-50%);
-                      margin-top: 6px;
-                      background: ${colors.grey900};
-                      color: ${colors.white};
-                      padding: 8px 12px;
-                      border-radius: 8px;
-                      font-size: 12px;
-                      white-space: nowrap;
-                      z-index: 10;
-                      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-                      line-height: 1.6;
-                    `}
-                  >
-                    <div>
-                      {res.start} ~ {res.end}
-                    </div>
-                    <div>{res.attendees}명</div>
-                    {res.equipment.length > 0 && (
-                      <div>{res.equipment.map((e: string) => EQUIPMENT_LABELS[e]).join(', ')}</div>
-                    )}
+                >
+                  <div>
+                    {reservation.start} ~ {reservation.end}
                   </div>
-                )}
-              </div>
-            );
-          }
-        )}
+                  <div>{reservation.attendees}명</div>
+                  {reservation.equipment.length > 0 && (
+                    <div>{reservation.equipment.map((e: string) => EQUIPMENT_LABELS[e]).join(', ')}</div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
