@@ -1,9 +1,8 @@
 import { css } from '@emotion/react';
 import { Border, Spacing } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { formatDate } from 'utils/date';
+
 import { Header } from 'components';
 import {
   MessageBanner,
@@ -13,10 +12,11 @@ import {
   ReservationTimeline,
   type Message,
 } from './components';
+import { useEffect, useState } from 'react';
+import { DateContextProvider } from './contexts/DateContext';
 
 export function ReservationStatusPage() {
   const location = useLocation();
-  const [date, setDate] = useState(formatDate(new Date()));
 
   const locationState = location.state as { message?: string } | null;
   const [message, setMessage] = useState<Message | null>(
@@ -40,20 +40,23 @@ export function ReservationStatusPage() {
 
       <Spacing size={24} />
 
-      <ReservationDateSelector date={date} setDate={setDate} />
+      <DateContextProvider>
+        <ReservationDateSelector />
+
+        <Spacing size={24} />
+
+        <Border size={8} />
+
+        <Spacing size={24} />
+
+        <ReservationTimeline />
+      </DateContextProvider>
 
       <Spacing size={24} />
-
       <Border size={8} />
       <Spacing size={24} />
 
-      <ReservationTimeline date={date} />
-
-      <Spacing size={24} />
-      <Border size={8} />
-      <Spacing size={24} />
-
-      <MessageBanner message={{ text: 'aa', type: 'error' }} />
+      {message && <MessageBanner message={message} />}
 
       <MyReservation setMessage={setMessage} />
 

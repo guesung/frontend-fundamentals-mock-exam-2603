@@ -20,12 +20,12 @@ yarn test
 
 1. 페이지 컴포넌트에 정보가 너무 많다. -> 구조가 눈에 보이지 않는다.
 2. 상수와 유틸이 컴포넌트에 섞여있어서, 내부 UI 로직을 보기 힘들다 -> utils, constants 파일 분리
+3. 재사용성 측면에서도, 시작 시간과 끝 시간, 시간을 변환하는 로직은 가능성이 있어서 분리.
 
-- 재사용성 측면에서도, 시작 시간과 끝 시간, 시간을 변환하는 로직은 가능성이 있어서 분리.
-
-1. 컴포넌트가 길다 -> 컴포넌트 분리
-2. ReservationTimeline 컴포넌트가 무겁다. => 각 컴포넌트는 어디에 둘 것인가?
-3. useMutation + invalidate 로직 -> 하나의 훅으로 분리 (post(데이터 수정) 후 invalidate는 자연스러운 흐름이므로 추상화해도 됨.)
+4. 컴포넌트가 길다 -> 컴포넌트 분리
+5. ReservationTimeline 컴포넌트가 무겁다. => 각 컴포넌트는 어디에 둘 것인가?
+6. useMutation + invalidate 로직 -> 하나의 훅으로 분리 (post(데이터 수정) 후 invalidate는 자연스러운 흐름이므로 추상화해도 됨.)
+7. Message의 message, setMessage를 props로 전달하는게 맞을까? -> Context API로 뿌려주는 방식은 어떨까?
 
 ### UX
 

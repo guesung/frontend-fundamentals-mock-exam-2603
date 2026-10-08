@@ -1,15 +1,13 @@
 import { css } from '@emotion/react';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useContext } from 'react';
 import { formatDate } from 'utils';
+import { DateContext } from '../contexts';
 
-interface ReservationDateSelectorProps {
-  date: string;
-  setDate: Dispatch<SetStateAction<string>>;
-}
+export function ReservationDateSelector() {
+  const { date, onDateChange } = useContext(DateContext);
 
-export function ReservationDateSelector({ date, setDate }: ReservationDateSelectorProps) {
   return (
     <div
       css={css`
@@ -24,7 +22,7 @@ export function ReservationDateSelector({ date, setDate }: ReservationDateSelect
         type="date"
         value={date}
         min={formatDate(new Date())}
-        onChange={e => setDate(e.target.value)}
+        onChange={e => onDateChange(e.target.value)}
         aria-label="날짜"
         id="date-select"
         css={css`
