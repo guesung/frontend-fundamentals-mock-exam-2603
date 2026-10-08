@@ -9,7 +9,6 @@ import { Message, useMessageContext } from '../contexts';
 
 export function MyReservation() {
   const { data: myReservationList = [] } = useMyReservationList();
-  const { onMessageChange } = useMessageContext();
 
   return (
     <div
@@ -44,7 +43,7 @@ export function MyReservation() {
           `}
         >
           {myReservationList.map((reservation: Reservation) => (
-            <MyReservationItem key={reservation.id} reservation={reservation} onMessageChange={onMessageChange} />
+            <MyReservationItem key={reservation.id} reservation={reservation} />
           ))}
         </div>
       ) : (
@@ -56,12 +55,12 @@ export function MyReservation() {
 
 interface MyReservationItemProps {
   reservation: Reservation;
-  onMessageChange: (message: Message | null) => void;
 }
 
-function MyReservationItem({ reservation, onMessageChange }: MyReservationItemProps) {
+function MyReservationItem({ reservation }: MyReservationItemProps) {
   const { data: rooms = [] } = useRooms();
   const { mutate } = useCancelReservation();
+  const { onMessageChange } = useMessageContext();
 
   const getRoomName = (roomId: string) => rooms.find((r: Room) => r.id === roomId)?.name ?? roomId;
 
