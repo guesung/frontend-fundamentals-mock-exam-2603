@@ -1,22 +1,19 @@
 import { css } from '@emotion/react';
-import { useQuery } from '@tanstack/react-query';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { getReservations, getRooms } from 'apis';
-import { useContext, useState } from 'react';
+import { useReservations, useRooms } from 'apis/query';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
-import { timeToMinutes } from '../utils';
-import { HOUR_LABELS, TOTAL_MINUTES } from '../constants';
+import { useContext, useState } from 'react';
 import { Reservation, Room } from 'types/reservation';
+import { HOUR_LABELS, TOTAL_MINUTES } from '../constants';
 import { DateContext } from '../contexts';
+import { timeToMinutes } from '../utils';
 
 export function ReservationTimeline() {
   const { date } = useContext(DateContext);
 
-  const { data: reservations = [] } = useQuery(['reservations', date], () => getReservations(date), {
-    enabled: !!date,
-  });
-  const { data: rooms = [] } = useQuery(['rooms'], () => getRooms());
+  const { data: reservations = [] } = useReservations({ date });
+  const { data: rooms = [] } = useRooms();
 
   return (
     <div

@@ -1,17 +1,16 @@
 import { css } from '@emotion/react';
-import { useQuery } from '@tanstack/react-query';
 import { Button, ListRow, Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { useCancelReservation } from 'apis';
-import { getMyReservations, getRooms } from 'apis/api';
+import { useMyReservationList, useRooms } from 'apis/query';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
-import { Dispatch, SetStateAction, useContext } from 'react';
+import { useContext } from 'react';
 import { Reservation, Room } from 'types';
-import { Message } from './MessageBanner';
 import { MessageContext } from '../contexts';
+import { Message } from './MessageBanner';
 
 export function MyReservation() {
-  const { data: myReservationList = [] } = useQuery(['myReservations'], getMyReservations);
+  const { data: myReservationList = [] } = useMyReservationList();
   const { onMessageChange } = useContext(MessageContext);
 
   return (
@@ -63,7 +62,7 @@ interface MyReservationItemProps {
 }
 
 function MyReservationItem({ reservation, onMessageChange }: MyReservationItemProps) {
-  const { data: rooms = [] } = useQuery(['rooms'], getRooms);
+  const { data: rooms = [] } = useRooms();
   const { mutate } = useCancelReservation();
 
   const getRoomName = (roomId: string) => rooms.find((r: Room) => r.id === roomId)?.name ?? roomId;
