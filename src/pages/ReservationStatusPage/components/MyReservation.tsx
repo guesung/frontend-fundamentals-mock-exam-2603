@@ -6,7 +6,8 @@ import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { cancelReservation, getMyReservations, getRooms } from 'apis/api';
 import { Dispatch, SetStateAction } from 'react';
 import { Message } from './MessageBanner';
-import { Reservation } from 'types';
+import { Reservation, Room } from 'types';
+import { useCancelReservation } from 'apis';
 
 interface MyReservationProps {
   setMessage: Dispatch<SetStateAction<Message | null>>;
@@ -65,26 +66,21 @@ interface MyReservationItemProps {
 
 function MyReservationItem({ reservation, setMessage }: MyReservationItemProps) {
   const { data: rooms = [] } = useQuery(['rooms'], getRooms);
+  const { mutate } = useCancelReservation();
 
-  const queryClient = useQueryClient();
-
-  const cancelMutation = useMutation((id: string) => cancelReservation(id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['reservations']);
-      queryClient.invalidateQueries(['myReservations']);
-    },
-  });
-
-  const getRoomName = (roomId: string) =>
-    rooms.find((r: { id: string; name: string }) => r.id === roomId)?.name ?? roomId;
+  const getRoomName = (roomId: string) => rooms.find((r: Room) => r.id === roomId)?.name ?? roomId;
 
   const handleCancel = async (id: string) => {
-    try {
-      await cancelMutation.mutateAsync(id);
-      setMessage({ type: 'success', text: '예약이 취소되었습니다.' });
-    } catch {
-      setMessage({ type: 'error', text: '취소에 실패했습니다.' });
-    }
+    if (!window.confirm('정말 취소하시겠습니까?')) return;
+
+    mutate(id, {
+      onSuccess: () => {
+        setMessage({ type: 'success', text: '예약이 취소되었습니다.' });
+      },
+      onError: () => {
+        setMessage({ type: 'error', text: '취소에 실패했습니다.' });
+      },
+    });
   };
 
   return (
@@ -115,9 +111,7 @@ function MyReservationItem({ reservation, setMessage }: MyReservationItemProps) 
             size="small"
             onClick={e => {
               e.stopPropagation();
-              if (window.confirm('정말 취소하시겠습니까?')) {
-                handleCancel(reservation.id);
-              }
+              handleCancel(reservation.id);
             }}
           >
             취소
