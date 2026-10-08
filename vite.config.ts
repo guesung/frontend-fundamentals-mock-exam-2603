@@ -33,6 +33,8 @@ export default defineConfig({
       utils: path.resolve(__dirname, 'src/utils'),
       hooks: path.resolve(__dirname, 'src/hooks'),
       stores: path.resolve(__dirname, 'src/stores'),
+      apis: path.resolve(__dirname, 'src/apis'),
+      modules: path.resolve(__dirname, 'src/modules'),
     },
   },
   server: {
