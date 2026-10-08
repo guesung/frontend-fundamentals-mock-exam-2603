@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { Button, ListRow, Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { useCancelReservation } from 'apis';
-import { useMyReservationList, useRooms } from 'apis/query';
+import { useMyReservationList, useRooms } from 'apis/queries';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { useContext } from 'react';
 import { Reservation, Room } from 'types';

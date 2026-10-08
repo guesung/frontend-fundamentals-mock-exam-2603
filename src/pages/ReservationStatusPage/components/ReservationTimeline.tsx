@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { useReservations, useRooms } from 'apis/query';
+import { useReservations, useRooms } from 'apis/queries';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { useContext, useState } from 'react';
 import { Reservation, Room } from 'types/reservation';
