@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { MessageContext, MessageType } from '../contexts';
+import { MessageType, useMessageContext } from '../contexts';
 
 const variantMap: Record<MessageType, { background: string; color: string }> = {
   success: {
@@ -18,7 +18,7 @@ const variantMap: Record<MessageType, { background: string; color: string }> = {
 
 export function MessageBanner() {
   const location = useLocation();
-  const { message } = useContext(MessageContext);
+  const { message } = useMessageContext();
 
   useEffect(
     function clearLocationState() {

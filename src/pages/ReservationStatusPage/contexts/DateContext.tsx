@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { formatDate } from 'utils/date';
 
 interface DateContextProviderProps {}
@@ -8,10 +8,14 @@ type DateContextType = {
   onDateChange: (date: string) => void;
 };
 
-export const DateContext = createContext<DateContextType>({
-  date: formatDate(new Date()),
-  onDateChange: () => {},
-});
+const DateContext = createContext<DateContextType | null>(null);
+
+export const useDateContext = () => {
+  const dateContext = useContext(DateContext);
+  if (dateContext === null) throw new Error('DateContext로 감싸주세요.');
+
+  return dateContext;
+};
 
 export function DateContextProvider({ children }: PropsWithChildren<DateContextProviderProps>) {
   const [date, setDate] = useState(formatDate(new Date()));

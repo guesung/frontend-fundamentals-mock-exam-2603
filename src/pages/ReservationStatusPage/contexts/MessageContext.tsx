@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 interface MessageContextProviderProps {}
@@ -11,10 +11,14 @@ type MessageContextType = {
   onMessageChange: (message: Message | null) => void;
 };
 
-export const MessageContext = createContext<MessageContextType>({
-  message: null,
-  onMessageChange: () => {},
-});
+const MessageContext = createContext<MessageContextType | null>(null);
+
+export const useMessageContext = () => {
+  const context = useContext(MessageContext);
+  if (context === null) throw new Error('MessageContext로 감싸주세요.');
+
+  return context;
+};
 
 export function MessageContextProvider({ children }: PropsWithChildren<MessageContextProviderProps>) {
   const location = useLocation();

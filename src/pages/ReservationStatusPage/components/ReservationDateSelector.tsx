@@ -1,12 +1,11 @@
 import { css } from '@emotion/react';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { Dispatch, SetStateAction, useContext } from 'react';
 import { formatDate } from 'utils';
-import { DateContext } from '../contexts';
+import { useDateContext } from '../contexts';
 
 export function ReservationDateSelector() {
-  const { date, onDateChange } = useContext(DateContext);
+  const { date, onDateChange } = useDateContext();
 
   return (
     <div

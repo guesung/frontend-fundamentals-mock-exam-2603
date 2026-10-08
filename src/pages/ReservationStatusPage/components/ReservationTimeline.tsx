@@ -3,14 +3,14 @@ import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { useReservations, useRooms } from 'apis/queries';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Reservation, Room } from 'types/reservation';
 import { HOUR_LABELS, TOTAL_MINUTES } from '../constants';
-import { DateContext } from '../contexts';
+import { useDateContext } from '../contexts';
 import { timeToMinutes } from '../utils';
 
 export function ReservationTimeline() {
-  const { date } = useContext(DateContext);
+  const { date } = useDateContext();
 
   const { data: reservations = [] } = useReservations({ date });
   const { data: rooms = [] } = useRooms();

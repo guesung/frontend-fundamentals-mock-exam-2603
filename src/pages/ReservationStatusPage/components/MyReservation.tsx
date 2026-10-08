@@ -4,13 +4,12 @@ import { colors } from '_tosslib/constants/colors';
 import { useCancelReservation } from 'apis';
 import { useMyReservationList, useRooms } from 'apis/queries';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
-import { useContext } from 'react';
 import { Reservation, Room } from 'types';
-import { Message, MessageContext } from '../contexts';
+import { Message, useMessageContext } from '../contexts';
 
 export function MyReservation() {
   const { data: myReservationList = [] } = useMyReservationList();
-  const { onMessageChange } = useContext(MessageContext);
+  const { onMessageChange } = useMessageContext();
 
   return (
     <div
