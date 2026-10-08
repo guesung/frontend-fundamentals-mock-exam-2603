@@ -12,3 +12,5 @@ export const http = {
     return axios.delete<Response>(url).then(res => res.data);
   },
 };
+
+export type CommonPostResponse = { ok: boolean };

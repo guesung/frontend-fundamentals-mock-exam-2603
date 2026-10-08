@@ -2,11 +2,12 @@ import { css } from '@emotion/react';
 import { useQuery } from '@tanstack/react-query';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { getReservations, getRooms, Reservation, Room } from 'pages/remotes';
+import { getReservations, getRooms } from 'apis/api';
 import { useState } from 'react';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { timeToMinutes } from '../utils';
 import { HOUR_LABELS, TOTAL_MINUTES } from '../constants';
+import { Reservation, Room } from 'types/reservation';
 
 interface ReservationTimelineProps {
   date: string;

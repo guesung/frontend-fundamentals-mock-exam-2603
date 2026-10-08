@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, ListRow, Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
-import { cancelReservation, getMyReservations, getRooms } from 'pages/remotes';
+import { cancelReservation, getMyReservations, getRooms } from 'apis/api';
 import { Dispatch, SetStateAction } from 'react';
 import { Message } from './MessageBanner';
 
