@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getMyReservations, getReservations, getRooms } from './api';
+import { getMyReservations, getReservations, getRooms } from './apis';
 
 export function useMyReservationList() {
   return useQuery(['myReservations'], getMyReservations);

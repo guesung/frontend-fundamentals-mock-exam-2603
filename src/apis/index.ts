@@ -1,3 +1,3 @@
-export * from './api';
+export * from './apis';
 export * from './types';
 export * from './mutations';
