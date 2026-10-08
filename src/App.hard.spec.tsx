@@ -28,7 +28,7 @@ describe('예약 현황 심화', () => {
 
     const dateInput = screen.getByLabelText('날짜');
     await userEvent.clear(dateInput);
-    await userEvent.type(dateInput, '2026-03-10');
+    await userEvent.type(dateInput, '2026-10-08');
 
     const reservationBlock = await screen.findByLabelText('토스홀 A 09:00-10:00 예약 상세');
     await userEvent.click(reservationBlock);
@@ -139,9 +139,15 @@ describe('예약하기 심화', () => {
 
     await screen.findByText('예약 가능 회의실');
 
-    const roomButtons = screen.getAllByRole('button', { pressed: false }).filter(
-      el => el.getAttribute('aria-label') && !['확정', '예약하기', '취소', 'TV', '화이트보드', '화상장비', '스피커', '뒤로가기'].includes(el.getAttribute('aria-label')!)
-    );
+    const roomButtons = screen
+      .getAllByRole('button', { pressed: false })
+      .filter(
+        el =>
+          el.getAttribute('aria-label') &&
+          !['확정', '예약하기', '취소', 'TV', '화이트보드', '화상장비', '스피커', '뒤로가기'].includes(
+            el.getAttribute('aria-label')!
+          )
+      );
     const roomNames = roomButtons.map(el => el.getAttribute('aria-label'));
 
     const floorOrder = roomNames.map(name => {
