@@ -6,6 +6,7 @@ import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { cancelReservation, getMyReservations, getRooms } from 'apis/api';
 import { Dispatch, SetStateAction } from 'react';
 import { Message } from './MessageBanner';
+import { Reservation } from 'types';
 
 interface MyReservationProps {
   setMessage: Dispatch<SetStateAction<Message | null>>;
@@ -13,27 +14,6 @@ interface MyReservationProps {
 
 export function MyReservation({ setMessage }: MyReservationProps) {
   const { data: myReservationList = [] } = useQuery(['myReservations'], getMyReservations);
-  const queryClient = useQueryClient();
-  const { data: rooms = [] } = useQuery(['rooms'], getRooms);
-
-  const getRoomName = (roomId: string) =>
-    rooms.find((r: { id: string; name: string }) => r.id === roomId)?.name ?? roomId;
-
-  const cancelMutation = useMutation((id: string) => cancelReservation(id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['reservations']);
-      queryClient.invalidateQueries(['myReservations']);
-    },
-  });
-
-  const handleCancel = async (id: string) => {
-    try {
-      await cancelMutation.mutateAsync(id);
-      setMessage({ type: 'success', text: '예약이 취소되었습니다.' });
-    } catch {
-      setMessage({ type: 'error', text: '취소에 실패했습니다.' });
-    }
-  };
 
   return (
     <div
@@ -59,20 +39,7 @@ export function MyReservation({ setMessage }: MyReservationProps) {
       </div>
       <Spacing size={16} />
 
-      {myReservationList.length === 0 ? (
-        <div
-          css={css`
-            padding: 40px 0;
-            text-align: center;
-            background: ${colors.grey50};
-            border-radius: 14px;
-          `}
-        >
-          <Text typography="t6" color={colors.grey500}>
-            예약 내역이 없습니다.
-          </Text>
-        </div>
-      ) : (
+      {myReservationList.length > 0 ? (
         <div
           css={css`
             display: flex;
@@ -80,57 +47,100 @@ export function MyReservation({ setMessage }: MyReservationProps) {
             gap: 10px;
           `}
         >
-          {myReservationList.map(
-            (res: {
-              id: string;
-              roomId: string;
-              date: string;
-              start: string;
-              end: string;
-              attendees: number;
-              equipment: string[];
-            }) => (
-              <div
-                key={res.id}
-                css={css`
-                  padding: 14px 16px;
-                  border-radius: 14px;
-                  background: ${colors.grey50};
-                  border: 1px solid ${colors.grey200};
-                `}
-              >
-                <ListRow
-                  contents={
-                    <ListRow.Text2Rows
-                      top={getRoomName(res.roomId)}
-                      topProps={{ typography: 't6', fontWeight: 'bold', color: colors.grey900 }}
-                      bottom={`${res.date} ${res.start}~${res.end} · ${res.attendees}명 · ${
-                        res.equipment.map((e: string) => EQUIPMENT_LABELS[e]).join(', ') || '장비 없음'
-                      }`}
-                      bottomProps={{ typography: 't7', color: colors.grey600 }}
-                    />
-                  }
-                  right={
-                    <Button
-                      type="danger"
-                      style="weak"
-                      size="small"
-                      onClick={e => {
-                        e.stopPropagation();
-                        if (window.confirm('정말 취소하시겠습니까?')) {
-                          handleCancel(res.id);
-                        }
-                      }}
-                    >
-                      취소
-                    </Button>
-                  }
-                />
-              </div>
-            )
-          )}
+          {myReservationList.map((reservation: Reservation) => (
+            <MyReservationItem reservation={reservation} setMessage={setMessage} />
+          ))}
         </div>
+      ) : (
+        <MyReservationEmpty />
       )}
+    </div>
+  );
+}
+
+interface MyReservationItemProps {
+  reservation: Reservation;
+  setMessage: Dispatch<SetStateAction<Message | null>>;
+}
+
+function MyReservationItem({ reservation, setMessage }: MyReservationItemProps) {
+  const { data: rooms = [] } = useQuery(['rooms'], getRooms);
+
+  const queryClient = useQueryClient();
+
+  const cancelMutation = useMutation((id: string) => cancelReservation(id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['reservations']);
+      queryClient.invalidateQueries(['myReservations']);
+    },
+  });
+
+  const getRoomName = (roomId: string) =>
+    rooms.find((r: { id: string; name: string }) => r.id === roomId)?.name ?? roomId;
+
+  const handleCancel = async (id: string) => {
+    try {
+      await cancelMutation.mutateAsync(id);
+      setMessage({ type: 'success', text: '예약이 취소되었습니다.' });
+    } catch {
+      setMessage({ type: 'error', text: '취소에 실패했습니다.' });
+    }
+  };
+
+  return (
+    <div
+      key={reservation.id}
+      css={css`
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: ${colors.grey50};
+        border: 1px solid ${colors.grey200};
+      `}
+    >
+      <ListRow
+        contents={
+          <ListRow.Text2Rows
+            top={getRoomName(reservation.roomId)}
+            topProps={{ typography: 't6', fontWeight: 'bold', color: colors.grey900 }}
+            bottom={`${reservation.date} ${reservation.start}~${reservation.end} · ${reservation.attendees}명 · ${
+              reservation.equipment.map((e: string) => EQUIPMENT_LABELS[e]).join(', ') || '장비 없음'
+            }`}
+            bottomProps={{ typography: 't7', color: colors.grey600 }}
+          />
+        }
+        right={
+          <Button
+            type="danger"
+            style="weak"
+            size="small"
+            onClick={e => {
+              e.stopPropagation();
+              if (window.confirm('정말 취소하시겠습니까?')) {
+                handleCancel(reservation.id);
+              }
+            }}
+          >
+            취소
+          </Button>
+        }
+      />
+    </div>
+  );
+}
+
+function MyReservationEmpty() {
+  return (
+    <div
+      css={css`
+        padding: 40px 0;
+        text-align: center;
+        background: ${colors.grey50};
+        border-radius: 14px;
+      `}
+    >
+      <Text typography="t6" color={colors.grey500}>
+        예약 내역이 없습니다.
+      </Text>
     </div>
   );
 }
