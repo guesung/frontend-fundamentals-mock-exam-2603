@@ -2,11 +2,23 @@ import { css } from '@emotion/react';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 
-export type Message = { type: 'success' | 'error'; text: string };
+type MessageType = 'success' | 'error';
+export type Message = { type: MessageType; text: string };
 
 interface MessageBannerProps {
   message: Message;
 }
+
+const variantMap: Record<MessageType, { background: string; color: string }> = {
+  success: {
+    background: colors.blue50,
+    color: colors.blue600,
+  },
+  error: {
+    background: colors.red50,
+    color: colors.red500,
+  },
+};
 
 export function MessageBanner({ message }: MessageBannerProps) {
   return (
@@ -19,13 +31,13 @@ export function MessageBanner({ message }: MessageBannerProps) {
         css={css`
           padding: 10px 14px;
           border-radius: 10px;
-          background: ${message.type === 'success' ? colors.blue50 : colors.red50};
+          background: ${variantMap[message.type]['background']};
           display: flex;
           align-items: center;
           gap: 8px;
         `}
       >
-        <Text typography="t7" fontWeight="medium" color={message.type === 'success' ? colors.blue600 : colors.red500}>
+        <Text typography="t7" fontWeight="medium" color={variantMap[message.type]['color']}>
           {message.text}
         </Text>
       </div>

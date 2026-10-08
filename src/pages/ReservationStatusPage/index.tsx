@@ -53,7 +53,7 @@ export function ReservationStatusPage() {
       <Border size={8} />
       <Spacing size={24} />
 
-      {message && <MessageBanner message={message} />}
+      <MessageBanner message={{ text: 'aa', type: 'error' }} />
 
       <MyReservation setMessage={setMessage} />
 
