@@ -14,21 +14,9 @@ import {
 } from './components';
 import { useEffect, useState } from 'react';
 import { DateContextProvider } from './contexts/DateContext';
+import { MessageContextProvider } from './contexts';
 
 export function ReservationStatusPage() {
-  const location = useLocation();
-
-  const locationState = location.state as { message?: string } | null;
-  const [message, setMessage] = useState<Message | null>(
-    locationState?.message ? { type: 'success', text: locationState.message } : null
-  );
-
-  useEffect(() => {
-    if (locationState?.message) {
-      window.history.replaceState({}, '');
-    }
-  }, [locationState]);
-
   return (
     <div
       css={css`
@@ -56,9 +44,11 @@ export function ReservationStatusPage() {
       <Border size={8} />
       <Spacing size={24} />
 
-      {message && <MessageBanner message={message} />}
+      <MessageContextProvider>
+        <MessageBanner />
 
-      <MyReservation setMessage={setMessage} />
+        <MyReservation />
+      </MessageContextProvider>
 
       <Spacing size={24} />
       <Border size={8} />

@@ -28,7 +28,7 @@ describe('예약 현황 심화', () => {
 
     const dateInput = screen.getByLabelText('날짜');
     await userEvent.clear(dateInput);
-    await userEvent.type(dateInput, '2026-10-08');
+    await userEvent.type(dateInput, '2026-10-09');
 
     const reservationBlock = await screen.findByLabelText('토스홀 A 09:00-10:00 예약 상세');
     await userEvent.click(reservationBlock);

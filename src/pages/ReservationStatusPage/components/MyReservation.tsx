@@ -5,16 +5,14 @@ import { colors } from '_tosslib/constants/colors';
 import { useCancelReservation } from 'apis';
 import { getMyReservations, getRooms } from 'apis/api';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useContext } from 'react';
 import { Reservation, Room } from 'types';
 import { Message } from './MessageBanner';
+import { MessageContext } from '../contexts';
 
-interface MyReservationProps {
-  setMessage: Dispatch<SetStateAction<Message | null>>;
-}
-
-export function MyReservation({ setMessage }: MyReservationProps) {
+export function MyReservation() {
   const { data: myReservationList = [] } = useQuery(['myReservations'], getMyReservations);
+  const { onMessageChange } = useContext(MessageContext);
 
   return (
     <div
@@ -49,7 +47,7 @@ export function MyReservation({ setMessage }: MyReservationProps) {
           `}
         >
           {myReservationList.map((reservation: Reservation) => (
-            <MyReservationItem reservation={reservation} setMessage={setMessage} />
+            <MyReservationItem key={reservation.id} reservation={reservation} onMessageChange={onMessageChange} />
           ))}
         </div>
       ) : (
@@ -61,10 +59,10 @@ export function MyReservation({ setMessage }: MyReservationProps) {
 
 interface MyReservationItemProps {
   reservation: Reservation;
-  setMessage: Dispatch<SetStateAction<Message | null>>;
+  onMessageChange: (message: Message | null) => void;
 }
 
-function MyReservationItem({ reservation, setMessage }: MyReservationItemProps) {
+function MyReservationItem({ reservation, onMessageChange }: MyReservationItemProps) {
   const { data: rooms = [] } = useQuery(['rooms'], getRooms);
   const { mutate } = useCancelReservation();
 
@@ -75,10 +73,10 @@ function MyReservationItem({ reservation, setMessage }: MyReservationItemProps) 
 
     mutate(id, {
       onSuccess: () => {
-        setMessage({ type: 'success', text: '예약이 취소되었습니다.' });
+        onMessageChange({ type: 'success', text: '예약이 취소되었습니다.' });
       },
       onError: () => {
-        setMessage({ type: 'error', text: '취소에 실패했습니다.' });
+        onMessageChange({ type: 'error', text: '취소에 실패했습니다.' });
       },
     });
   };

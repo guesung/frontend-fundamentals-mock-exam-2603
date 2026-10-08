@@ -6,7 +6,7 @@ export const Routes = () => {
   return (
     <ReactRouterRoutes>
       <Route path="/" element={<ReservationStatusPage />} />
-      {/* <Route path="/booking" element={<RoomBookingPage />} /> */}
+      <Route path="/booking" element={<RoomBookingPage />} />
       <Route path="*" element={<Navigate replace to="/" />} />
     </ReactRouterRoutes>
   );

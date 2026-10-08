@@ -31,14 +31,14 @@ export function RoomBookingPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [date, setDate] = useState(searchParams.get('date') || formatDate(new Date()));
-  const [startTime, setStartTime] = useState(searchParams.get('startTime') || '');
-  const [endTime, setEndTime] = useState(searchParams.get('endTime') || '');
+  const [startTime, setStartTime] = useState(searchParams.get('startTime') || '10:00');
+  const [endTime, setEndTime] = useState(searchParams.get('endTime') || '11:00');
   const [attendees, setAttendees] = useState(Number(searchParams.get('attendees')) || 1);
   const [equipment, setEquipment] = useState<string[]>(
     searchParams.get('equipment') ? searchParams.get('equipment')!.split(',').filter(Boolean) : []
   );
   const [preferredFloor, setPreferredFloor] = useState<number | null>(
-    searchParams.get('floor') ? Number(searchParams.get('floor')) : null
+    searchParams.get('floor') ? Number(searchParams.get('floor')) : 3
   );
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
