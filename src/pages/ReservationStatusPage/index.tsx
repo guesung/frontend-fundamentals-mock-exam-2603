@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import { Border, Spacing } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { useLocation } from 'react-router-dom';
 
 import { Header } from 'components';
 import {
@@ -10,11 +9,9 @@ import {
   ReservationButton,
   ReservationDateSelector,
   ReservationTimeline,
-  type Message,
 } from './components';
-import { useEffect, useState } from 'react';
-import { DateContextProvider } from './contexts/DateContext';
 import { MessageContextProvider } from './contexts';
+import { DateContextProvider } from './contexts/DateContext';
 
 export function ReservationStatusPage() {
   return (
