@@ -32,10 +32,7 @@ export function ReservationRoomList({ selectedRoomId, setErrorMessage, setSelect
 
       return isCapacityAvailable && isAllEquipmentAvailable && isPreferredFloorAvailable && !isRoomConflict;
     })
-    .sort((a, b) => {
-      if (a.floor !== b.floor) return a.floor - b.floor;
-      return a.name.localeCompare(b.name);
-    });
+    .sort((a, b) => a.floor - b.floor || a.name.localeCompare(b.name));
 
   const handleBook = async () => {
     if (!selectedRoomId) {
