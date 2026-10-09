@@ -2,18 +2,9 @@ import { css } from '@emotion/react';
 import { Border, Spacing } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { ReservationHeader } from 'components/ReservationHeader';
-import { useState } from 'react';
-import {
-  ReservationBookButton,
-  ReservationButton,
-  ReservationCondition,
-  ReservationNavigation,
-  ReservationRoomList,
-  ValidationError,
-} from './components';
-import { ReservationError } from './components/ReservationError';
-import { useReservationSearchParams } from './hooks';
 import { useSearchParams } from 'react-router-dom';
+import { ReservationCondition, ReservationNavigation, ReservationRoomList, ValidationError } from './components';
+import { ReservationError } from './components/ReservationError';
 import { ErrorMessageContextProvider } from './contexts/ErrorMessageContextProvider';
 
 const TIME_SLOTS: string[] = [];
@@ -46,8 +37,6 @@ export function RoomBookingPage() {
 
         <ReservationRoomList key={filterKey} />
       </ErrorMessageContextProvider>
-
-      <ReservationButton />
 
       <Spacing size={24} />
 
