@@ -58,5 +58,5 @@ yarn test
 5. 붙이면, 응답값에 한정됨. 하지만 이를 떼면 범용적으로 활용할 수 있는 Reservation, Room 타입이 됨.
 6. 상태 관리를 어디서 하는 것이 적절할까?
 7. handleFilterChange를 ReservationCondition에 props로 전달하고, 각 input의 onChange 전달해줘야한다. 이걸 개선할 수는 없을까?
-8. 현재 요구사항 : 필터가 변경이 생기면 (즉, input에 값이 변경되면) 에러와 선택된 roomId를 초기화해야한다. ->
+8. 현재 요구사항 : 필터가 변경이 생기면 (즉, input에 값이 변경되면) 에러와 선택된 roomId를 초기화해야한다. => query string으로 상태를 관리 중이기에 searchParams로 key를 설정 -> key가 변경되면 해당 컴포넌트 리렌더링. errorMessage는 Provider로 감싸고, Provider에 key props를 전달
 9. validationError도 옮길 수 없을까?
