@@ -4,7 +4,7 @@ import { PropsWithChildren } from 'react';
 
 interface HeaderProps {}
 
-export function Header({ children }: PropsWithChildren<HeaderProps>) {
+export function ReservationHeader({ children }: PropsWithChildren<HeaderProps>) {
   return (
     <Top.Top03
       css={css`
