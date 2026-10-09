@@ -33,7 +33,11 @@ export function RoomBookingPage() {
       <ErrorMessageContextProvider key={filterKey}>
         <ReservationError />
 
+        <Spacing size={24} />
+
         <ReservationCondition />
+
+        <Spacing size={24} />
 
         <ReservationRoomList key={filterKey} />
       </ErrorMessageContextProvider>
@@ -43,10 +47,8 @@ export function RoomBookingPage() {
       <ValidationError />
 
       <Spacing size={24} />
-      <Border size={8} />
-      <Spacing size={24} />
 
-      <Spacing size={24} />
+      <Border size={8} />
     </div>
   );
 }
