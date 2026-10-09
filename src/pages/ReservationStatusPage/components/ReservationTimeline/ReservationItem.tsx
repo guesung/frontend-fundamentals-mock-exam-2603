@@ -3,19 +3,18 @@ import { colors } from '_tosslib/constants/colors';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { Reservation, Room } from 'types';
 import { TOTAL_MINUTES } from '../../constants';
-import { timeToMinutes } from '../../utils';
+import { getTimelinePercentage, timeToMinutes } from '../../utils';
 
 interface ReservationItemProps {
   reservation: Reservation;
-  room: Room;
+  name: string;
   isActive: boolean;
-  onReservationItemClick: (id: string) => void;
+  onReservationItemClick: () => void;
 }
 
-export function ReservationItem({ reservation, room, isActive, onReservationItemClick }: ReservationItemProps) {
+export function ReservationItem({ reservation, name, isActive, onReservationItemClick }: ReservationItemProps) {
   return (
     <div
-      key={reservation.id}
       css={css`
         position: absolute;
         left: ${(timeToMinutes(reservation.start) / TOTAL_MINUTES) * 100}%;
@@ -25,8 +24,8 @@ export function ReservationItem({ reservation, room, isActive, onReservationItem
     >
       <div
         role="button"
-        aria-label={`${room.name} ${reservation.start}-${reservation.end} 예약 상세`}
-        onClick={() => onReservationItemClick(reservation.id)}
+        aria-label={`${name} ${reservation.start}-${reservation.end} 예약 상세`}
+        onClick={onReservationItemClick}
         css={css`
           width: 100%;
           height: 100%;
@@ -40,7 +39,7 @@ export function ReservationItem({ reservation, room, isActive, onReservationItem
           }
         `}
       />
-      {isActive ? (
+      {isActive && (
         <div
           role="tooltip"
           css={css`
@@ -68,7 +67,7 @@ export function ReservationItem({ reservation, room, isActive, onReservationItem
             <div>{reservation.equipment.map((e: string) => EQUIPMENT_LABELS[e]).join(', ')}</div>
           )}
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

@@ -1,8 +1,9 @@
 import { css } from '@emotion/react';
 import { Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { HOUR_LABELS, TOTAL_MINUTES } from '../../constants';
-import { timeToMinutes } from '../../utils';
+import { HOUR_LABELS } from '../../constants';
+import { getTimelinePercentage } from '../../utils';
+import { ROOM_NAME_WIDTH } from './TimelineRoom';
 
 export function TimelineHeader() {
   return (
@@ -15,7 +16,7 @@ export function TimelineHeader() {
     >
       <div
         css={css`
-          width: 80px;
+          width: ${ROOM_NAME_WIDTH}px;
           flex-shrink: 0;
           padding-right: 8px;
         `}
@@ -27,23 +28,22 @@ export function TimelineHeader() {
           height: 18px;
         `}
       >
-        {HOUR_LABELS.map(t => {
-          const left = (timeToMinutes(t) / TOTAL_MINUTES) * 100;
+        {HOUR_LABELS.map(time => {
           return (
             <Text
-              key={t}
+              key={time}
               typography="t7"
               fontWeight="regular"
               color={colors.grey400}
               css={css`
                 position: absolute;
-                left: ${left}%;
+                left: ${getTimelinePercentage(time)}%;
                 transform: translateX(-50%);
                 font-size: 10px;
                 letter-spacing: -0.3px;
               `}
             >
-              {t.slice(0, 2)}
+              {time.slice(0, 2)}
             </Text>
           );
         })}

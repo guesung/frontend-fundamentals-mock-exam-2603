@@ -1,4 +1,4 @@
-import { TIMELINE_START } from '../constants';
+import { TIMELINE_START, TOTAL_MINUTES } from '../constants';
 
 /**
  *
@@ -9,4 +9,8 @@ export function timeToMinutes(time: string): number {
   const [h, m] = time.split(':').map(Number);
 
   return (h - TIMELINE_START) * 60 + m;
+}
+
+export function getTimelinePercentage(time: string) {
+  return (timeToMinutes(time) / TOTAL_MINUTES) * 100;
 }
