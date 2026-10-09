@@ -41,10 +41,8 @@ export function ReservationTimeline() {
         <Spacing size={4} />
 
         {rooms.map((room: Room) => (
-          <TimelineRoom
-            key={room.id}
-            room={room}
-            reservationItem={reservations
+          <TimelineRoom key={room.id} name={room.name}>
+            {reservations
               .filter(reservation => reservation.roomId === room.id)
               .map(reservation => (
                 <ReservationItem
@@ -55,7 +53,7 @@ export function ReservationTimeline() {
                   onReservationItemClick={(id: string) => setActiveReservationId(prev => (prev === id ? null : id))}
                 />
               ))}
-          />
+          </TimelineRoom>
         ))}
       </div>
     </div>

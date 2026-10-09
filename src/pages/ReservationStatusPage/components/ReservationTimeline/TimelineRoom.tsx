@@ -1,17 +1,16 @@
 import { css } from '@emotion/react';
 import { Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
+import { PropsWithChildren } from 'react';
 import { Room } from 'types';
 
 interface TimelineRoomProps {
-  room: Room;
-  reservationItem: React.ReactElement[];
+  name: string;
 }
 
-export function TimelineRoom({ room, reservationItem }: TimelineRoomProps) {
+export function TimelineRoom({ name, children }: PropsWithChildren<TimelineRoomProps>) {
   return (
     <div
-      key={room.id}
       css={css`
         display: flex;
         align-items: center;
@@ -34,7 +33,7 @@ export function TimelineRoom({ room, reservationItem }: TimelineRoomProps) {
             font-size: 12px;
           `}
         >
-          {room.name}
+          {name}
         </Text>
       </div>
       <div
@@ -47,7 +46,7 @@ export function TimelineRoom({ room, reservationItem }: TimelineRoomProps) {
           overflow: visible;
         `}
       >
-        {reservationItem}
+        {children}
       </div>
     </div>
   );
