@@ -8,6 +8,7 @@ import axios from 'axios';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { createReservation, getReservations, getRooms } from 'apis';
 import { ReservationHeader } from 'components/ReservationHeader';
+import { ReservationButton, ReservationCondition, ReservationNavigation, ReservationRoomList } from './components';
 
 const ALL_EQUIPMENT = ['tv', 'whiteboard', 'video', 'speaker'];
 
@@ -158,6 +159,10 @@ export function RoomBookingPage() {
         padding-bottom: 40px;
       `}
     >
+      <ReservationNavigation />
+      <ReservationCondition />
+      <ReservationRoomList />
+      <ReservationButton />
       <div
         css={css`
           padding: 12px 24px 0;
@@ -182,6 +187,7 @@ export function RoomBookingPage() {
           ← 예약 현황으로
         </button>
       </div>
+
       <ReservationHeader>예약하기</ReservationHeader>
 
       {errorMessage && (
