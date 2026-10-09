@@ -5,10 +5,11 @@ import { useCancelReservation } from 'apis';
 import { useMyReservationList, useRooms } from 'apis/queries';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { Reservation, Room } from 'types';
-import { Message, useMessageContext } from '../contexts';
+import { useMessageContext } from '../contexts';
 
 export function MyReservation() {
   const { data: myReservationList = [] } = useMyReservationList();
+  const { data: rooms = [] } = useRooms();
 
   return (
     <div
@@ -43,7 +44,11 @@ export function MyReservation() {
           `}
         >
           {myReservationList.map((reservation: Reservation) => (
-            <MyReservationItem key={reservation.id} reservation={reservation} />
+            <MyReservationItem
+              key={reservation.id}
+              reservation={reservation}
+              room={rooms.find((room: Room) => room.id === reservation.roomId)}
+            />
           ))}
         </div>
       ) : (
@@ -55,14 +60,12 @@ export function MyReservation() {
 
 interface MyReservationItemProps {
   reservation: Reservation;
+  room?: Room;
 }
 
-function MyReservationItem({ reservation }: MyReservationItemProps) {
-  const { data: rooms = [] } = useRooms();
-  const { mutate } = useCancelReservation();
+function MyReservationItem({ reservation, room }: MyReservationItemProps) {
   const { onMessageChange } = useMessageContext();
-
-  const getRoomName = (roomId: string) => rooms.find((r: Room) => r.id === roomId)?.name ?? roomId;
+  const { mutate } = useCancelReservation();
 
   const handleCancel = async (id: string) => {
     if (!window.confirm('정말 취소하시겠습니까?')) return;
@@ -90,7 +93,7 @@ function MyReservationItem({ reservation }: MyReservationItemProps) {
       <ListRow
         contents={
           <ListRow.Text2Rows
-            top={getRoomName(reservation.roomId)}
+            top={room?.name ?? room?.id ?? ''}
             topProps={{ typography: 't6', fontWeight: 'bold', color: colors.grey900 }}
             bottom={`${reservation.date} ${reservation.start}~${reservation.end} · ${reservation.attendees}명 · ${
               reservation.equipment.map((e: string) => EQUIPMENT_LABELS[e]).join(', ') || '장비 없음'
