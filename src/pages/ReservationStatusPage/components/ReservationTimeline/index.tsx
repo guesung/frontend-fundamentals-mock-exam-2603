@@ -10,14 +10,12 @@ import { useDateContext } from 'pages/ReservationStatusPage/contexts';
 import { ReservationItem } from './ReservationItem';
 
 export function ReservationTimeline() {
-  const [activeReservationId, setActiveReservationId] = useState<string>('');
+  const [activeReservationId, setActiveReservationId] = useState<string | null>(null);
 
-  const { data: rooms = [] } = useRooms();
   const { date } = useDateContext();
 
+  const { data: rooms = [] } = useRooms();
   const { data: reservations = [] } = useReservations({ date });
-
-  const handleReservationItemClick = (id: string) => setActiveReservationId(prev => (prev === id ? '' : id));
 
   return (
     <div
@@ -54,7 +52,7 @@ export function ReservationTimeline() {
                   reservation={reservation}
                   room={room}
                   isActive={activeReservationId === reservation.id}
-                  onReservationItemClick={handleReservationItemClick}
+                  onReservationItemClick={(id: string) => setActiveReservationId(prev => (prev === id ? null : id))}
                 />
               ))}
           />
