@@ -6,6 +6,7 @@ import { useMyReservationList, useRooms } from 'apis/queries';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { Reservation, Room } from 'types';
 import { useMessageContext } from '../contexts';
+import { MouseEvent, MouseEventHandler } from 'react';
 
 export function MyReservation() {
   const { data: myReservationList = [] } = useMyReservationList();
@@ -67,10 +68,12 @@ function MyReservationItem({ reservation, room }: MyReservationItemProps) {
   const { onMessageChange } = useMessageContext();
   const { mutate } = useCancelReservation();
 
-  const handleCancel = async (id: string) => {
+  const handleCancel: MouseEventHandler<HTMLElement> = event => {
+    event.stopPropagation();
+
     if (!window.confirm('정말 취소하시겠습니까?')) return;
 
-    mutate(id, {
+    mutate(reservation.id, {
       onSuccess: () => {
         onMessageChange({ type: 'success', text: '예약이 취소되었습니다.' });
       },
@@ -102,15 +105,7 @@ function MyReservationItem({ reservation, room }: MyReservationItemProps) {
           />
         }
         right={
-          <Button
-            type="danger"
-            style="weak"
-            size="small"
-            onClick={e => {
-              e.stopPropagation();
-              handleCancel(reservation.id);
-            }}
-          >
+          <Button type="danger" style="weak" size="small" onClick={handleCancel}>
             취소
           </Button>
         }

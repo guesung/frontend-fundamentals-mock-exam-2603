@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { useReservations, useRooms } from 'apis/queries';
+import { useReservations, useRooms } from 'apis';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { useState } from 'react';
-import { Reservation, Room } from 'types/reservation';
+import { Reservation, Room } from 'types';
 import { HOUR_LABELS, TOTAL_MINUTES } from '../constants';
 import { useDateContext } from '../contexts';
 import { timeToMinutes } from '../utils';
