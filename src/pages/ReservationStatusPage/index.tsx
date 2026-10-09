@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { Border, Spacing } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 
-import { Header } from 'components';
+import { ReservationHeader } from 'components';
 import {
   MessageBanner,
   MyReservation,
@@ -20,7 +20,7 @@ export function ReservationStatusPage() {
         padding-bottom: 40px;
       `}
     >
-      <Header>회의실 예약</Header>
+      <ReservationHeader>회의실 예약</ReservationHeader>
 
       <Spacing size={24} />
 
