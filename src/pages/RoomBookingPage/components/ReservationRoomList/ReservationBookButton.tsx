@@ -12,7 +12,7 @@ interface ReservationBookButtonProps {
 
 export function ReservationBookButton({ selectedRoomId, resetSelectedRoomId }: ReservationBookButtonProps) {
   const { mutateAsync: createReservation, isPending } = useCreateReservation();
-  const { date, attendees, endTime, equipment, startTime } = useReservationSearchParams();
+  const { field } = useReservationSearchParams();
 
   const navigate = useNavigate();
   const { onErrorMessageChange } = useErrorMessageContext();
@@ -22,7 +22,7 @@ export function ReservationBookButton({ selectedRoomId, resetSelectedRoomId }: R
       onErrorMessageChange('회의실을 선택해주세요.');
       return;
     }
-    if (!startTime || !endTime) {
+    if (!field.startTime || !field.endTime) {
       onErrorMessageChange('시작 시간과 종료 시간을 선택해주세요.');
       return;
     }
@@ -30,11 +30,11 @@ export function ReservationBookButton({ selectedRoomId, resetSelectedRoomId }: R
     await createReservation(
       {
         roomId: selectedRoomId,
-        date,
-        start: startTime,
-        end: endTime,
-        attendees,
-        equipment,
+        date: field.date,
+        start: field.startTime,
+        end: field.endTime,
+        attendees: field.attendees,
+        equipment: field.equipment,
       },
       {
         onSuccess: () => {

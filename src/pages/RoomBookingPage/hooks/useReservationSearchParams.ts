@@ -14,7 +14,7 @@ export function useReservationSearchParams() {
     startTime,
     endTime,
     attendees: Number(attendees),
-    equipment: equipment?.split(','),
+    equipment: equipment.split(','),
     preferredFloor: Number(preferredFloor),
   };
 
@@ -24,9 +24,7 @@ export function useReservationSearchParams() {
     setEndTime,
     setAttendees: (attendees: number) => setAttendees(String(attendees)),
     setEquipment: (equipment: string[]) => setEquipment(equipment.join(',')),
-    setPreferredFloor: (preferredFloor: number | null) => {
-      setPreferredFloor(String(preferredFloor));
-    },
+    setPreferredFloor: (preferredFloor: number | null) => setPreferredFloor(String(preferredFloor)),
   };
 
   return {
