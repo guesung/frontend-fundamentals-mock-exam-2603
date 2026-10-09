@@ -17,18 +17,7 @@ const variantMap: Record<MessageType, { background: string; color: string }> = {
 };
 
 export function MessageBanner() {
-  const location = useLocation();
   const { message } = useMessageContext();
-
-  useEffect(
-    function clearLocationState() {
-      const locationState = location.state as { message?: string } | null;
-      if (locationState?.message) {
-        window.history.replaceState({}, '');
-      }
-    },
-    [location]
-  );
 
   if (!message) return null;
   return (

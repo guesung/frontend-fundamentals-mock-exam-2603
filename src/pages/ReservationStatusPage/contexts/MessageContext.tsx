@@ -1,5 +1,6 @@
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useLocationMessage } from '../hooks';
 
 interface MessageContextProviderProps {}
 
@@ -21,11 +22,10 @@ export const useMessageContext = () => {
 };
 
 export function MessageContextProvider({ children }: PropsWithChildren<MessageContextProviderProps>) {
-  const location = useLocation();
+  const { message: locationMessage } = useLocationMessage();
 
-  const locationState = location.state as { message?: string } | null;
   const [message, setMessage] = useState<Message | null>(
-    locationState?.message ? { type: 'success', text: locationState.message } : null
+    locationMessage ? { type: 'success', text: locationMessage } : null
   );
 
   const onMessageChange = (message: Message | null) => setMessage(message);
