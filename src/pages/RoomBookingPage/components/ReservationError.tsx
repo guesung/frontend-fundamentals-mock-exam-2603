@@ -3,10 +3,14 @@ import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 
 interface ReservationErrorProps {
-  errorMessage: string;
+  errorMessage: string | null;
 }
 
 export function ReservationError({ errorMessage }: ReservationErrorProps) {
+  if (!errorMessage) {
+    return null;
+  }
+
   return (
     <div
       css={css`

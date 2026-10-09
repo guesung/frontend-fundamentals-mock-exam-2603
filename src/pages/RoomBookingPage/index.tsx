@@ -57,7 +57,7 @@ export function RoomBookingPage() {
 
       <ReservationHeader>예약하기</ReservationHeader>
 
-      {errorMessage && <ReservationError errorMessage={errorMessage} />}
+      <ReservationError errorMessage={errorMessage} />
 
       <ReservationCondition onFilterChange={handleFilterChange} />
 
@@ -68,11 +68,12 @@ export function RoomBookingPage() {
           setSelectedRoomId={setSelectedRoomId}
         />
       )}
+
       <ReservationButton />
 
       <Spacing size={24} />
 
-      {validationError && <ValidationError validationError={validationError} />}
+      <ValidationError validationError={validationError} />
 
       <Spacing size={24} />
       <Border size={8} />

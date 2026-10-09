@@ -26,6 +26,7 @@ yarn test
 6. useMutation + invalidate 로직 -> 하나의 훅으로 분리 (post(데이터 수정) 후 invalidate는 자연스러운 흐름이므로 추상화해도 됨.)
 7. Message의 message, setMessage를 props로 전달하는게 맞을까? -> Context API로 뿌려주는 방식은 어떨까?
 8. RoomBookingPage에서 관리하는 상태가 너무 많다. -> 자식으로 내려주기에는, 부모도 필요한 값이다. -> Context Provider로 상태를 분리? -> 결국 이것도 상위에서 감싸야하는거잖아. -> query string을 SSOT로 두기. -> 훅으로 분리하자. -> 하나의 훅으로 분리해도 될까? 너무 많은 관심사를 가지게 되는게 아닐까? 근데 동일한 폼에서 사용하는 훅이라, 하나의 훅에 둬도 되지 않을까?
+9. {error && <Error error={error} />} 가 맞는 방식일까? 그냥 error를 넘겨서, 내부에서 error가 null이면 아무것도 렌더링하지 않도록 하면, 그게 좋은 추상화 아닐까? 굳이 사용처에서 '에러이면'이라는 내용을 드러낼 필요 없잖아.
 
 ### UX
 

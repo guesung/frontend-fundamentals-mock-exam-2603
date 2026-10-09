@@ -2,9 +2,13 @@ import { css } from '@emotion/react';
 import { Spacing } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 
-interface ValidationErrorProps {}
+interface ValidationErrorProps {
+  validationError: string | null;
+}
 
 export function ValidationError({ validationError }: ValidationErrorProps) {
+  if (!validationError) return null;
+
   return (
     <div
       css={css`

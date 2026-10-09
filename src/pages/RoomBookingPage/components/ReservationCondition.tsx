@@ -24,13 +24,11 @@ export function ReservationCondition({ onFilterChange }: ReservationConditionPro
     equipment,
     startTime,
     preferredFloor,
-    searchParams,
     setAttendees,
     setDate,
     setEndTime,
     setEquipment,
     setPreferredFloor,
-    setSearchParams,
     setStartTime,
   } = useReservationSearchParams();
 
