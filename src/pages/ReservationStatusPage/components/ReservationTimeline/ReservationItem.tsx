@@ -1,9 +1,8 @@
 import { css } from '@emotion/react';
 import { colors } from '_tosslib/constants/colors';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
-import { Reservation, Room } from 'types';
-import { TOTAL_MINUTES } from '../../constants';
-import { getTimelinePercentage, timeToMinutes } from '../../utils';
+import { Reservation } from 'types';
+import { getTimelinePercentage, getTimelineWidth } from '../../utils';
 
 interface ReservationItemProps {
   reservation: Reservation;
@@ -17,8 +16,8 @@ export function ReservationItem({ reservation, name, isActive, onReservationItem
     <div
       css={css`
         position: absolute;
-        left: ${(timeToMinutes(reservation.start) / TOTAL_MINUTES) * 100}%;
-        width: ${((timeToMinutes(reservation.end) - timeToMinutes(reservation.start)) / TOTAL_MINUTES) * 100}%;
+        left: ${getTimelinePercentage(reservation.start)}%;
+        width: ${getTimelineWidth(reservation.start, reservation.end)}%;
         height: 100%;
       `}
     >

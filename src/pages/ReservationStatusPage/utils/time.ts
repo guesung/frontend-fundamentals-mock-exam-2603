@@ -14,3 +14,7 @@ export function timeToMinutes(time: string): number {
 export function getTimelinePercentage(time: string) {
   return (timeToMinutes(time) / TOTAL_MINUTES) * 100;
 }
+
+export function getTimelineWidth(start: string, end: string) {
+  return getTimelinePercentage(end) - getTimelinePercentage(start);
+}
