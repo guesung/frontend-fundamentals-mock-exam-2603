@@ -4,9 +4,9 @@ import { colors } from '_tosslib/constants/colors';
 import { useRooms } from 'apis';
 import { EQUIPMENT_LABELS, EQUIPMENTS } from 'constants/equipment';
 import { TIME_SLOTS } from 'pages/ReservationStatusPage/constants';
+import { Room } from 'types';
 import { formatDate } from 'utils/date';
 import { useReservationSearchParams } from '../hooks';
-import { Room } from 'types';
 
 function getFloors(rooms: Room[]) {
   return [...new Set(rooms.map(r => r.floor))].sort((a, b) => a - b);
@@ -14,21 +14,7 @@ function getFloors(rooms: Room[]) {
 
 export function ReservationCondition() {
   const { data: rooms = [] } = useRooms();
-
-  const {
-    date,
-    attendees,
-    endTime,
-    equipment,
-    startTime,
-    preferredFloor,
-    setAttendees,
-    setDate,
-    setEndTime,
-    setEquipment,
-    setPreferredFloor,
-    setStartTime,
-  } = useReservationSearchParams();
+  const { field, fieldSetter } = useReservationSearchParams();
 
   return (
     <div
@@ -54,10 +40,10 @@ export function ReservationCondition() {
         </Text>
         <input
           type="date"
-          value={date}
+          value={field.date}
           min={formatDate(new Date())}
           onChange={e => {
-            setDate(e.target.value);
+            fieldSetter.setDate(e.target.value);
           }}
           aria-label="날짜"
           css={css`
@@ -101,9 +87,9 @@ export function ReservationCondition() {
             시작 시간
           </Text>
           <Select
-            value={startTime}
+            value={field.startTime}
             onChange={e => {
-              setStartTime(e.target.value);
+              fieldSetter.setStartTime(e.target.value);
             }}
             aria-label="시작 시간"
           >
@@ -127,9 +113,9 @@ export function ReservationCondition() {
             종료 시간
           </Text>
           <Select
-            value={endTime}
+            value={field.endTime}
             onChange={e => {
-              setEndTime(e.target.value);
+              fieldSetter.setEndTime(e.target.value);
             }}
             aria-label="종료 시간"
           >
@@ -165,9 +151,9 @@ export function ReservationCondition() {
           <input
             type="number"
             min={1}
-            value={attendees}
+            value={field.attendees}
             onChange={e => {
-              setAttendees(Math.max(1, Number(e.target.value)));
+              fieldSetter.setAttendees(Math.max(1, Number(e.target.value)));
             }}
             aria-label="참석 인원"
             css={css`
@@ -202,10 +188,10 @@ export function ReservationCondition() {
             선호 층
           </Text>
           <Select
-            value={preferredFloor ?? ''}
+            value={field.preferredFloor}
             onChange={e => {
               const val = e.target.value;
-              setPreferredFloor(val === '' ? null : Number(val));
+              fieldSetter.setPreferredFloor(val === '' ? null : Number(val));
             }}
             aria-label="선호 층"
           >
@@ -234,14 +220,14 @@ export function ReservationCondition() {
           `}
         >
           {EQUIPMENTS.map(eq => {
-            const selected = equipment.includes(eq);
+            const selected = field.equipment.includes(eq);
             return (
               <button
                 key={eq}
                 type="button"
                 onClick={() => {
-                  const next = selected ? equipment.filter(e => e !== eq) : [...equipment, eq];
-                  setEquipment(next);
+                  const next = selected ? field.equipment.filter(e => e !== eq) : [...field.equipment, eq];
+                  fieldSetter.setEquipment(next);
                 }}
                 aria-label={EQUIPMENT_LABELS[eq]}
                 aria-pressed={selected}
