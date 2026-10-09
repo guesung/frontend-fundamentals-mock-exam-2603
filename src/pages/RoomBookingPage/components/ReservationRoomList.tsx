@@ -6,8 +6,13 @@ import axios from 'axios';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { useNavigate } from 'react-router-dom';
 import { useReservationSearchParams } from '../hooks';
+import { Room } from 'types';
 
-interface ReservationRoomListProps {}
+interface ReservationRoomListProps {
+  selectedRoomId: string | null;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
+  setSelectedRoomId: React.Dispatch<React.SetStateAction<string | null>>;
+}
 
 export function ReservationRoomList({ selectedRoomId, setErrorMessage, setSelectedRoomId }: ReservationRoomListProps) {
   const { date, attendees, endTime, equipment, startTime, preferredFloor } = useReservationSearchParams();
@@ -17,18 +22,17 @@ export function ReservationRoomList({ selectedRoomId, setErrorMessage, setSelect
   const { data: reservations = [] } = useReservations({ date });
 
   const availableRooms = rooms
-    .filter((room: { id: string; capacity: number; equipment: string[]; floor: number }) => {
-      if (room.capacity < attendees) return false;
-      if (!equipment.every(eq => room.equipment.includes(eq))) return false;
-      if (preferredFloor !== null && room.floor !== preferredFloor) return false;
-      const hasConflict = reservations.some(
-        (r: { roomId: string; date: string; start: string; end: string }) =>
-          r.roomId === room.id && r.date === date && r.start < endTime && r.end > startTime
+    .filter(room => {
+      const isCapacityAvailable = room.capacity >= attendees;
+      const isAllEquipmentAvailable = equipment.every(eq => room.equipment.includes(eq));
+      const isPreferredFloorAvailable = preferredFloor === null || room.floor === preferredFloor;
+      const isRoomConflict = reservations.some(
+        r => r.roomId === room.id && r.date === date && r.start < endTime && r.end > startTime
       );
-      if (hasConflict) return false;
-      return true;
+
+      return isCapacityAvailable && isAllEquipmentAvailable && isPreferredFloorAvailable && !isRoomConflict;
     })
-    .sort((a: { floor: number; name: string }, b: { floor: number; name: string }) => {
+    .sort((a, b) => {
       if (a.floor !== b.floor) return a.floor - b.floor;
       return a.name.localeCompare(b.name);
     });
