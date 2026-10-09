@@ -17,6 +17,10 @@ export function ReservationTimeline() {
   const { data: rooms = [] } = useRooms();
   const { data: reservations = [] } = useReservations({ date });
 
+  const toggleReservation = (id: string) => {
+    setActiveReservationId(prev => (prev === id ? null : id));
+  };
+
   return (
     <div
       css={css`
@@ -50,7 +54,7 @@ export function ReservationTimeline() {
                   reservation={reservation}
                   room={room}
                   isActive={activeReservationId === reservation.id}
-                  onReservationItemClick={(id: string) => setActiveReservationId(prev => (prev === id ? null : id))}
+                  onReservationItemClick={() => toggleReservation(reservation.id)}
                 />
               ))}
           </TimelineRoom>
