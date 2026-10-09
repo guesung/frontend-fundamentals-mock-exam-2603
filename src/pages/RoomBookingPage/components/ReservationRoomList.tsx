@@ -9,6 +9,7 @@ import { useReservationSearchParams } from '../hooks';
 import { useState } from 'react';
 import { useErrorMessageContext } from '../contexts/ErrorMessageContextProvider';
 import { getValidationError } from '../utils';
+import { Room } from 'types';
 
 export function ReservationRoomList() {
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>('');
@@ -118,51 +119,13 @@ export function ReservationRoomList() {
             gap: 10px;
           `}
         >
-          {availableRooms.map(
-            (room: { id: string; name: string; floor: number; capacity: number; equipment: string[] }) => {
-              const isSelected = selectedRoomId === room.id;
-              return (
-                <div
-                  key={room.id}
-                  onClick={() => setSelectedRoomId(room.id)}
-                  role="button"
-                  aria-pressed={isSelected}
-                  aria-label={room.name}
-                  css={css`
-                    cursor: pointer;
-                    padding: 14px 16px;
-                    border-radius: 14px;
-                    border: 2px solid ${isSelected ? colors.blue500 : colors.grey200};
-                    background: ${isSelected ? colors.blue50 : colors.white};
-                    transition: all 0.15s;
-                    &:hover {
-                      border-color: ${isSelected ? colors.blue500 : colors.grey300};
-                    }
-                  `}
-                >
-                  <ListRow
-                    contents={
-                      <ListRow.Text2Rows
-                        top={room.name}
-                        topProps={{ typography: 't6', fontWeight: 'bold', color: colors.grey900 }}
-                        bottom={`${room.floor}층 · ${room.capacity}명 · ${room.equipment
-                          .map((e: string) => EQUIPMENT_LABELS[e])
-                          .join(', ')}`}
-                        bottomProps={{ typography: 't7', color: colors.grey600 }}
-                      />
-                    }
-                    right={
-                      isSelected ? (
-                        <Text typography="t7" fontWeight="bold" color={colors.blue500}>
-                          선택됨
-                        </Text>
-                      ) : undefined
-                    }
-                  />
-                </div>
-              );
-            }
-          )}
+          {availableRooms.map(room => (
+            <AvailableRoom
+              room={room}
+              isSelected={selectedRoomId === room.id}
+              onAvilableRoomClick={id => setSelectedRoomId(id)}
+            />
+          ))}
         </div>
       )}
 
@@ -170,6 +133,55 @@ export function ReservationRoomList() {
       <Button display="full" onClick={handleBook} disabled={isPending}>
         {isPending ? '예약 중...' : '확정'}
       </Button>
+    </div>
+  );
+}
+
+interface AvailableRoomProps {
+  room: Room;
+  isSelected: boolean;
+  onAvilableRoomClick: (id: string) => void;
+}
+
+function AvailableRoom({ room, isSelected, onAvilableRoomClick }: AvailableRoomProps) {
+  return (
+    <div
+      key={room.id}
+      onClick={() => onAvilableRoomClick(room.id)}
+      role="button"
+      aria-pressed={isSelected}
+      aria-label={room.name}
+      css={css`
+        cursor: pointer;
+        padding: 14px 16px;
+        border-radius: 14px;
+        border: 2px solid ${isSelected ? colors.blue500 : colors.grey200};
+        background: ${isSelected ? colors.blue50 : colors.white};
+        transition: all 0.15s;
+        &:hover {
+          border-color: ${isSelected ? colors.blue500 : colors.grey300};
+        }
+      `}
+    >
+      <ListRow
+        contents={
+          <ListRow.Text2Rows
+            top={room.name}
+            topProps={{ typography: 't6', fontWeight: 'bold', color: colors.grey900 }}
+            bottom={`${room.floor}층 · ${room.capacity}명 · ${room.equipment
+              .map((e: string) => EQUIPMENT_LABELS[e])
+              .join(', ')}`}
+            bottomProps={{ typography: 't7', color: colors.grey600 }}
+          />
+        }
+        right={
+          isSelected ? (
+            <Text typography="t7" fontWeight="bold" color={colors.blue500}>
+              선택됨
+            </Text>
+          ) : undefined
+        }
+      />
     </div>
   );
 }
