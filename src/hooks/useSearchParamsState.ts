@@ -13,7 +13,9 @@ export function useSearchParamsState(
   const value = searchParams.get(key) ?? defaultValue;
   const setValue = (newValue: string) => {
     const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set(key, String(newValue));
+
+    if (newValue === 'null') newSearchParams.delete(key);
+    else newSearchParams.set(key, String(newValue));
 
     setSearchParams(newSearchParams);
   };

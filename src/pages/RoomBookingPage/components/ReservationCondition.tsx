@@ -188,14 +188,14 @@ export function ReservationCondition() {
             선호 층
           </Text>
           <Select
-            value={field.preferredFloor}
+            value={field.preferredFloor ?? undefined}
             onChange={e => {
               const val = e.target.value;
-              fieldSetter.setPreferredFloor(val === '' ? null : Number(val));
+              fieldSetter.setPreferredFloor(val === 'all' ? null : Number(val));
             }}
             aria-label="선호 층"
           >
-            <option value="">전체</option>
+            <option value="all">전체</option>
             {getFloors(rooms).map(floor => (
               <option key={floor} value={floor}>
                 {floor}층
