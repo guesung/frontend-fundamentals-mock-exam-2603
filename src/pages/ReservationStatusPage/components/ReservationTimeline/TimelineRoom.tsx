@@ -8,6 +8,8 @@ interface TimelineRoomProps {
   name: string;
 }
 
+export const ROOM_NAME_WIDTH = 80;
+
 export function TimelineRoom({ name, children }: PropsWithChildren<TimelineRoomProps>) {
   return (
     <div
@@ -19,7 +21,7 @@ export function TimelineRoom({ name, children }: PropsWithChildren<TimelineRoomP
     >
       <div
         css={css`
-          width: 80px;
+          width: ${ROOM_NAME_WIDTH}px;
           flex-shrink: 0;
           padding-right: 8px;
         `}

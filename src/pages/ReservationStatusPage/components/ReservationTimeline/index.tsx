@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Room } from 'types';
 import { TimelineHeader } from './TimelineHeader';
 import { TimelineRoom } from './TimelineRoom';
-import { useDateContext } from 'pages/ReservationStatusPage/contexts';
+import { useDateContext } from '../../contexts';
 import { ReservationItem } from './ReservationItem';
 
 export function ReservationTimeline() {
@@ -25,6 +25,8 @@ export function ReservationTimeline() {
     <div
       css={css`
         padding: 0 24px;
+        flex-direction: column;
+        gap: 4px;
       `}
     >
       <Text typography="t5" fontWeight="bold" color={colors.grey900}>
@@ -52,7 +54,7 @@ export function ReservationTimeline() {
                 <ReservationItem
                   key={reservation.id}
                   reservation={reservation}
-                  room={room}
+                  name={room.name}
                   isActive={activeReservationId === reservation.id}
                   onReservationItemClick={() => toggleReservation(reservation.id)}
                 />
