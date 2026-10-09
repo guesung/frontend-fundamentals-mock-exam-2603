@@ -45,8 +45,6 @@ export function RoomBookingPage() {
         <ReservationCondition />
 
         <ReservationRoomList key={filterKey} />
-
-        <ReservationBookButton />
       </ErrorMessageContextProvider>
 
       <ReservationButton />

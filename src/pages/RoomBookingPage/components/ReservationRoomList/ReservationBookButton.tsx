@@ -5,11 +5,14 @@ import { useReservationSearchParams } from '../../hooks';
 import { useErrorMessageContext } from '../../contexts';
 import { useNavigate } from 'react-router-dom';
 
-interface ReservationBookButtonProps {}
+interface ReservationBookButtonProps {
+  selectedRoomId: string | null;
+  resetSelectedRoomId: () => void;
+}
 
-export function ReservationBookButton({}: ReservationBookButtonProps) {
-  const { mutateAsync: createReservation, isPending } = useCreateReservation();
-  const { date, attendees, endTime, equipment, startTime, preferredFloor } = useReservationSearchParams();
+export function ReservationBookButton({ selectedRoomId, resetSelectedRoomId }: ReservationBookButtonProps) {
+  const { mutate: createReservation, isPending } = useCreateReservation();
+  const { date, attendees, endTime, equipment, startTime } = useReservationSearchParams();
 
   const navigate = useNavigate();
   const { onErrorMessageChange } = useErrorMessageContext();
@@ -24,33 +27,30 @@ export function ReservationBookButton({}: ReservationBookButtonProps) {
       return;
     }
 
-    try {
-      const result = await createReservation({
+    createReservation(
+      {
         roomId: selectedRoomId,
         date,
         start: startTime,
         end: endTime,
         attendees,
         equipment,
-      });
-
-      if ('ok' in result && result.ok) {
-        navigate('/', { state: { message: '예약이 완료되었습니다!' } });
-        return;
+      },
+      {
+        onSuccess: () => {
+          navigate('/', { state: { message: '예약이 완료되었습니다!' } });
+        },
+        onError: error => {
+          let serverMessage = '예약에 실패했습니다.';
+          if (axios.isAxiosError(error)) {
+            const data = error.response?.data as { message?: string } | undefined;
+            serverMessage = data?.message ?? serverMessage;
+          }
+          onErrorMessageChange(serverMessage);
+          resetSelectedRoomId();
+        },
       }
-
-      const errResult = result as { message?: string };
-      onErrorMessageChange(errResult.message ?? '예약에 실패했습니다.');
-      setSelectedRoomId(null);
-    } catch (err: unknown) {
-      let serverMessage = '예약에 실패했습니다.';
-      if (axios.isAxiosError(err)) {
-        const data = err.response?.data as { message?: string } | undefined;
-        serverMessage = data?.message ?? serverMessage;
-      }
-      onErrorMessageChange(serverMessage);
-      setSelectedRoomId(null);
-    }
+    );
   };
 
   return (
