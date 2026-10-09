@@ -1,23 +1,25 @@
 import { css } from '@emotion/react';
 import { Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
+import { useReservations } from 'apis';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
-import { useState } from 'react';
 import { Reservation, Room } from 'types';
 import { TOTAL_MINUTES } from '../../constants';
+import { useDateContext } from '../../contexts';
 import { timeToMinutes } from '../../utils';
 
 interface TimelineRoomProps {
-  roomReservations: Reservation[];
   room: Room;
+  activeReservationId: string;
+  onReservationItemClick: (id: string) => void;
 }
 
-export function TimelineRoom({
-  roomReservations,
-  room,
-  activeReservationId,
-  onReservationItemClick,
-}: TimelineRoomProps) {
+export function TimelineRoom({ room, activeReservationId, onReservationItemClick }: TimelineRoomProps) {
+  const { date } = useDateContext();
+  const { data: reservations = [] } = useReservations({ date });
+
+  const roomReservations = reservations.filter(reservation => reservation.roomId === room.id);
+
   return (
     <div
       key={room.id}

@@ -1,18 +1,15 @@
 import { css } from '@emotion/react';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { useReservations, useRooms } from 'apis';
+import { useRooms } from 'apis';
+import { useState } from 'react';
 import { Room } from 'types';
-import { useDateContext } from '../../contexts';
 import { TimelineHeader } from './TimelineHeader';
 import { TimelineRoom } from './TimelineRoom';
-import { useState } from 'react';
 
 export function ReservationTimeline() {
-  const { date } = useDateContext();
   const [activeReservationId, setActiveReservationId] = useState<string>('');
 
-  const { data: reservations = [] } = useReservations({ date });
   const { data: rooms = [] } = useRooms();
 
   return (
@@ -41,7 +38,6 @@ export function ReservationTimeline() {
         {rooms.map((room: Room) => (
           <TimelineRoom
             key={room.id}
-            roomReservations={reservations.filter(reservation => reservation.roomId === room.id)}
             room={room}
             activeReservationId={activeReservationId}
             onReservationItemClick={(id: string) => setActiveReservationId(prev => (prev === id ? '' : id))}
