@@ -9,8 +9,9 @@ import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { createReservation, getReservations, getRooms } from 'apis';
 import { ReservationHeader } from 'components/ReservationHeader';
 import { ReservationButton, ReservationCondition, ReservationNavigation, ReservationRoomList } from './components';
-
-const ALL_EQUIPMENT = ['tv', 'whiteboard', 'video', 'speaker'];
+import { ReservationError } from './components/ReservationError';
+import { formatDate } from 'utils/date';
+import { useReservationSearchParams } from './hooks';
 
 const TIME_SLOTS: string[] = [];
 for (let h = 9; h <= 20; h++) {
@@ -20,47 +21,14 @@ for (let h = 9; h <= 20; h++) {
   }
 }
 
-function formatDate(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
-}
-
 export function RoomBookingPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [date, setDate] = useState(searchParams.get('date') || formatDate(new Date()));
-  const [startTime, setStartTime] = useState(searchParams.get('startTime') || '10:00');
-  const [endTime, setEndTime] = useState(searchParams.get('endTime') || '11:00');
-  const [attendees, setAttendees] = useState(Number(searchParams.get('attendees')) || 1);
-  const [equipment, setEquipment] = useState<string[]>(
-    searchParams.get('equipment') ? searchParams.get('equipment')!.split(',').filter(Boolean) : []
-  );
-  const [preferredFloor, setPreferredFloor] = useState<number | null>(
-    searchParams.get('floor') ? Number(searchParams.get('floor')) : null
-  );
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // URL 쿼리 파라미터 동기화
-  useEffect(() => {
-    const params: Record<string, string> = {};
-    if (date) params.date = date;
-    if (startTime) params.startTime = startTime;
-    if (endTime) params.endTime = endTime;
-    if (attendees > 1) params.attendees = String(attendees);
-    if (equipment.length > 0) params.equipment = equipment.join(',');
-    if (preferredFloor !== null) params.floor = String(preferredFloor);
-    setSearchParams(params, { replace: true });
-  }, [date, startTime, endTime, attendees, equipment, preferredFloor, setSearchParams]);
-
-  const { data: rooms = [] } = useQuery(['rooms'], getRooms);
-  const { data: reservations = [] } = useQuery(['reservations', date], () => getReservations(date), {
-    enabled: !!date,
-  });
+  const { date, attendees, endTime, equipment, startTime, preferredFloor } = useReservationSearchParams();
 
   const createMutation = useMutation(
     (data: { roomId: string; date: string; start: string; end: string; attendees: number; equipment: string[] }) =>
@@ -73,11 +41,10 @@ export function RoomBookingPage() {
     }
   );
 
-  // 필터 변경 시 선택 초기화
-  const handleFilterChange = () => {
-    setSelectedRoomId(null);
-    setErrorMessage(null);
-  };
+  const { data: rooms = [] } = useQuery(['rooms'], getRooms);
+  const { data: reservations = [] } = useQuery(['reservations', date], () => getReservations(date), {
+    enabled: !!date,
+  });
 
   // 입력 검증
   let validationError: string | null = null;
@@ -90,9 +57,6 @@ export function RoomBookingPage() {
     }
   }
   const isFilterComplete = hasTimeInputs && !validationError;
-
-  // 필터링
-  const floors = [...new Set(rooms.map((r: { floor: number }) => r.floor))].sort((a: number, b: number) => a - b);
 
   const availableRooms = isFilterComplete
     ? rooms
@@ -152,6 +116,12 @@ export function RoomBookingPage() {
     }
   };
 
+  // 필터 변경 시 선택 초기화
+  const handleFilterChange = () => {
+    setSelectedRoomId(null);
+    setErrorMessage(null);
+  };
+
   return (
     <div
       css={css`
@@ -160,305 +130,17 @@ export function RoomBookingPage() {
       `}
     >
       <ReservationNavigation />
-      <ReservationCondition />
-      <ReservationRoomList />
-      <ReservationButton />
-      <div
-        css={css`
-          padding: 12px 24px 0;
-        `}
-      >
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          aria-label="뒤로가기"
-          css={css`
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            font-size: 14px;
-            color: ${colors.grey600};
-            &:hover {
-              color: ${colors.grey900};
-            }
-          `}
-        >
-          ← 예약 현황으로
-        </button>
-      </div>
 
       <ReservationHeader>예약하기</ReservationHeader>
 
-      {errorMessage && (
-        <div
-          css={css`
-            padding: 0 24px;
-          `}
-        >
-          <Spacing size={12} />
-          <div
-            css={css`
-              padding: 10px 14px;
-              border-radius: 10px;
-              background: ${colors.red50};
-              display: flex;
-              align-items: center;
-              gap: 8px;
-            `}
-          >
-            <Text typography="t7" fontWeight="medium" color={colors.red500}>
-              {errorMessage}
-            </Text>
-          </div>
-        </div>
-      )}
+      {errorMessage && <ReservationError errorMessage={errorMessage} />}
+
+      <ReservationCondition onFilterChange={handleFilterChange} />
+
+      <ReservationRoomList />
+      <ReservationButton />
 
       <Spacing size={24} />
-
-      {/* 예약 조건 입력 */}
-      <div
-        css={css`
-          padding: 0 24px;
-        `}
-      >
-        <Text typography="t5" fontWeight="bold" color={colors.grey900}>
-          예약 조건
-        </Text>
-        <Spacing size={16} />
-
-        {/* 날짜 */}
-        <div
-          css={css`
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-          `}
-        >
-          <Text as="label" typography="t7" fontWeight="medium" color={colors.grey600}>
-            날짜
-          </Text>
-          <input
-            type="date"
-            value={date}
-            min={formatDate(new Date())}
-            onChange={e => {
-              setDate(e.target.value);
-              handleFilterChange();
-            }}
-            aria-label="날짜"
-            css={css`
-              box-sizing: border-box;
-              font-size: 16px;
-              font-weight: 500;
-              line-height: 1.5;
-              height: 48px;
-              background-color: ${colors.grey50};
-              border-radius: 12px;
-              color: ${colors.grey800};
-              width: 100%;
-              border: 1px solid ${colors.grey200};
-              padding: 0 16px;
-              outline: none;
-              transition: border-color 0.15s;
-              &:focus {
-                border-color: ${colors.blue500};
-              }
-            `}
-          />
-        </div>
-        <Spacing size={14} />
-
-        {/* 시간 */}
-        <div
-          css={css`
-            display: flex;
-            gap: 12px;
-          `}
-        >
-          <div
-            css={css`
-              display: flex;
-              flex-direction: column;
-              gap: 6px;
-              flex: 1;
-            `}
-          >
-            <Text as="label" typography="t7" fontWeight="medium" color={colors.grey600}>
-              시작 시간
-            </Text>
-            <Select
-              value={startTime}
-              onChange={e => {
-                setStartTime(e.target.value);
-                handleFilterChange();
-              }}
-              aria-label="시작 시간"
-            >
-              <option value="">선택</option>
-              {TIME_SLOTS.slice(0, -1).map(t => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </Select>
-          </div>
-          <div
-            css={css`
-              display: flex;
-              flex-direction: column;
-              gap: 6px;
-              flex: 1;
-            `}
-          >
-            <Text as="label" typography="t7" fontWeight="medium" color={colors.grey600}>
-              종료 시간
-            </Text>
-            <Select
-              value={endTime}
-              onChange={e => {
-                setEndTime(e.target.value);
-                handleFilterChange();
-              }}
-              aria-label="종료 시간"
-            >
-              <option value="">선택</option>
-              {TIME_SLOTS.slice(1).map(t => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </Select>
-          </div>
-        </div>
-        <Spacing size={14} />
-
-        {/* 참석 인원 + 선호 층 */}
-        <div
-          css={css`
-            display: flex;
-            gap: 12px;
-          `}
-        >
-          <div
-            css={css`
-              display: flex;
-              flex-direction: column;
-              gap: 6px;
-              flex: 1;
-            `}
-          >
-            <Text as="label" typography="t7" fontWeight="medium" color={colors.grey600}>
-              참석 인원
-            </Text>
-            <input
-              type="number"
-              min={1}
-              value={attendees}
-              onChange={e => {
-                setAttendees(Math.max(1, Number(e.target.value)));
-                handleFilterChange();
-              }}
-              aria-label="참석 인원"
-              css={css`
-                box-sizing: border-box;
-                font-size: 16px;
-                font-weight: 500;
-                line-height: 1.5;
-                height: 48px;
-                background-color: ${colors.grey50};
-                border-radius: 12px;
-                color: ${colors.grey800};
-                width: 100%;
-                border: 1px solid ${colors.grey200};
-                padding: 0 16px;
-                outline: none;
-                transition: border-color 0.15s;
-                &:focus {
-                  border-color: ${colors.blue500};
-                }
-              `}
-            />
-          </div>
-          <div
-            css={css`
-              display: flex;
-              flex-direction: column;
-              gap: 6px;
-              flex: 1;
-            `}
-          >
-            <Text as="label" typography="t7" fontWeight="medium" color={colors.grey600}>
-              선호 층
-            </Text>
-            <Select
-              value={preferredFloor ?? ''}
-              onChange={e => {
-                const val = e.target.value;
-                setPreferredFloor(val === '' ? null : Number(val));
-                handleFilterChange();
-              }}
-              aria-label="선호 층"
-            >
-              <option value="">전체</option>
-              {floors.map((f: number) => (
-                <option key={f} value={f}>
-                  {f}층
-                </option>
-              ))}
-            </Select>
-          </div>
-        </div>
-        <Spacing size={14} />
-
-        {/* 장비 */}
-        <div>
-          <Text as="label" typography="t7" fontWeight="medium" color={colors.grey600}>
-            필요 장비
-          </Text>
-          <Spacing size={8} />
-          <div
-            css={css`
-              display: flex;
-              gap: 8px;
-              flex-wrap: wrap;
-            `}
-          >
-            {ALL_EQUIPMENT.map(eq => {
-              const selected = equipment.includes(eq);
-              return (
-                <button
-                  key={eq}
-                  type="button"
-                  onClick={() => {
-                    const next = selected ? equipment.filter(e => e !== eq) : [...equipment, eq];
-                    setEquipment(next);
-                    handleFilterChange();
-                  }}
-                  aria-label={EQUIPMENT_LABELS[eq]}
-                  aria-pressed={selected}
-                  css={css`
-                    padding: 8px 16px;
-                    border-radius: 20px;
-                    border: 1px solid ${selected ? colors.blue500 : colors.grey200};
-                    background: ${selected ? colors.blue50 : colors.grey50};
-                    color: ${selected ? colors.blue600 : colors.grey700};
-                    font-size: 14px;
-                    font-weight: 500;
-                    cursor: pointer;
-                    transition: all 0.15s;
-                    &:hover {
-                      border-color: ${selected ? colors.blue500 : colors.grey400};
-                    }
-                  `}
-                >
-                  {EQUIPMENT_LABELS[eq]}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
 
       {validationError && (
         <div
