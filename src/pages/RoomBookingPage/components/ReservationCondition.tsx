@@ -3,12 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import { Select, Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { getRooms } from 'apis';
-import { EQUIPMENT_LABELS } from 'constants/equipment';
+import { EQUIPMENT_LABELS, EQUIPMENTS } from 'constants/equipment';
 import { TIME_SLOTS } from 'pages/ReservationStatusPage/constants';
 import { formatDate } from 'utils/date';
 import { useReservationSearchParams } from '../hooks';
-
-const ALL_EQUIPMENT = ['tv', 'whiteboard', 'video', 'speaker'];
 
 interface ReservationConditionProps {
   onFilterChange: () => void;
@@ -243,7 +241,7 @@ export function ReservationCondition({ onFilterChange }: ReservationConditionPro
             flex-wrap: wrap;
           `}
         >
-          {ALL_EQUIPMENT.map(eq => {
+          {EQUIPMENTS.map(eq => {
             const selected = equipment.includes(eq);
             return (
               <button
