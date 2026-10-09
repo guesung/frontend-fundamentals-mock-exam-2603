@@ -12,6 +12,8 @@ import {
 } from './components';
 import { ReservationError } from './components/ReservationError';
 import { useReservationSearchParams } from './hooks';
+import { useSearchParams } from 'react-router-dom';
+import { ErrorMessageContextProvider } from './contexts/ErrorMessageContextProvider';
 
 const TIME_SLOTS: string[] = [];
 for (let h = 9; h <= 20; h++) {
@@ -22,16 +24,10 @@ for (let h = 9; h <= 20; h++) {
 }
 
 export function RoomBookingPage() {
-  const [selectedRoomId, setSelectedRoomId] = useState<string | null>('');
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const filterKey = searchParams.toString();
 
-  const { date, attendees, endTime, equipment, startTime, preferredFloor } = useReservationSearchParams();
-
-  // 필터 변경 시 선택 초기화
-  const handleFilterChange = () => {
-    setSelectedRoomId(null);
-    setErrorMessage(null);
-  };
+  const { attendees, endTime, startTime } = useReservationSearchParams();
 
   // 입력 검증
   let validationError: string | null = null;
@@ -57,17 +53,12 @@ export function RoomBookingPage() {
 
       <ReservationHeader>예약하기</ReservationHeader>
 
-      <ReservationError errorMessage={errorMessage} />
-
-      <ReservationCondition onFilterChange={handleFilterChange} />
-
-      {isFilterComplete && (
-        <ReservationRoomList
-          selectedRoomId={selectedRoomId}
-          setErrorMessage={setErrorMessage}
-          setSelectedRoomId={setSelectedRoomId}
-        />
-      )}
+      <ErrorMessageContextProvider key={filterKey}>
+        <ReservationError />
+        ㄷ
+        <ReservationCondition />
+        {isFilterComplete && <ReservationRoomList key={filterKey} />}
+      </ErrorMessageContextProvider>
 
       <ReservationButton />
 

@@ -6,20 +6,19 @@ import axios from 'axios';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { useNavigate } from 'react-router-dom';
 import { useReservationSearchParams } from '../hooks';
-import { Room } from 'types';
+import { useState } from 'react';
+import { useErrorMessageContext } from '../contexts/ErrorMessageContextProvider';
 
-interface ReservationRoomListProps {
-  selectedRoomId: string | null;
-  setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
-  setSelectedRoomId: React.Dispatch<React.SetStateAction<string | null>>;
-}
+export function ReservationRoomList() {
+  const [selectedRoomId, setSelectedRoomId] = useState<string | null>('');
+  const { onErrorMessageChange } = useErrorMessageContext();
 
-export function ReservationRoomList({ selectedRoomId, setErrorMessage, setSelectedRoomId }: ReservationRoomListProps) {
   const { date, attendees, endTime, equipment, startTime, preferredFloor } = useReservationSearchParams();
   const navigate = useNavigate();
 
   const { data: rooms = [] } = useRooms();
   const { data: reservations = [] } = useReservations({ date });
+  const { mutateAsync: createReservation, isPending } = useCreateReservation();
 
   const availableRooms = rooms
     .filter(room => {
@@ -36,16 +35,16 @@ export function ReservationRoomList({ selectedRoomId, setErrorMessage, setSelect
 
   const handleBook = async () => {
     if (!selectedRoomId) {
-      setErrorMessage('회의실을 선택해주세요.');
+      onErrorMessageChange('회의실을 선택해주세요.');
       return;
     }
     if (!startTime || !endTime) {
-      setErrorMessage('시작 시간과 종료 시간을 선택해주세요.');
+      onErrorMessageChange('시작 시간과 종료 시간을 선택해주세요.');
       return;
     }
 
     try {
-      const result = await createMutation.mutateAsync({
+      const result = await createReservation({
         roomId: selectedRoomId,
         date,
         start: startTime,
@@ -60,7 +59,7 @@ export function ReservationRoomList({ selectedRoomId, setErrorMessage, setSelect
       }
 
       const errResult = result as { message?: string };
-      setErrorMessage(errResult.message ?? '예약에 실패했습니다.');
+      onErrorMessageChange(errResult.message ?? '예약에 실패했습니다.');
       setSelectedRoomId(null);
     } catch (err: unknown) {
       let serverMessage = '예약에 실패했습니다.';
@@ -68,12 +67,10 @@ export function ReservationRoomList({ selectedRoomId, setErrorMessage, setSelect
         const data = err.response?.data as { message?: string } | undefined;
         serverMessage = data?.message ?? serverMessage;
       }
-      setErrorMessage(serverMessage);
+      onErrorMessageChange(serverMessage);
       setSelectedRoomId(null);
     }
   };
-
-  const createMutation = useCreateReservation();
 
   return (
     <div
@@ -167,8 +164,8 @@ export function ReservationRoomList({ selectedRoomId, setErrorMessage, setSelect
       )}
 
       <Spacing size={16} />
-      <Button display="full" onClick={handleBook} disabled={createMutation.isLoading}>
-        {createMutation.isLoading ? '예약 중...' : '확정'}
+      <Button display="full" onClick={handleBook} disabled={isPending}>
+        {isPending ? '예약 중...' : '확정'}
       </Button>
     </div>
   );

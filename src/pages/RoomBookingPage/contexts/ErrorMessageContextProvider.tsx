@@ -1,0 +1,27 @@
+import { createContext, PropsWithChildren, useContext, useState } from 'react';
+
+type ErrorMessageContextType = {
+  errorMessage: string | null;
+  onErrorMessageChange: (errorMessage: string) => void;
+};
+
+const ErrorMessageContext = createContext<ErrorMessageContextType | null>(null);
+
+export const useErrorMessageContext = () => {
+  const context = useContext(ErrorMessageContext);
+  if (context === null) throw new Error('ErrorMessageContextProvider로 감싸주세요.');
+
+  return context;
+};
+
+interface ErrorMessageContextProviderProps {}
+
+export function ErrorMessageContextProvider({ children }: PropsWithChildren<ErrorMessageContextProviderProps>) {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  return (
+    <ErrorMessageContext.Provider value={{ errorMessage, onErrorMessageChange: setErrorMessage }}>
+      {children}
+    </ErrorMessageContext.Provider>
+  );
+}

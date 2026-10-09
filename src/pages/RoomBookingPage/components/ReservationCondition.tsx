@@ -12,7 +12,7 @@ interface ReservationConditionProps {
   onFilterChange: () => void;
 }
 
-export function ReservationCondition({ onFilterChange }: ReservationConditionProps) {
+export function ReservationCondition() {
   const { data: rooms = [] } = useQuery(['rooms'], getRooms);
 
   const {
@@ -61,7 +61,6 @@ export function ReservationCondition({ onFilterChange }: ReservationConditionPro
           min={formatDate(new Date())}
           onChange={e => {
             setDate(e.target.value);
-            onFilterChange();
           }}
           aria-label="날짜"
           css={css`
@@ -108,7 +107,6 @@ export function ReservationCondition({ onFilterChange }: ReservationConditionPro
             value={startTime}
             onChange={e => {
               setStartTime(e.target.value);
-              onFilterChange();
             }}
             aria-label="시작 시간"
           >
@@ -135,7 +133,6 @@ export function ReservationCondition({ onFilterChange }: ReservationConditionPro
             value={endTime}
             onChange={e => {
               setEndTime(e.target.value);
-              onFilterChange();
             }}
             aria-label="종료 시간"
           >
@@ -174,7 +171,6 @@ export function ReservationCondition({ onFilterChange }: ReservationConditionPro
             value={attendees}
             onChange={e => {
               setAttendees(Math.max(1, Number(e.target.value)));
-              onFilterChange();
             }}
             aria-label="참석 인원"
             css={css`
@@ -213,7 +209,6 @@ export function ReservationCondition({ onFilterChange }: ReservationConditionPro
             onChange={e => {
               const val = e.target.value;
               setPreferredFloor(val === '' ? null : Number(val));
-              onFilterChange();
             }}
             aria-label="선호 층"
           >
@@ -250,7 +245,6 @@ export function ReservationCondition({ onFilterChange }: ReservationConditionPro
                 onClick={() => {
                   const next = selected ? equipment.filter(e => e !== eq) : [...equipment, eq];
                   setEquipment(next);
-                  onFilterChange();
                 }}
                 aria-label={EQUIPMENT_LABELS[eq]}
                 aria-pressed={selected}
