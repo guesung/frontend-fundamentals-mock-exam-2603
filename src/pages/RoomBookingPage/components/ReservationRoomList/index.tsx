@@ -9,17 +9,15 @@ import { useErrorMessageContext } from '../../contexts';
 import { useReservationSearchParams } from '../../hooks';
 import { getValidationError } from '../../utils';
 import { AvailableRoomList, NoAvailbleRoom } from './AvailableRoomList';
+import { ReservationBookButton } from './ReservationBookButton';
 
 export function ReservationRoomList() {
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>('');
-  const { onErrorMessageChange } = useErrorMessageContext();
 
   const { date, attendees, endTime, equipment, startTime, preferredFloor } = useReservationSearchParams();
-  const navigate = useNavigate();
 
   const { data: rooms = [] } = useRooms();
   const { data: reservations = [] } = useReservations({ date });
-  const { mutateAsync: createReservation, isPending } = useCreateReservation();
 
   const availableRoomList = rooms
     .filter(room => {
@@ -33,45 +31,6 @@ export function ReservationRoomList() {
       return isCapacityAvailable && isAllEquipmentAvailable && isPreferredFloorAvailable && !isRoomConflict;
     })
     .sort((a, b) => a.floor - b.floor || a.name.localeCompare(b.name));
-
-  const handleBook = async () => {
-    if (!selectedRoomId) {
-      onErrorMessageChange('회의실을 선택해주세요.');
-      return;
-    }
-    if (!startTime || !endTime) {
-      onErrorMessageChange('시작 시간과 종료 시간을 선택해주세요.');
-      return;
-    }
-
-    try {
-      const result = await createReservation({
-        roomId: selectedRoomId,
-        date,
-        start: startTime,
-        end: endTime,
-        attendees,
-        equipment,
-      });
-
-      if ('ok' in result && result.ok) {
-        navigate('/', { state: { message: '예약이 완료되었습니다!' } });
-        return;
-      }
-
-      const errResult = result as { message?: string };
-      onErrorMessageChange(errResult.message ?? '예약에 실패했습니다.');
-      setSelectedRoomId(null);
-    } catch (err: unknown) {
-      let serverMessage = '예약에 실패했습니다.';
-      if (axios.isAxiosError(err)) {
-        const data = err.response?.data as { message?: string } | undefined;
-        serverMessage = data?.message ?? serverMessage;
-      }
-      onErrorMessageChange(serverMessage);
-      setSelectedRoomId(null);
-    }
-  };
 
   const validationError = getValidationError({ endTime, startTime, attendees });
   if (validationError) return null;
@@ -109,9 +68,8 @@ export function ReservationRoomList() {
       )}
 
       <Spacing size={16} />
-      <Button display="full" onClick={handleBook} disabled={isPending}>
-        {isPending ? '예약 중...' : '확정'}
-      </Button>
+
+      <ReservationBookButton selectedRoomId={selectedRoomId} resetSelectedRoomId={() => setSelectedRoomId(null)} />
     </div>
   );
 }

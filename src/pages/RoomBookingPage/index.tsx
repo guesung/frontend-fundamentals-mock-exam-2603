@@ -4,6 +4,7 @@ import { colors } from '_tosslib/constants/colors';
 import { ReservationHeader } from 'components/ReservationHeader';
 import { useState } from 'react';
 import {
+  ReservationBookButton,
   ReservationButton,
   ReservationCondition,
   ReservationNavigation,
@@ -44,6 +45,8 @@ export function RoomBookingPage() {
         <ReservationCondition />
 
         <ReservationRoomList key={filterKey} />
+
+        <ReservationBookButton />
       </ErrorMessageContextProvider>
 
       <ReservationButton />

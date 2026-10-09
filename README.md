@@ -59,4 +59,9 @@ yarn test
 6. 상태 관리를 어디서 하는 것이 적절할까?
 7. handleFilterChange를 ReservationCondition에 props로 전달하고, 각 input의 onChange 전달해줘야한다. 이걸 개선할 수는 없을까?
 8. 현재 요구사항 : 필터가 변경이 생기면 (즉, input에 값이 변경되면) 에러와 선택된 roomId를 초기화해야한다. => query string으로 상태를 관리 중이기에 searchParams로 key를 설정 -> key가 변경되면 해당 컴포넌트 리렌더링. errorMessage는 Provider로 감싸고, Provider에 key props를 전달
-9. validationError도 옮길 수 없을까?
+9. validationError도 옮길 수 없을까? => 유틸로 분리
+10. Button은 selectedId를 필요로한다. selectedId는 List에서 관리 중이다.
+11. A안 : selectedId를 Context API로 뿌린다.
+12. B안 : Button을 List 안으로 옮겨 props로 전달한다
+13. 단점 : Button은 List 컴포넌트의 자식이 된다. List가 폼 역할이여서 괜찮나 생각이 든다.
+14.
