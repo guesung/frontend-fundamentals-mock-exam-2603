@@ -11,8 +11,8 @@ export function useReservationSearchParams() {
 
   const field = {
     date: date || formatDate(new Date()),
-    startTime,
-    endTime,
+    startTime: startTime || '',
+    endTime: endTime || '',
     attendees: Number(attendees) || 1,
     equipment: equipment ? equipment.split(',') : [],
     preferredFloor: preferredFloor ? Number(preferredFloor) : null,

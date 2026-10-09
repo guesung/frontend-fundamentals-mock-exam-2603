@@ -16,8 +16,6 @@ export function ReservationRoomList() {
   const { data: rooms = [] } = useRooms();
   const { data: reservations = [] } = useReservations({ date: field.date });
 
-  console.log(field);
-
   const availableRoomList = rooms
     .filter(room => {
       const isCapacityAvailable = room.capacity >= field.attendees;

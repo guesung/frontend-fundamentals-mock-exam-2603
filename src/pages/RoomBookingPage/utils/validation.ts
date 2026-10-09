@@ -5,9 +5,6 @@ type GetValidationErrorParams = {
 };
 
 export function getValidationError({ endTime, startTime, attendees }: GetValidationErrorParams) {
-  if (endTime === '' || startTime === '') {
-    return '시작 시간과 종료 시간을 모두 채워야 합니다.';
-  }
   if (endTime <= startTime) {
     return '종료 시간은 시작 시간보다 늦어야 합니다.';
   } else if (attendees < 1) {

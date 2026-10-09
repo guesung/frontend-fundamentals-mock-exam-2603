@@ -8,7 +8,7 @@ export function ValidationError() {
   const { field } = useReservationSearchParams();
   const validationError = getValidationError(field);
 
-  if (!getValidationError(field)) return null;
+  if (field.endTime === '' || field.startTime === '') return null;
   return (
     <div
       css={css`
