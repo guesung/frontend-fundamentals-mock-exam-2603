@@ -12,7 +12,12 @@ interface TimelineRoomProps {
   room: Room;
 }
 
-export function TimelineRoom({ roomReservations, room }: TimelineRoomProps) {
+export function TimelineRoom({
+  roomReservations,
+  room,
+  activeReservationId,
+  onReservationItemClick,
+}: TimelineRoomProps) {
   return (
     <div
       key={room.id}
@@ -34,7 +39,13 @@ export function TimelineRoom({ roomReservations, room }: TimelineRoomProps) {
         `}
       >
         {roomReservations.map((reservation: Reservation) => (
-          <ReservationItem reservation={reservation} room={room} />
+          <ReservationItem
+            key={reservation.id}
+            reservation={reservation}
+            room={room}
+            isActive={activeReservationId === reservation.id}
+            onReservationItemClick={onReservationItemClick}
+          />
         ))}
       </div>
     </div>
@@ -72,11 +83,12 @@ export function RoomName({ children }: RoomNameProps) {
 interface ReservationItemProps {
   reservation: Reservation;
   room: Room;
+  isActive: boolean;
+  onReservationItemClick: (id: string) => void;
 }
 
-export function ReservationItem({ reservation, room }: ReservationItemProps) {
-  const [isActive, setIsActive] = useState<boolean>(false);
-
+export function ReservationItem({ reservation, room, isActive, onReservationItemClick }: ReservationItemProps) {
+  console.log({ isActive, reservation });
   return (
     <div
       key={reservation.id}
@@ -90,7 +102,7 @@ export function ReservationItem({ reservation, room }: ReservationItemProps) {
       <div
         role="button"
         aria-label={`${room.name} ${reservation.start}-${reservation.end} 예약 상세`}
-        onClick={() => setIsActive(prev => !prev)}
+        onClick={() => onReservationItemClick(reservation.id)}
         css={css`
           width: 100%;
           height: 100%;
@@ -104,7 +116,7 @@ export function ReservationItem({ reservation, room }: ReservationItemProps) {
           }
         `}
       />
-      {isActive && (
+      {isActive ? (
         <div
           role="tooltip"
           css={css`
@@ -132,7 +144,7 @@ export function ReservationItem({ reservation, room }: ReservationItemProps) {
             <div>{reservation.equipment.map((e: string) => EQUIPMENT_LABELS[e]).join(', ')}</div>
           )}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

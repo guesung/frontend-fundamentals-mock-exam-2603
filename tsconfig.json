@@ -7,7 +7,7 @@
     "skipLibCheck": true,
 
     /* Bundler mode */
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
@@ -23,20 +23,20 @@
     "forceConsistentCasingInFileNames": true,
 
     /* Path alias */
+    "baseUrl": "src",
     "paths": {
-      "*": ["./src/*"],
-      "_tosslib/*": ["./src/_tosslib/*"],
-      "pages/*": ["./src/pages/*"],
-      "containers/*": ["./src/containers/*"],
-      "components/*": ["./src/components/*"],
-      "sections/*": ["./src/sections/*"],
-      "constants/*": ["./src/constants/*"],
-      "models/*": ["./src/models/*"],
-      "remotes/*": ["./src/remotes/*"],
-      "styles/*": ["./src/styles/*"],
-      "utils/*": ["./src/utils/*"],
-      "hooks/*": ["./src/hooks/*"],
-      "stores/*": ["./src/stores/*"]
+      "_tosslib/*": ["_tosslib/*"],
+      "pages/*": ["pages/*"],
+      "containers/*": ["containers/*"],
+      "components/*": ["components/*"],
+      "sections/*": ["sections/*"],
+      "constants/*": ["constants/*"],
+      "models/*": ["models/*"],
+      "remotes/*": ["remotes/*"],
+      "styles/*": ["styles/*"],
+      "utils/*": ["utils/*"],
+      "hooks/*": ["hooks/*"],
+      "stores/*": ["stores/*"]
     }
   },
   "include": ["src"],

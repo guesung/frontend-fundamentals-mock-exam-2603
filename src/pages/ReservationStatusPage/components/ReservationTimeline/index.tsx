@@ -6,9 +6,11 @@ import { Room } from 'types';
 import { useDateContext } from '../../contexts';
 import { TimelineHeader } from './TimelineHeader';
 import { TimelineRoom } from './TimelineRoom';
+import { useState } from 'react';
 
 export function ReservationTimeline() {
   const { date } = useDateContext();
+  const [activeReservationId, setActiveReservationId] = useState<string>('');
 
   const { data: reservations = [] } = useReservations({ date });
   const { data: rooms = [] } = useRooms();
@@ -41,6 +43,8 @@ export function ReservationTimeline() {
             key={room.id}
             roomReservations={reservations.filter(reservation => reservation.roomId === room.id)}
             room={room}
+            activeReservationId={activeReservationId}
+            onReservationItemClick={(id: string) => setActiveReservationId(prev => (prev === id ? '' : id))}
           />
         ))}
       </div>
