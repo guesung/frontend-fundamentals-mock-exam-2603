@@ -7,7 +7,7 @@ type Options = {
 export function useSearchParamsState(
   key: string,
   { defaultValue = '' }: Options = {}
-): [string, (newValue: string) => void] {
+): [string | null, (newValue: string) => void] {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const value = searchParams.get(key) ?? defaultValue;

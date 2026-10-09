@@ -11,26 +11,34 @@ import { ReservationBookButton } from './ReservationBookButton';
 export function ReservationRoomList() {
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>('');
 
-  const { date, attendees, endTime, equipment, startTime, preferredFloor } = useReservationSearchParams();
+  const { field } = useReservationSearchParams();
 
   const { data: rooms = [] } = useRooms();
-  const { data: reservations = [] } = useReservations({ date });
+  const { data: reservations = [] } = useReservations({ date: field.date });
+
+  console.log(field);
 
   const availableRoomList = rooms
     .filter(room => {
-      const isCapacityAvailable = room.capacity >= attendees;
-      const isAllEquipmentAvailable = equipment.every(eq => room.equipment.includes(eq));
-      const isPreferredFloorAvailable = preferredFloor === null || room.floor === preferredFloor;
+      const isCapacityAvailable = room.capacity >= field.attendees;
+      const isAllEquipmentAvailable = field.equipment.every(eq => room.equipment.includes(eq));
+      const isPreferredFloorAvailable = field.preferredFloor === null || room.floor === field.preferredFloor;
       const isRoomConflict = reservations.some(
-        r => r.roomId === room.id && r.date === date && r.start < endTime && r.end > startTime
+        r => r.roomId === room.id && r.date === field.date && r.start < field.endTime && r.end > field.startTime
       );
+
+      console.log({
+        isCapacityAvailable,
+        isAllEquipmentAvailable,
+        isPreferredFloorAvailable,
+        notIsRoomConflict: !isRoomConflict,
+      });
 
       return isCapacityAvailable && isAllEquipmentAvailable && isPreferredFloorAvailable && !isRoomConflict;
     })
     .sort((a, b) => a.floor - b.floor || a.name.localeCompare(b.name));
 
-  const validationError = getValidationError({ endTime, startTime, attendees });
-  if (validationError) return null;
+  if (getValidationError(field)) return null;
   return (
     <div
       css={css`
