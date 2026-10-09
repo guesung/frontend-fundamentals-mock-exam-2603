@@ -1,16 +1,23 @@
 import { css } from '@emotion/react';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { useRooms } from 'apis';
+import { useReservations, useRooms } from 'apis';
 import { useState } from 'react';
 import { Room } from 'types';
 import { TimelineHeader } from './TimelineHeader';
 import { TimelineRoom } from './TimelineRoom';
+import { useDateContext } from 'pages/ReservationStatusPage/contexts';
+import { ReservationItem } from './ReservationItem';
 
 export function ReservationTimeline() {
   const [activeReservationId, setActiveReservationId] = useState<string>('');
 
   const { data: rooms = [] } = useRooms();
+  const { date } = useDateContext();
+
+  const { data: reservations = [] } = useReservations({ date });
+
+  const handleReservationItemClick = (id: string) => setActiveReservationId(prev => (prev === id ? '' : id));
 
   return (
     <div
@@ -39,8 +46,17 @@ export function ReservationTimeline() {
           <TimelineRoom
             key={room.id}
             room={room}
-            activeReservationId={activeReservationId}
-            onReservationItemClick={(id: string) => setActiveReservationId(prev => (prev === id ? '' : id))}
+            reservationItem={reservations
+              .filter(reservation => reservation.roomId === room.id)
+              .map(reservation => (
+                <ReservationItem
+                  key={reservation.id}
+                  reservation={reservation}
+                  room={room}
+                  isActive={activeReservationId === reservation.id}
+                  onReservationItemClick={handleReservationItemClick}
+                />
+              ))}
           />
         ))}
       </div>
