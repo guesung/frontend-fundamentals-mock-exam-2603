@@ -48,9 +48,9 @@ describe('예약 현황 페이지', () => {
 
     const dateInput = screen.getByLabelText('날짜');
     await userEvent.clear(dateInput);
-    await userEvent.type(dateInput, '2026-03-15');
+    await userEvent.type(dateInput, '2026-10-09');
 
-    await waitFor(() => expect(spyGetReservations).toHaveBeenCalledWith('2026-03-15'));
+    await waitFor(() => expect(spyGetReservations).toHaveBeenCalledWith('2026-10-09'));
   });
 
   test('내 예약 목록이 표시된다', async () => {

@@ -38,7 +38,7 @@ export function RoomBookingPage() {
     searchParams.get('equipment') ? searchParams.get('equipment')!.split(',').filter(Boolean) : []
   );
   const [preferredFloor, setPreferredFloor] = useState<number | null>(
-    searchParams.get('floor') ? Number(searchParams.get('floor')) : 3
+    searchParams.get('floor') ? Number(searchParams.get('floor')) : null
   );
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
