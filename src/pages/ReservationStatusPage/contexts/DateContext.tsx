@@ -12,7 +12,7 @@ const DateContext = createContext<DateContextType | null>(null);
 
 export const useDateContext = () => {
   const dateContext = useContext(DateContext);
-  if (dateContext === null) throw new Error('DateContext로 감싸주세요.');
+  if (dateContext === null) throw new Error('DateContextProvider로 감싸주세요.');
 
   return dateContext;
 };

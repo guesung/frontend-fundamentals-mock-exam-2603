@@ -1,105 +1,18 @@
 import { css } from '@emotion/react';
-import { Spacing, Text } from '_tosslib/components';
+import { Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { useReservations, useRooms } from 'apis';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { useState } from 'react';
 import { Reservation, Room } from 'types';
-import { HOUR_LABELS, TOTAL_MINUTES } from '../constants';
-import { useDateContext } from '../contexts';
-import { timeToMinutes } from '../utils';
-
-export function ReservationTimeline() {
-  const { date } = useDateContext();
-
-  const { data: reservations = [] } = useReservations({ date });
-  const { data: rooms = [] } = useRooms();
-
-  return (
-    <div
-      css={css`
-        padding: 0 24px;
-      `}
-    >
-      <Text typography="t5" fontWeight="bold" color={colors.grey900}>
-        예약 현황
-      </Text>
-
-      <Spacing size={16} />
-
-      <div
-        css={css`
-          background: ${colors.grey50};
-          border-radius: 14px;
-          padding: 16px;
-        `}
-      >
-        <TimelineHeader />
-
-        <Spacing size={4} />
-
-        {rooms.map((room: Room) => (
-          <TimelineRoom key={room.id} reservations={reservations} room={room} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function TimelineHeader() {
-  return (
-    <div
-      css={css`
-        display: flex;
-        align-items: flex-end;
-        margin-bottom: 8px;
-      `}
-    >
-      <div
-        css={css`
-          width: 80px;
-          flex-shrink: 0;
-          padding-right: 8px;
-        `}
-      />
-      <div
-        css={css`
-          flex: 1;
-          position: relative;
-          height: 18px;
-        `}
-      >
-        {HOUR_LABELS.map(t => {
-          const left = (timeToMinutes(t) / TOTAL_MINUTES) * 100;
-          return (
-            <Text
-              key={t}
-              typography="t7"
-              fontWeight="regular"
-              color={colors.grey400}
-              css={css`
-                position: absolute;
-                left: ${left}%;
-                transform: translateX(-50%);
-                font-size: 10px;
-                letter-spacing: -0.3px;
-              `}
-            >
-              {t.slice(0, 2)}
-            </Text>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
+import { TOTAL_MINUTES } from '../../constants';
+import { timeToMinutes } from '../../utils';
 
 interface TimelineRoomProps {
   reservations: Reservation[];
   room: Room;
 }
 
-function TimelineRoom({ reservations, room }: TimelineRoomProps) {
+export function TimelineRoom({ reservations, room }: TimelineRoomProps) {
   const roomReservations = reservations.filter((reservation: Reservation) => reservation.roomId === room.id);
   const [activeReservationId, setActiveReservationId] = useState<string | null>(null);
 
