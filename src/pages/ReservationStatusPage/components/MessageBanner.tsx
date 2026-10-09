@@ -1,8 +1,6 @@
 import { css } from '@emotion/react';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { MessageType, useMessageContext } from '../contexts';
 
 const variantMap: Record<MessageType, { background: string; color: string }> = {
