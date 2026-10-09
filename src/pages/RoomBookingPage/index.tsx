@@ -3,7 +3,13 @@ import { Border, Spacing } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { ReservationHeader } from 'components/ReservationHeader';
 import { useState } from 'react';
-import { ReservationButton, ReservationCondition, ReservationNavigation, ReservationRoomList } from './components';
+import {
+  ReservationButton,
+  ReservationCondition,
+  ReservationNavigation,
+  ReservationRoomList,
+  ValidationError,
+} from './components';
 import { ReservationError } from './components/ReservationError';
 import { useReservationSearchParams } from './hooks';
 
@@ -37,6 +43,7 @@ export function RoomBookingPage() {
       validationError = '참석 인원은 1명 이상이어야 합니다.';
     }
   }
+
   const isFilterComplete = hasTimeInputs && !validationError;
 
   return (
@@ -65,24 +72,7 @@ export function RoomBookingPage() {
 
       <Spacing size={24} />
 
-      {validationError && (
-        <div
-          css={css`
-            padding: 0 24px;
-          `}
-        >
-          <Spacing size={8} />
-          <span
-            css={css`
-              color: ${colors.red500};
-              font-size: 14px;
-            `}
-            role="alert"
-          >
-            {validationError}
-          </span>
-        </div>
-      )}
+      {validationError && <ValidationError validationError={validationError} />}
 
       <Spacing size={24} />
       <Border size={8} />
