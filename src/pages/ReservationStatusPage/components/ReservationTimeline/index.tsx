@@ -37,7 +37,11 @@ export function ReservationTimeline() {
         <Spacing size={4} />
 
         {rooms.map((room: Room) => (
-          <TimelineRoom key={room.id} reservations={reservations} room={room} />
+          <TimelineRoom
+            key={room.id}
+            roomReservations={reservations.filter(reservation => reservation.roomId === room.id)}
+            room={room}
+          />
         ))}
       </div>
     </div>
