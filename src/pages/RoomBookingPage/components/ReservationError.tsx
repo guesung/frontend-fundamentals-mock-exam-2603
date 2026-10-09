@@ -1,11 +1,7 @@
 import { css } from '@emotion/react';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { useErrorMessageContext } from '../contexts/ErrorMessageContextProvider';
-
-interface ReservationErrorProps {
-  errorMessage: string | null;
-}
+import { useErrorMessageContext } from '../contexts';
 
 export function ReservationError() {
   const { errorMessage } = useErrorMessageContext();

@@ -1,19 +1,19 @@
 import { css } from '@emotion/react';
-import { useQuery } from '@tanstack/react-query';
 import { Select, Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { getRooms } from 'apis';
+import { useRooms } from 'apis';
 import { EQUIPMENT_LABELS, EQUIPMENTS } from 'constants/equipment';
 import { TIME_SLOTS } from 'pages/ReservationStatusPage/constants';
 import { formatDate } from 'utils/date';
 import { useReservationSearchParams } from '../hooks';
+import { Room } from 'types';
 
-interface ReservationConditionProps {
-  onFilterChange: () => void;
+function getFloors(rooms: Room[]) {
+  return [...new Set(rooms.map(r => r.floor))].sort((a, b) => a - b);
 }
 
 export function ReservationCondition() {
-  const { data: rooms = [] } = useQuery(['rooms'], getRooms);
+  const { data: rooms = [] } = useRooms();
 
   const {
     date,
@@ -29,9 +29,6 @@ export function ReservationCondition() {
     setPreferredFloor,
     setStartTime,
   } = useReservationSearchParams();
-
-  // 필터링
-  const floors = [...new Set(rooms.map((r: { floor: number }) => r.floor))].sort((a: number, b: number) => a - b);
 
   return (
     <div
@@ -213,9 +210,9 @@ export function ReservationCondition() {
             aria-label="선호 층"
           >
             <option value="">전체</option>
-            {floors.map((f: number) => (
-              <option key={f} value={f}>
-                {f}층
+            {getFloors(rooms).map(floor => (
+              <option key={floor} value={floor}>
+                {floor}층
               </option>
             ))}
           </Select>
