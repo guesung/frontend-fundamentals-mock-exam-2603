@@ -7,6 +7,7 @@ import { colors } from '_tosslib/constants/colors';
 import axios from 'axios';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { createReservation, getReservations, getRooms } from 'apis';
+import { ReservationHeader } from 'components/ReservationHeader';
 
 const ALL_EQUIPMENT = ['tv', 'whiteboard', 'video', 'speaker'];
 
@@ -181,14 +182,7 @@ export function RoomBookingPage() {
           ← 예약 현황으로
         </button>
       </div>
-      <Top.Top03
-        css={css`
-          padding-left: 24px;
-          padding-right: 24px;
-        `}
-      >
-        예약하기
-      </Top.Top03>
+      <ReservationHeader>예약하기</ReservationHeader>
 
       {errorMessage && (
         <div
