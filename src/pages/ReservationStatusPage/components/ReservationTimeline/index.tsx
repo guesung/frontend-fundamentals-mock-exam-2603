@@ -25,8 +25,6 @@ export function ReservationTimeline() {
     <div
       css={css`
         padding: 0 24px;
-        flex-direction: column;
-        gap: 4px;
       `}
     >
       <Text typography="t5" fontWeight="bold" color={colors.grey900}>
@@ -46,21 +44,29 @@ export function ReservationTimeline() {
 
         <Spacing size={4} />
 
-        {rooms.map((room: Room) => (
-          <TimelineRoom key={room.id} name={room.name}>
-            {reservations
-              .filter(reservation => reservation.roomId === room.id)
-              .map(reservation => (
-                <ReservationItem
-                  key={reservation.id}
-                  reservation={reservation}
-                  name={room.name}
-                  isActive={activeReservationId === reservation.id}
-                  onReservationItemClick={() => toggleReservation(reservation.id)}
-                />
-              ))}
-          </TimelineRoom>
-        ))}
+        <div
+          css={css`
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+          `}
+        >
+          {rooms.map((room: Room) => (
+            <TimelineRoom key={room.id} name={room.name}>
+              {reservations
+                .filter(reservation => reservation.roomId === room.id)
+                .map(reservation => (
+                  <ReservationItem
+                    key={reservation.id}
+                    reservation={reservation}
+                    name={room.name}
+                    isActive={activeReservationId === reservation.id}
+                    onReservationItemClick={() => toggleReservation(reservation.id)}
+                  />
+                ))}
+            </TimelineRoom>
+          ))}
+        </div>
       </div>
     </div>
   );
