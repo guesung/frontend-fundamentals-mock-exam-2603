@@ -14,7 +14,7 @@ function getFloors(rooms: Room[]) {
 
 export function ReservationCondition() {
   const { data: rooms = [] } = useRooms();
-  const { conditions, setConditions } = useReservationSearchParams();
+  const { conditions, conditionsSetter } = useReservationSearchParams();
 
   return (
     <div
@@ -43,7 +43,7 @@ export function ReservationCondition() {
           value={conditions.date}
           min={formatDate(new Date())}
           onChange={e => {
-            setConditions.date(e.target.value);
+            conditionsSetter.date(e.target.value);
           }}
           aria-label="날짜"
           css={css`
@@ -89,7 +89,7 @@ export function ReservationCondition() {
           <Select
             value={conditions.startTime}
             onChange={e => {
-              setConditions.startTime(e.target.value);
+              conditionsSetter.startTime(e.target.value);
             }}
             aria-label="시작 시간"
           >
@@ -115,7 +115,7 @@ export function ReservationCondition() {
           <Select
             value={conditions.endTime}
             onChange={e => {
-              setConditions.endTime(e.target.value);
+              conditionsSetter.endTime(e.target.value);
             }}
             aria-label="종료 시간"
           >
@@ -153,7 +153,7 @@ export function ReservationCondition() {
             min={1}
             value={conditions.attendees}
             onChange={e => {
-              setConditions.attendees(Math.max(1, Number(e.target.value)));
+              conditionsSetter.attendees(Math.max(1, Number(e.target.value)));
             }}
             aria-label="참석 인원"
             css={css`
@@ -191,7 +191,7 @@ export function ReservationCondition() {
             value={conditions.preferredFloor ?? 'all'}
             onChange={e => {
               const val = e.target.value;
-              setConditions.preferredFloor(val === 'all' ? null : Number(val));
+              conditionsSetter.preferredFloor(val === 'all' ? null : Number(val));
             }}
             aria-label="선호 층"
           >
@@ -227,7 +227,7 @@ export function ReservationCondition() {
                 type="button"
                 onClick={() => {
                   const next = selected ? conditions.equipment.filter(e => e !== eq) : [...conditions.equipment, eq];
-                  setConditions.equipment(next);
+                  conditionsSetter.equipment(next);
                 }}
                 aria-label={EQUIPMENT_LABELS[eq]}
                 aria-pressed={selected}
