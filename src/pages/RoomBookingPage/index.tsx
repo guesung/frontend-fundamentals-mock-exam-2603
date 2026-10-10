@@ -7,6 +7,7 @@ import { ReservationError } from './components/ReservationError';
 import { ErrorMessageContextProvider } from './contexts/ErrorMessageContextProvider';
 import { useReservationConditions } from './hooks';
 import { getValidationError, hasTimeRange } from './utils';
+import { Suspense } from 'react';
 
 export function RoomBookingPage() {
   const { reservationFilterKey, conditions } = useReservationConditions();
@@ -29,11 +30,17 @@ export function RoomBookingPage() {
 
         <Spacing size={24} />
 
-        <ReservationCondition />
+        <Suspense fallback={null}>
+          <ReservationCondition />
+        </Suspense>
 
         <Spacing size={24} />
 
-        {isConditionsReady && <ReservationRoomList />}
+        {isConditionsReady && (
+          <Suspense fallback={null}>
+            <ReservationRoomList />
+          </Suspense>
+        )}
       </ErrorMessageContextProvider>
 
       <Spacing size={24} />

@@ -12,11 +12,11 @@ interface ReservationBookButtonProps {
 }
 
 export function ReservationBookButton({ selectedRoomId, resetSelectedRoomId }: ReservationBookButtonProps) {
-  const { mutate: createReservation, isPending } = useCreateReservation();
+  const { setErrorMessage } = useErrorMessageContext();
   const { conditions } = useReservationConditions();
+  const { mutate: createReservation, isPending } = useCreateReservation();
 
   const navigate = useNavigate();
-  const { setErrorMessage } = useErrorMessageContext();
 
   const handleBook = async () => {
     if (!selectedRoomId) {
@@ -39,7 +39,13 @@ export function ReservationBookButton({ selectedRoomId, resetSelectedRoomId }: R
       },
       {
         onSuccess: () => {
-          navigate('/', { state: { message: '예약이 완료되었습니다!' } });
+          navigate(
+            {
+              pathname: '/',
+              search: new URLSearchParams({ date: conditions.date }).toString(),
+            },
+            { state: { message: '예약이 완료되었습니다!' } }
+          );
         },
         onError: error => {
           const message = error instanceof HttpError ? error.serverMessage : undefined;
