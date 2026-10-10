@@ -22,7 +22,7 @@ export function useSearchParamsState<T>(
       newSearchParams.set(key, String(newValue));
     }
 
-    setSearchParams(newSearchParams, { ...navigateOptions, replace: true });
+    setSearchParams(newSearchParams, { replace: true, ...navigateOptions });
   };
 
   return [value, setValue] as const;

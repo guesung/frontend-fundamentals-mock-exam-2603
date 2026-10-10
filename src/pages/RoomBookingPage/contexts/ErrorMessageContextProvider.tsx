@@ -1,6 +1,5 @@
-import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
-import { useReservationSearchParams } from '../hooks';
 import { useResettableState } from 'hooks';
+import { createContext, PropsWithChildren, useContext } from 'react';
 
 type ErrorMessageContextType = {
   errorMessage: string | null;
