@@ -27,30 +27,33 @@ export function ReservationBookButton({ selectedRoomId, resetSelectedRoomId }: R
       return;
     }
 
-    await createReservation(
-      {
+    try {
+      const result = await createReservation({
         roomId: selectedRoomId,
         date: field.date,
         start: field.startTime,
         end: field.endTime,
         attendees: field.attendees,
         equipment: field.equipment,
-      },
-      {
-        onSuccess: () => {
-          navigate('/', { state: { message: '예약이 완료되었습니다!' } });
-        },
-        onError: error => {
-          let serverMessage = '예약에 실패했습니다.';
-          if (axios.isAxiosError(error)) {
-            const data = error.response?.data as { message?: string } | undefined;
-            serverMessage = data?.message ?? serverMessage;
-          }
-          onErrorMessageChange(serverMessage);
-          resetSelectedRoomId();
-        },
+      });
+
+      if ('ok' in result && result.ok) {
+        navigate('/', { state: { message: '예약이 완료되었습니다!' } });
+        return;
       }
-    );
+
+      const errResult = result as { message?: string };
+      onErrorMessageChange(errResult.message ?? '예약에 실패했습니다.');
+      resetSelectedRoomId();
+    } catch (err: unknown) {
+      let serverMessage = '예약에 실패했습니다.';
+      if (axios.isAxiosError(err)) {
+        const data = err.response?.data as { message?: string } | undefined;
+        serverMessage = data?.message ?? serverMessage;
+      }
+      onErrorMessageChange(serverMessage);
+      resetSelectedRoomId();
+    }
   };
 
   return (
