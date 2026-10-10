@@ -12,7 +12,7 @@ interface ReservationBookButtonProps {
 }
 
 export function ReservationBookButton({ selectedRoomId, resetSelectedRoomId }: ReservationBookButtonProps) {
-  const { mutateAsync: createReservation, isPending } = useCreateReservation();
+  const { mutate: createReservation, isPending } = useCreateReservation();
   const { conditions } = useReservationSearchParams();
 
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ export function ReservationBookButton({ selectedRoomId, resetSelectedRoomId }: R
       return;
     }
 
-    await createReservation(
+    createReservation(
       {
         roomId: selectedRoomId,
         date: conditions.date,
