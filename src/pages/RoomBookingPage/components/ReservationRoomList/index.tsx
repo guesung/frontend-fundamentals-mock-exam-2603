@@ -7,9 +7,12 @@ import { useReservationSearchParams } from '../../hooks';
 import { getValidationError } from '../../utils';
 import { AvailableRoomList, NoAvailbleRoom } from './AvailableRoomList';
 import { ReservationBookButton } from './ReservationBookButton';
+import { useErrorMessageContext } from 'pages/RoomBookingPage/contexts';
 
 export function ReservationRoomList() {
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>('');
+
+  const { onErrorMessageChange } = useErrorMessageContext();
 
   const { field } = useReservationSearchParams();
 
@@ -61,7 +64,10 @@ export function ReservationRoomList() {
       {availableRoomList.length > 0 ? (
         <AvailableRoomList
           availableRoomList={availableRoomList}
-          onAvilableRoomClick={id => setSelectedRoomId(id)}
+          onAvilableRoomClick={id => {
+            onErrorMessageChange(null);
+            setSelectedRoomId(id);
+          }}
           selectedRoomId={selectedRoomId}
         />
       ) : (

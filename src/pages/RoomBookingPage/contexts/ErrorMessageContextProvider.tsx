@@ -3,7 +3,7 @@ import { useReservationSearchParams } from '../hooks';
 
 type ErrorMessageContextType = {
   errorMessage: string | null;
-  onErrorMessageChange: (errorMessage: string) => void;
+  onErrorMessageChange: (errorMessage: string | null) => void;
 };
 
 const ErrorMessageContext = createContext<ErrorMessageContextType | null>(null);
