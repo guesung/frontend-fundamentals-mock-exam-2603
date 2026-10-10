@@ -188,7 +188,7 @@ export function ReservationCondition() {
             선호 층
           </Text>
           <Select
-            value={field.preferredFloor ?? undefined}
+            value={field.preferredFloor ?? 'all'}
             onChange={e => {
               const val = e.target.value;
               fieldSetter.setPreferredFloor(val === 'all' ? null : Number(val));
