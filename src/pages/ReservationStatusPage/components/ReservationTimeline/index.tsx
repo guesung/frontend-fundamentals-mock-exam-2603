@@ -8,6 +8,7 @@ import { Room } from 'types';
 import { ReservationItem } from './ReservationItem';
 import { TimelineHeader } from './TimelineHeader';
 import { TimelineRoom } from './TimelineRoom';
+import { useOutsideClick } from 'hooks';
 
 export function ReservationTimeline() {
   const [activeReservationId, setActiveReservationId] = useState<string | null>(null);
@@ -20,6 +21,13 @@ export function ReservationTimeline() {
   const toggleReservation = (id: string) => {
     setActiveReservationId(prev => (prev === id ? null : id));
   };
+
+  const { ref } = useOutsideClick<HTMLDivElement>(() => {
+    if (!activeReservationId) {
+      return;
+    }
+    setActiveReservationId(null);
+  });
 
   return (
     <div
@@ -44,6 +52,8 @@ export function ReservationTimeline() {
 
         <Spacing size={4} />
 
+        {/* <div ref={ref}>테스트</div> */}
+
         <div
           css={css`
             display: flex;
@@ -51,12 +61,13 @@ export function ReservationTimeline() {
             gap: 4px;
           `}
         >
-          {rooms.map((room: Room) => (
+          {rooms?.map((room: Room) => (
             <TimelineRoom key={room.id} name={room.name}>
               {reservations
                 .filter(reservation => reservation.roomId === room.id)
                 .map(reservation => (
                   <ReservationItem
+                    ref={ref}
                     key={reservation.id}
                     reservation={reservation}
                     name={room.name}

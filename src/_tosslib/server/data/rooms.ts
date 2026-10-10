@@ -12,11 +12,11 @@ export const rooms: Room[] = [
 ];
 
 export const reservations: Reservation[] = [
-  { id: 'res-1', roomId: 'room-1', date: '2026-10-09', start: '09:00', end: '10:00', attendees: 5, equipment: ['tv'] },
+  { id: 'res-1', roomId: 'room-1', date: '2026-10-11', start: '09:00', end: '10:00', attendees: 5, equipment: ['tv'] },
   {
     id: 'res-2',
     roomId: 'room-1',
-    date: '2026-10-09',
+    date: '2026-10-11',
     start: '14:00',
     end: '15:30',
     attendees: 8,
@@ -25,7 +25,7 @@ export const reservations: Reservation[] = [
   {
     id: 'res-3',
     roomId: 'room-2',
-    date: '2026-10-09',
+    date: '2026-10-11',
     start: '10:00',
     end: '11:30',
     attendees: 4,
@@ -34,7 +34,7 @@ export const reservations: Reservation[] = [
   {
     id: 'res-4',
     roomId: 'room-4',
-    date: '2026-10-09',
+    date: '2026-10-11',
     start: '13:00',
     end: '14:00',
     attendees: 6,
@@ -43,7 +43,7 @@ export const reservations: Reservation[] = [
   {
     id: 'res-5',
     roomId: 'room-6',
-    date: '2026-10-09',
+    date: '2026-10-11',
     start: '09:30',
     end: '11:00',
     attendees: 15,
@@ -52,7 +52,7 @@ export const reservations: Reservation[] = [
   {
     id: 'res-6',
     roomId: 'room-7',
-    date: '2026-10-09',
+    date: '2026-10-11',
     start: '15:00',
     end: '16:30',
     attendees: 5,
@@ -61,11 +61,11 @@ export const reservations: Reservation[] = [
 ];
 
 export const myReservations: Reservation[] = [
-  { id: 'res-1', roomId: 'room-1', date: '2026-10-09', start: '09:00', end: '10:00', attendees: 5, equipment: ['tv'] },
+  { id: 'res-1', roomId: 'room-1', date: '2026-10-11', start: '09:00', end: '10:00', attendees: 5, equipment: ['tv'] },
   {
     id: 'res-4',
     roomId: 'room-4',
-    date: '2026-10-09',
+    date: '2026-10-11',
     start: '13:00',
     end: '14:00',
     attendees: 6,
