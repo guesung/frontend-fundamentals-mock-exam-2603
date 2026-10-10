@@ -21,7 +21,7 @@ export function RoomBookingPage() {
 
       <ReservationHeader>예약하기</ReservationHeader>
 
-      <ErrorMessageContextProvider key={rservationFilterKey}>
+      <ErrorMessageContextProvider>
         <ReservationError />
 
         <Spacing size={24} />
