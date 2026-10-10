@@ -71,3 +71,19 @@ export function ReservationTimeline() {
     </div>
   );
 }
+
+function Loading() {
+  return (
+    <div
+      css={css`
+        width: 100%;
+        height: 380px;
+        padding: 0 24px;
+        box-sizing: border-box;
+        background: ${colors.grey50};
+      `}
+    ></div>
+  );
+}
+
+ReservationTimeline.Loading = Loading;

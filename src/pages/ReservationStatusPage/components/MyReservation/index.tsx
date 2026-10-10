@@ -56,3 +56,17 @@ export function MyReservation() {
     </div>
   );
 }
+
+function Loading() {
+  return (
+    <div
+      css={css`
+        width: 1px;
+        height: 200px;
+        background: ${colors.grey50};
+      `}
+    ></div>
+  );
+}
+
+MyReservation.Loading = Loading;
