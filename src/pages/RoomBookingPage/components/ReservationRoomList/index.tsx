@@ -21,11 +21,15 @@ export function ReservationRoomList() {
       const isCapacityAvailable = room.capacity >= field.attendees;
       const isAllEquipmentAvailable = field.equipment.every(eq => room.equipment.includes(eq));
       const isPreferredFloorAvailable = field.preferredFloor === null || room.floor === field.preferredFloor;
-      const isRoomConflict = reservations.some(
-        r => r.roomId === room.id && r.date === field.date && r.start < field.endTime && r.end > field.startTime
+      const isRoomAvailable = reservations.every(
+        reservation =>
+          reservation.roomId !== room.id &&
+          reservation.date !== field.date &&
+          reservation.start >= field.endTime &&
+          reservation.end <= field.startTime
       );
 
-      return isCapacityAvailable && isAllEquipmentAvailable && isPreferredFloorAvailable && !isRoomConflict;
+      return isCapacityAvailable && isAllEquipmentAvailable && isPreferredFloorAvailable && isRoomAvailable;
     })
     .sort((a, b) => a.floor - b.floor || a.name.localeCompare(b.name));
 
