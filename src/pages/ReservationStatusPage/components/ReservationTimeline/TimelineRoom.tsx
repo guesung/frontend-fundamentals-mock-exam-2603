@@ -2,13 +2,11 @@ import { css } from '@emotion/react';
 import { Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { PropsWithChildren } from 'react';
-import { Room } from 'types';
+import { ROOM_NAME_WIDTH } from './constants';
 
 interface TimelineRoomProps {
   name: string;
 }
-
-export const ROOM_NAME_WIDTH = 80;
 
 export function TimelineRoom({ name, children }: PropsWithChildren<TimelineRoomProps>) {
   return (

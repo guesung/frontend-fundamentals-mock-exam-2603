@@ -3,7 +3,7 @@ import { Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { HOUR_LABELS } from '../../constants';
 import { getTimelinePercentage } from '../../utils';
-import { ROOM_NAME_WIDTH } from './TimelineRoom';
+import { ROOM_NAME_WIDTH } from './constants';
 
 export function TimelineHeader() {
   return (
