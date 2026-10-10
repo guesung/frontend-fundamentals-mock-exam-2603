@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useReservationSearchParams } from '../../hooks';
 import { useErrorMessageContext } from '../../contexts';
 import { useNavigate } from 'react-router-dom';
+import { HttpError } from 'modules';
 
 interface ReservationBookButtonProps {
   selectedRoomId: string | null;
@@ -41,7 +42,8 @@ export function ReservationBookButton({ selectedRoomId, resetSelectedRoomId }: R
           navigate('/', { state: { message: '예약이 완료되었습니다!' } });
         },
         onError: error => {
-          onErrorMessageChange((error as Error)?.message ?? '예약에 실패했습니다.');
+          const message = error instanceof HttpError ? error.serverMessage : undefined;
+          onErrorMessageChange(message ?? '예약에 실패했습니다.');
           resetSelectedRoomId();
         },
       }
