@@ -2,14 +2,13 @@ import { css } from '@emotion/react';
 import { Border, Spacing } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { ReservationHeader } from 'components/ReservationHeader';
-import { useSearchParams } from 'react-router-dom';
 import { ReservationCondition, ReservationNavigation, ReservationRoomList, ValidationError } from './components';
 import { ReservationError } from './components/ReservationError';
 import { ErrorMessageContextProvider } from './contexts/ErrorMessageContextProvider';
+import { useReservationSearchParams } from './hooks';
 
 export function RoomBookingPage() {
-  const [searchParams] = useSearchParams();
-  const filterKey = searchParams.toString();
+  const { rservationFilterKey } = useReservationSearchParams();
 
   return (
     <div
@@ -22,7 +21,7 @@ export function RoomBookingPage() {
 
       <ReservationHeader>예약하기</ReservationHeader>
 
-      <ErrorMessageContextProvider key={filterKey}>
+      <ErrorMessageContextProvider key={rservationFilterKey}>
         <ReservationError />
 
         <Spacing size={24} />
@@ -31,7 +30,7 @@ export function RoomBookingPage() {
 
         <Spacing size={24} />
 
-        <ReservationRoomList key={filterKey} />
+        <ReservationRoomList key={rservationFilterKey} />
       </ErrorMessageContextProvider>
 
       <Spacing size={24} />

@@ -11,35 +11,30 @@ export function useReservationSearchParams() {
   });
   const [equipment, setEquipment] = useSearchParamsState<string[]>('equipment', {
     defaultValue: [],
-    parser: equipment => equipment?.split(',') ?? [],
+    parser: equipment => (equipment ? equipment?.split(',') : []),
   });
   const [preferredFloor, setPreferredFloor] = useSearchParamsState<number | null>('preferredFloor', {
     defaultValue: null,
     parser: preferredFloor => Number(preferredFloor),
   });
 
-  const field = {
-    date,
-    startTime,
-    endTime,
-    attendees,
-    equipment,
-    preferredFloor,
-  };
-
-  const fieldSetter = {
-    setDate,
-    setStartTime,
-    setEndTime,
-    setAttendees,
-    setEquipment,
-    setPreferredFloor,
-  };
-
-  console.log(field);
-
   return {
-    field,
-    fieldSetter,
+    field: {
+      date,
+      startTime,
+      endTime,
+      attendees,
+      equipment,
+      preferredFloor,
+    },
+    fieldSetter: {
+      setDate,
+      setStartTime,
+      setEndTime,
+      setAttendees,
+      setEquipment,
+      setPreferredFloor,
+    },
+    rservationFilterKey: `${date}-${startTime}-${endTime}-${attendees}-${equipment}-${preferredFloor}`,
   };
 }
