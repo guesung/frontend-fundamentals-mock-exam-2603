@@ -2,13 +2,13 @@ import { css } from '@emotion/react';
 import { Spacing } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { useReservationSearchParams } from '../hooks';
-import { getValidationError } from '../utils';
+import { getValidationError, hasTimeRange } from '../utils';
 
 export function ValidationError() {
   const { conditions } = useReservationSearchParams();
   const validationError = getValidationError(conditions);
 
-  if (conditions.endTime === '' || conditions.startTime === '') return null;
+  if (hasTimeRange(conditions)) return null;
   return (
     <div
       css={css`

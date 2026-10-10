@@ -11,3 +11,12 @@ export function getValidationError({ endTime, startTime, attendees }: GetValidat
     return '참석 인원은 1명 이상이어야 합니다.';
   }
 }
+
+type HasTimeRangeParams = {
+  endTime: string;
+  startTime: string;
+};
+
+export function hasTimeRange({ endTime, startTime }: HasTimeRangeParams) {
+  return endTime === '' || startTime === '';
+}
