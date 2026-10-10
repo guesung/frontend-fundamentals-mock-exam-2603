@@ -10,7 +10,7 @@ import {
   ReservationDateSelector,
   ReservationTimeline,
 } from './components';
-import { DateContextProvider, MessageContextProvider } from './contexts';
+import { MessageContextProvider } from './contexts';
 import { Suspense } from 'react';
 
 export function ReservationStatusPage() {
@@ -25,16 +25,14 @@ export function ReservationStatusPage() {
 
       <Spacing size={24} />
 
-      <DateContextProvider>
-        <ReservationDateSelector />
-        <Spacing size={24} />
-        <Border size={8} />
-        <Spacing size={24} />
+      <ReservationDateSelector />
+      <Spacing size={24} />
+      <Border size={8} />
+      <Spacing size={24} />
 
-        <Suspense fallback={<ReservationTimeline.Loading />}>
-          <ReservationTimeline />
-        </Suspense>
-      </DateContextProvider>
+      <Suspense fallback={<ReservationTimeline.Loading />}>
+        <ReservationTimeline />
+      </Suspense>
 
       <Spacing size={24} />
       <Border size={8} />

@@ -1,7 +1,6 @@
-import { useSearchParamsState } from 'hooks/useSearchParamsState';
+import { Navigate, Routes as ReactRouterRoutes, Route } from 'react-router-dom';
 import { ReservationStatusPage } from './ReservationStatusPage';
 import { RoomBookingPage } from './RoomBookingPage';
-import { Route, Routes as ReactRouterRoutes, Navigate } from 'react-router-dom';
 
 export const Routes = () => {
   return (

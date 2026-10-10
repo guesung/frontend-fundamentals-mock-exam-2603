@@ -2,17 +2,17 @@ import { css } from '@emotion/react';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { useReservations, useRooms } from 'apis';
+import { useReservationDate } from 'hooks/useReservationDate';
 import { useState } from 'react';
 import { Room } from 'types';
+import { ReservationItem } from './ReservationItem';
 import { TimelineHeader } from './TimelineHeader';
 import { TimelineRoom } from './TimelineRoom';
-import { useDateContext } from '../../contexts';
-import { ReservationItem } from './ReservationItem';
 
 export function ReservationTimeline() {
   const [activeReservationId, setActiveReservationId] = useState<string | null>(null);
 
-  const { date } = useDateContext();
+  const { date } = useReservationDate();
 
   const { data: rooms = [] } = useRooms();
   const { data: reservations = [] } = useReservations({ date });

@@ -1,4 +1,4 @@
-import { useSearchParamsState } from 'hooks/useSearchParamsState';
+import { useSearchParamsState } from 'hooks';
 import { formatDate } from 'utils/date';
 
 export function useReservationConditions() {
