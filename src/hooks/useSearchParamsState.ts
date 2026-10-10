@@ -1,11 +1,14 @@
-import { useSearchParams } from 'react-router-dom';
+import { NavigateOptions, useSearchParams } from 'react-router-dom';
 
 type Options<T> = {
   defaultValue: T;
   parser?: (value: string | null) => T;
-};
+} & NavigateOptions;
 
-export function useSearchParamsState<T>(key: string, { defaultValue, parser = v => v as T }: Options<T>) {
+export function useSearchParamsState<T>(
+  key: string,
+  { defaultValue, parser = v => v as T, ...navigateOptions }: Options<T>
+) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const value = parser(searchParams.get(key)) || defaultValue;
@@ -19,7 +22,7 @@ export function useSearchParamsState<T>(key: string, { defaultValue, parser = v 
       newSearchParams.set(key, String(newValue));
     }
 
-    setSearchParams(newSearchParams);
+    setSearchParams(newSearchParams, { ...navigateOptions, replace: true });
   };
 
   return [value, setValue] as const;
