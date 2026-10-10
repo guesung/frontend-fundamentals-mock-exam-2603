@@ -1,5 +1,6 @@
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { useReservationSearchParams } from '../hooks';
+import { useResettableState } from 'hooks';
 
 type ErrorMessageContextType = {
   errorMessage: string | null;
@@ -15,16 +16,15 @@ export const useErrorMessageContext = () => {
   return context;
 };
 
-interface ErrorMessageContextProviderProps {}
+interface ErrorMessageContextProviderProps {
+  resetKey: string;
+}
 
-export function ErrorMessageContextProvider({ children }: PropsWithChildren<ErrorMessageContextProviderProps>) {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const { rservationFilterKey } = useReservationSearchParams();
-
-  useEffect(() => {
-    setErrorMessage(null);
-  }, [rservationFilterKey]);
+export function ErrorMessageContextProvider({
+  resetKey,
+  children,
+}: PropsWithChildren<ErrorMessageContextProviderProps>) {
+  const [errorMessage, setErrorMessage] = useResettableState<string | null>(resetKey, null);
 
   return (
     <ErrorMessageContext.Provider value={{ errorMessage, onErrorMessageChange: setErrorMessage }}>

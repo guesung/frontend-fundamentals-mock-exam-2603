@@ -8,13 +8,14 @@ import { getValidationError } from '../../utils';
 import { AvailableRoomList, NoAvailbleRoom } from './AvailableRoomList';
 import { ReservationBookButton } from './ReservationBookButton';
 import { useErrorMessageContext } from 'pages/RoomBookingPage/contexts';
+import { useResettableState } from 'hooks';
 
 export function ReservationRoomList() {
-  const [selectedRoomId, setSelectedRoomId] = useState<string | null>('');
+  const { field, rservationFilterKey } = useReservationSearchParams();
+
+  const [selectedRoomId, setSelectedRoomId] = useResettableState<string | null>(rservationFilterKey, '');
 
   const { onErrorMessageChange } = useErrorMessageContext();
-
-  const { field } = useReservationSearchParams();
 
   const { data: rooms = [] } = useRooms();
   const { data: reservations = [] } = useReservations({ date: field.date });
