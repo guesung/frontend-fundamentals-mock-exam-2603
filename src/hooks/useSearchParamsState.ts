@@ -11,8 +11,6 @@ export function useSearchParamsState<T>(key: string, { defaultValue, parser = v 
   const value = parser(searchParams.get(key)) || defaultValue;
 
   const setValue = (newValue: T) => {
-    if (key === 'equipment') console.log(newValue);
-
     const newSearchParams = new URLSearchParams(searchParams);
 
     if (newValue === null) {

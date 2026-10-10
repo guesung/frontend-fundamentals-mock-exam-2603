@@ -29,6 +29,7 @@ export function ReservationRoomList() {
     })
     .sort((a, b) => a.floor - b.floor || a.name.localeCompare(b.name));
 
+  if (field.endTime === '' || field.startTime === '') return null;
   if (getValidationError(field)) return null;
   return (
     <div
