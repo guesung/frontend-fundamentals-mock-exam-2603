@@ -20,12 +20,17 @@ export function ReservationItem({
   onReservationItemClick,
   onReservationItemCancle,
 }: ReservationItemProps) {
-  const { ref } = useOutsideClick<HTMLDivElement>(() => {
-    if (!isActive) {
-      return;
+  const { ref } = useOutsideClick<HTMLDivElement>(
+    () => {
+      if (!isActive) {
+        return;
+      }
+      onReservationItemCancle();
+    },
+    {
+      ignoreId: 'tooltip',
     }
-    onReservationItemCancle();
-  });
+  );
 
   return (
     <div
@@ -37,6 +42,7 @@ export function ReservationItem({
       `}
     >
       <div
+        id="tooltip"
         role="button"
         aria-label={`${name} ${reservation.start}-${reservation.end} 예약 상세`}
         onClick={onReservationItemClick}
