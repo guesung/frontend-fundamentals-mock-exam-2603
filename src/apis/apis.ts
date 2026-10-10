@@ -17,13 +17,7 @@ export function getReservations(date: string) {
 }
 
 export async function createReservation(payload: CreateReservationPayload) {
-  const response = await http.post<typeof payload, CreateReservationResponse>('/api/reservations', payload);
-
-  if ('ok' in response && !response.ok) {
-    throw new Error('예약에 실패했습니다.');
-  }
-
-  return response;
+  return http.post<typeof payload, CreateReservationResponse>('/api/reservations', payload);
 }
 
 export function getMyReservations() {
