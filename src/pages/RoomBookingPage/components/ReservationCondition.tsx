@@ -6,7 +6,7 @@ import { EQUIPMENT_LABELS, EQUIPMENTS } from 'constants/equipment';
 import { TIME_SLOTS } from 'pages/ReservationStatusPage/constants';
 import { Room } from 'types';
 import { formatDate } from 'utils/date';
-import { useReservationSearchParams } from '../hooks';
+import { useReservationConditions } from '../hooks';
 
 function getFloors(rooms: Room[]) {
   return [...new Set(rooms.map(r => r.floor))].sort((a, b) => a - b);
@@ -14,7 +14,7 @@ function getFloors(rooms: Room[]) {
 
 export function ReservationCondition() {
   const { data: rooms = [] } = useRooms();
-  const { conditions, conditionsSetter } = useReservationSearchParams();
+  const { conditions, conditionsSetter } = useReservationConditions();
 
   return (
     <div

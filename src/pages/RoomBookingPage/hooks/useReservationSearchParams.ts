@@ -1,7 +1,7 @@
 import { useSearchParamsState } from 'hooks/useSearchParamsState';
 import { formatDate } from 'utils/date';
 
-export function useReservationSearchParams() {
+export function useReservationConditions() {
   const [date, setDate] = useSearchParamsState<string>('date', { defaultValue: formatDate(new Date()) });
   const [startTime, setStartTime] = useSearchParamsState<string>('startTime', { defaultValue: '' });
   const [endTime, setEndTime] = useSearchParamsState<string>('endTime', { defaultValue: '' });

@@ -5,11 +5,11 @@ import { ReservationHeader } from 'components/ReservationHeader';
 import { ReservationCondition, ReservationNavigation, ReservationRoomList, ValidationError } from './components';
 import { ReservationError } from './components/ReservationError';
 import { ErrorMessageContextProvider } from './contexts/ErrorMessageContextProvider';
-import { useReservationSearchParams } from './hooks';
+import { useReservationConditions } from './hooks';
 import { getValidationError, hasTimeRange } from './utils';
 
 export function RoomBookingPage() {
-  const { reservationFilterKey, conditions } = useReservationSearchParams();
+  const { reservationFilterKey, conditions } = useReservationConditions();
 
   const isConditionsReady = hasTimeRange(conditions) && !getValidationError(conditions);
 

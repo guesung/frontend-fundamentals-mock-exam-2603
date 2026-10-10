@@ -1,7 +1,7 @@
 import { Button } from '_tosslib/components';
 import { useCreateReservation } from 'apis';
 import axios from 'axios';
-import { useReservationSearchParams } from '../../hooks';
+import { useReservationConditions } from '../../hooks';
 import { useErrorMessageContext } from '../../contexts';
 import { useNavigate } from 'react-router-dom';
 import { HttpError } from 'modules';
@@ -13,7 +13,7 @@ interface ReservationBookButtonProps {
 
 export function ReservationBookButton({ selectedRoomId, resetSelectedRoomId }: ReservationBookButtonProps) {
   const { mutate: createReservation, isPending } = useCreateReservation();
-  const { conditions } = useReservationSearchParams();
+  const { conditions } = useReservationConditions();
 
   const navigate = useNavigate();
   const { setErrorMessage } = useErrorMessageContext();
