@@ -3,7 +3,7 @@ import { createContext, PropsWithChildren, useContext } from 'react';
 
 type ErrorMessageContextType = {
   errorMessage: string | null;
-  onErrorMessageChange: (errorMessage: string | null) => void;
+  setErrorMessage: (errorMessage: string | null) => void;
 };
 
 const ErrorMessageContext = createContext<ErrorMessageContextType | null>(null);
@@ -26,8 +26,6 @@ export function ErrorMessageContextProvider({
   const [errorMessage, setErrorMessage] = useResettableState<string | null>(resetKey, null);
 
   return (
-    <ErrorMessageContext.Provider value={{ errorMessage, onErrorMessageChange: setErrorMessage }}>
-      {children}
-    </ErrorMessageContext.Provider>
+    <ErrorMessageContext.Provider value={{ errorMessage, setErrorMessage }}>{children}</ErrorMessageContext.Provider>
   );
 }

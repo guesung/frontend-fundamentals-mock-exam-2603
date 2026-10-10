@@ -13,29 +13,29 @@ interface ReservationBookButtonProps {
 
 export function ReservationBookButton({ selectedRoomId, resetSelectedRoomId }: ReservationBookButtonProps) {
   const { mutateAsync: createReservation, isPending } = useCreateReservation();
-  const { field } = useReservationSearchParams();
+  const { conditions } = useReservationSearchParams();
 
   const navigate = useNavigate();
-  const { onErrorMessageChange } = useErrorMessageContext();
+  const { setErrorMessage } = useErrorMessageContext();
 
   const handleBook = async () => {
     if (!selectedRoomId) {
-      onErrorMessageChange('회의실을 선택해주세요.');
+      setErrorMessage('회의실을 선택해주세요.');
       return;
     }
-    if (!field.startTime || !field.endTime) {
-      onErrorMessageChange('시작 시간과 종료 시간을 선택해주세요.');
+    if (!conditions.startTime || !conditions.endTime) {
+      setErrorMessage('시작 시간과 종료 시간을 선택해주세요.');
       return;
     }
 
     await createReservation(
       {
         roomId: selectedRoomId,
-        date: field.date,
-        start: field.startTime,
-        end: field.endTime,
-        attendees: field.attendees,
-        equipment: field.equipment,
+        date: conditions.date,
+        start: conditions.startTime,
+        end: conditions.endTime,
+        attendees: conditions.attendees,
+        equipment: conditions.equipment,
       },
       {
         onSuccess: () => {
@@ -43,7 +43,7 @@ export function ReservationBookButton({ selectedRoomId, resetSelectedRoomId }: R
         },
         onError: error => {
           const message = error instanceof HttpError ? error.serverMessage : undefined;
-          onErrorMessageChange(message ?? '예약에 실패했습니다.');
+          setErrorMessage(message ?? '예약에 실패했습니다.');
           resetSelectedRoomId();
         },
       }

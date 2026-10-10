@@ -19,7 +19,7 @@ export function useReservationSearchParams() {
   });
 
   return {
-    field: {
+    conditions: {
       date,
       startTime,
       endTime,
@@ -27,13 +27,13 @@ export function useReservationSearchParams() {
       equipment,
       preferredFloor,
     },
-    fieldSetter: {
-      setDate,
-      setStartTime,
-      setEndTime,
-      setAttendees,
-      setEquipment,
-      setPreferredFloor,
+    setConditions: {
+      date: setDate,
+      startTime: setStartTime,
+      endTime: setEndTime,
+      attendees: setAttendees,
+      equipment: setEquipment,
+      preferredFloor: setPreferredFloor,
     },
     rservationFilterKey: `${date}-${startTime}-${endTime}-${attendees}-${equipment}-${preferredFloor}`,
   };

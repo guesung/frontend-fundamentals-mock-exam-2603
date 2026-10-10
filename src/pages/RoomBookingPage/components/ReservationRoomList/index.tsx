@@ -10,31 +10,33 @@ import { AvailableRoomList, NoAvailbleRoom } from './AvailableRoomList';
 import { ReservationBookButton } from './ReservationBookButton';
 
 export function ReservationRoomList() {
-  const { field, rservationFilterKey } = useReservationSearchParams();
+  const { conditions, rservationFilterKey } = useReservationSearchParams();
 
   const [selectedRoomId, setSelectedRoomId] = useResettableState<string | null>(rservationFilterKey, '');
 
-  const { onErrorMessageChange } = useErrorMessageContext();
+  const { setErrorMessage } = useErrorMessageContext();
 
   const { data: rooms = [] } = useRooms();
-  const { data: reservations = [] } = useReservations({ date: field.date });
+  const { data: reservations = [] } = useReservations({ date: conditions.date });
 
   const availableRoomList = rooms
     .filter(room => {
-      const isCapacityAvailable = room.capacity >= field.attendees;
-      const isAllEquipmentAvailable = field.equipment.every(eq => room.equipment.includes(eq));
-      const isPreferredFloorAvailable = field.preferredFloor === null || room.floor === field.preferredFloor;
+      const isCapacityAvailable = room.capacity >= conditions.attendees;
+      const isAllEquipmentAvailable = conditions.equipment.every(eq => room.equipment.includes(eq));
+      const isPreferredFloorAvailable = conditions.preferredFloor === null || room.floor === conditions.preferredFloor;
       const hasConflict = reservations.some(
         reservation =>
-          reservation.roomId === room.id && reservation.start < field.endTime && reservation.end > field.startTime
+          reservation.roomId === room.id &&
+          reservation.start < conditions.endTime &&
+          reservation.end > conditions.startTime
       );
 
       return isCapacityAvailable && isAllEquipmentAvailable && isPreferredFloorAvailable && !hasConflict;
     })
     .sort((a, b) => a.floor - b.floor || a.name.localeCompare(b.name));
 
-  if (field.endTime === '' || field.startTime === '') return null;
-  if (getValidationError(field)) return null;
+  if (conditions.endTime === '' || conditions.startTime === '') return null;
+  if (getValidationError(conditions)) return null;
   return (
     <div
       css={css`
@@ -62,7 +64,7 @@ export function ReservationRoomList() {
         <AvailableRoomList
           availableRoomList={availableRoomList}
           onAvilableRoomClick={id => {
-            onErrorMessageChange(null);
+            setErrorMessage(null);
             setSelectedRoomId(id);
           }}
           selectedRoomId={selectedRoomId}

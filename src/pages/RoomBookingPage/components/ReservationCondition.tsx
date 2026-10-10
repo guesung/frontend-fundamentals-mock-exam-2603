@@ -14,7 +14,7 @@ function getFloors(rooms: Room[]) {
 
 export function ReservationCondition() {
   const { data: rooms = [] } = useRooms();
-  const { field, fieldSetter } = useReservationSearchParams();
+  const { conditions, setConditions } = useReservationSearchParams();
 
   return (
     <div
@@ -40,10 +40,10 @@ export function ReservationCondition() {
         </Text>
         <input
           type="date"
-          value={field.date}
+          value={conditions.date}
           min={formatDate(new Date())}
           onChange={e => {
-            fieldSetter.setDate(e.target.value);
+            setConditions.date(e.target.value);
           }}
           aria-label="날짜"
           css={css`
@@ -87,9 +87,9 @@ export function ReservationCondition() {
             시작 시간
           </Text>
           <Select
-            value={field.startTime}
+            value={conditions.startTime}
             onChange={e => {
-              fieldSetter.setStartTime(e.target.value);
+              setConditions.startTime(e.target.value);
             }}
             aria-label="시작 시간"
           >
@@ -113,9 +113,9 @@ export function ReservationCondition() {
             종료 시간
           </Text>
           <Select
-            value={field.endTime}
+            value={conditions.endTime}
             onChange={e => {
-              fieldSetter.setEndTime(e.target.value);
+              setConditions.endTime(e.target.value);
             }}
             aria-label="종료 시간"
           >
@@ -151,9 +151,9 @@ export function ReservationCondition() {
           <input
             type="number"
             min={1}
-            value={field.attendees}
+            value={conditions.attendees}
             onChange={e => {
-              fieldSetter.setAttendees(Math.max(1, Number(e.target.value)));
+              setConditions.attendees(Math.max(1, Number(e.target.value)));
             }}
             aria-label="참석 인원"
             css={css`
@@ -188,10 +188,10 @@ export function ReservationCondition() {
             선호 층
           </Text>
           <Select
-            value={field.preferredFloor ?? 'all'}
+            value={conditions.preferredFloor ?? 'all'}
             onChange={e => {
               const val = e.target.value;
-              fieldSetter.setPreferredFloor(val === 'all' ? null : Number(val));
+              setConditions.preferredFloor(val === 'all' ? null : Number(val));
             }}
             aria-label="선호 층"
           >
@@ -220,14 +220,14 @@ export function ReservationCondition() {
           `}
         >
           {EQUIPMENTS.map(eq => {
-            const selected = field.equipment.includes(eq);
+            const selected = conditions.equipment.includes(eq);
             return (
               <button
                 key={eq}
                 type="button"
                 onClick={() => {
-                  const next = selected ? field.equipment.filter(e => e !== eq) : [...field.equipment, eq];
-                  fieldSetter.setEquipment(next);
+                  const next = selected ? conditions.equipment.filter(e => e !== eq) : [...conditions.equipment, eq];
+                  setConditions.equipment(next);
                 }}
                 aria-label={EQUIPMENT_LABELS[eq]}
                 aria-pressed={selected}

@@ -5,10 +5,10 @@ import { useReservationSearchParams } from '../hooks';
 import { getValidationError } from '../utils';
 
 export function ValidationError() {
-  const { field } = useReservationSearchParams();
-  const validationError = getValidationError(field);
+  const { conditions } = useReservationSearchParams();
+  const validationError = getValidationError(conditions);
 
-  if (field.endTime === '' || field.startTime === '') return null;
+  if (conditions.endTime === '' || conditions.startTime === '') return null;
   return (
     <div
       css={css`
