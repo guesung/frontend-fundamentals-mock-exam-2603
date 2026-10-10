@@ -25,13 +25,6 @@ export function ReservationRoomList() {
         r => r.roomId === room.id && r.date === field.date && r.start < field.endTime && r.end > field.startTime
       );
 
-      console.log({
-        isCapacityAvailable,
-        isAllEquipmentAvailable,
-        isPreferredFloorAvailable,
-        notIsRoomConflict: !isRoomConflict,
-      });
-
       return isCapacityAvailable && isAllEquipmentAvailable && isPreferredFloorAvailable && !isRoomConflict;
     })
     .sort((a, b) => a.floor - b.floor || a.name.localeCompare(b.name));

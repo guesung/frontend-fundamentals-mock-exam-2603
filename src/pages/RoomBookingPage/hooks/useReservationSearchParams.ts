@@ -2,30 +2,41 @@ import { useSearchParamsState } from 'hooks/useSearchParamsState';
 import { formatDate } from 'utils/date';
 
 export function useReservationSearchParams() {
-  const [date, setDate] = useSearchParamsState('date');
-  const [startTime, setStartTime] = useSearchParamsState('startTime');
-  const [endTime, setEndTime] = useSearchParamsState('endTime');
-  const [attendees, setAttendees] = useSearchParamsState('attendees');
-  const [equipment, setEquipment] = useSearchParamsState('equipment');
-  const [preferredFloor, setPreferredFloor] = useSearchParamsState('preferredFloor');
+  const [date, setDate] = useSearchParamsState<string>('date', { defaultValue: formatDate(new Date()) });
+  const [startTime, setStartTime] = useSearchParamsState<string>('startTime', { defaultValue: '' });
+  const [endTime, setEndTime] = useSearchParamsState<string>('endTime', { defaultValue: '' });
+  const [attendees, setAttendees] = useSearchParamsState<number>('attendees', {
+    defaultValue: 1,
+    parser: attendees => Number(attendees),
+  });
+  const [equipment, setEquipment] = useSearchParamsState<string[]>('equipment', {
+    defaultValue: [],
+    parser: equipment => equipment?.split(',') ?? [],
+  });
+  const [preferredFloor, setPreferredFloor] = useSearchParamsState<number | null>('preferredFloor', {
+    defaultValue: null,
+    parser: preferredFloor => Number(preferredFloor),
+  });
 
   const field = {
-    date: date || formatDate(new Date()),
-    startTime: startTime || '',
-    endTime: endTime || '',
-    attendees: Number(attendees) || 1,
-    equipment: equipment ? equipment.split(',') : [],
-    preferredFloor: preferredFloor ? Number(preferredFloor) : null,
+    date,
+    startTime,
+    endTime,
+    attendees,
+    equipment,
+    preferredFloor,
   };
 
   const fieldSetter = {
     setDate,
     setStartTime,
     setEndTime,
-    setAttendees: (attendees: number) => setAttendees(String(attendees)),
-    setEquipment: (equipment: string[]) => setEquipment(equipment.join(',')),
-    setPreferredFloor: (preferredFloor: number | null) => setPreferredFloor(String(preferredFloor)),
+    setAttendees,
+    setEquipment,
+    setPreferredFloor,
   };
+
+  console.log(field);
 
   return {
     field,

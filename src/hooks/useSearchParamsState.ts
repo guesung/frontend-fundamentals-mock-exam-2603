@@ -1,24 +1,26 @@
 import { useSearchParams } from 'react-router-dom';
 
-type Options = {
-  defaultValue?: string;
+type Options<T> = {
+  defaultValue: T;
+  parser?: (value: string | null) => T;
 };
 
-export function useSearchParamsState(
-  key: string,
-  { defaultValue = '' }: Options = {}
-): [string | null, (newValue: string) => void] {
+export function useSearchParamsState<T>(key: string, { defaultValue, parser = v => v as T }: Options<T>) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const value = searchParams.get(key) ?? defaultValue;
-  const setValue = (newValue: string) => {
+  const value = parser(searchParams.get(key)) || defaultValue;
+
+  const setValue = (newValue: T) => {
     const newSearchParams = new URLSearchParams(searchParams);
 
-    if (newValue === 'null') newSearchParams.delete(key);
-    else newSearchParams.set(key, String(newValue));
+    if (newValue === null) {
+      newSearchParams.delete(key);
+    } else {
+      newSearchParams.set(key, String(newValue));
+    }
 
     setSearchParams(newSearchParams);
   };
 
-  return [value, setValue];
+  return [value, setValue] as const;
 }
