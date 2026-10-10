@@ -6,7 +6,6 @@ import { getValidationError, hasTimeRange } from '../utils';
 
 export function ValidationError() {
   const { conditions } = useReservationSearchParams();
-  const validationError = getValidationError(conditions);
 
   if (!hasTimeRange(conditions)) return null;
   return (
@@ -23,7 +22,7 @@ export function ValidationError() {
         `}
         role="alert"
       >
-        {validationError}
+        {getValidationError(conditions)}
       </span>
     </div>
   );
