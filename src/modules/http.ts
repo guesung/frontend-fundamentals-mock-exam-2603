@@ -26,7 +26,7 @@ export const http = {
     return axios.get<Response>(url).then(res => res.data);
   },
   post: async function post<Request = unknown, Response = unknown>(url: string, data?: Request) {
-    return axios.post<Response>(url, { data });
+    return axios.post<Response>(url, { data }).then(res => res.data);
   },
   delete: function del<Response = unknown>(url: string) {
     return axios.delete<Response>(url).then(res => res.data);
