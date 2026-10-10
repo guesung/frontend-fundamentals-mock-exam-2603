@@ -27,7 +27,7 @@ export function useReservationSearchParams() {
       equipment,
       preferredFloor,
     },
-    setConditions: {
+    conditionsSetter: {
       date: setDate,
       startTime: setStartTime,
       endTime: setEndTime,
@@ -35,6 +35,6 @@ export function useReservationSearchParams() {
       equipment: setEquipment,
       preferredFloor: setPreferredFloor,
     },
-    rservationFilterKey: `${date}-${startTime}-${endTime}-${attendees}-${equipment}-${preferredFloor}`,
+    reservationFilterKey: `${date}-${startTime}-${endTime}-${attendees}-${equipment}-${preferredFloor}`,
   };
 }

@@ -9,7 +9,7 @@ import { useReservationSearchParams } from './hooks';
 import { getValidationError, hasTimeRange } from './utils';
 
 export function RoomBookingPage() {
-  const { rservationFilterKey, conditions } = useReservationSearchParams();
+  const { reservationFilterKey, conditions } = useReservationSearchParams();
 
   const isConditionsReady = hasTimeRange(conditions) && !getValidationError(conditions);
 
@@ -24,7 +24,7 @@ export function RoomBookingPage() {
 
       <ReservationHeader>예약하기</ReservationHeader>
 
-      <ErrorMessageContextProvider resetKey={rservationFilterKey}>
+      <ErrorMessageContextProvider resetKey={reservationFilterKey}>
         <ReservationError />
 
         <Spacing size={24} />

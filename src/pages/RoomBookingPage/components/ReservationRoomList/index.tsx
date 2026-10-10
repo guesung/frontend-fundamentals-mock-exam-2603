@@ -3,15 +3,15 @@ import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { useReservations, useRooms } from 'apis';
 import { useResettableState } from 'hooks';
-import { useErrorMessageContext } from 'pages/RoomBookingPage/contexts';
+import { useErrorMessageContext } from '../../contexts';
 import { useReservationSearchParams } from '../../hooks';
 import { AvailableRoomList, NoAvailbleRoom } from './AvailableRoomList';
 import { ReservationBookButton } from './ReservationBookButton';
 
 export function ReservationRoomList() {
-  const { conditions, rservationFilterKey } = useReservationSearchParams();
+  const { conditions, reservationFilterKey } = useReservationSearchParams();
 
-  const [selectedRoomId, setSelectedRoomId] = useResettableState<string | null>(rservationFilterKey, null);
+  const [selectedRoomId, setSelectedRoomId] = useResettableState<string | null>(reservationFilterKey, null);
 
   const { setErrorMessage } = useErrorMessageContext();
 
