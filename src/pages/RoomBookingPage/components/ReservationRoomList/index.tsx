@@ -11,7 +11,7 @@ import { ReservationBookButton } from './ReservationBookButton';
 export function ReservationRoomList() {
   const { conditions, rservationFilterKey } = useReservationSearchParams();
 
-  const [selectedRoomId, setSelectedRoomId] = useResettableState<string | null>(rservationFilterKey, '');
+  const [selectedRoomId, setSelectedRoomId] = useResettableState<string | null>(rservationFilterKey, null);
 
   const { setErrorMessage } = useErrorMessageContext();
 
