@@ -6,9 +6,12 @@ import { ReservationCondition, ReservationNavigation, ReservationRoomList, Valid
 import { ReservationError } from './components/ReservationError';
 import { ErrorMessageContextProvider } from './contexts/ErrorMessageContextProvider';
 import { useReservationSearchParams } from './hooks';
+import { getValidationError, hasTimeRange } from './utils';
 
 export function RoomBookingPage() {
-  const { rservationFilterKey } = useReservationSearchParams();
+  const { rservationFilterKey, conditions } = useReservationSearchParams();
+
+  const isConditionsReady = hasTimeRange(conditions) && !getValidationError(conditions);
 
   return (
     <div
@@ -30,7 +33,7 @@ export function RoomBookingPage() {
 
         <Spacing size={24} />
 
-        <ReservationRoomList />
+        {isConditionsReady && <ReservationRoomList />}
       </ErrorMessageContextProvider>
 
       <Spacing size={24} />

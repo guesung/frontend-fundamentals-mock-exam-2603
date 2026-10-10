@@ -8,7 +8,7 @@ export function ValidationError() {
   const { conditions } = useReservationSearchParams();
   const validationError = getValidationError(conditions);
 
-  if (hasTimeRange(conditions)) return null;
+  if (!hasTimeRange(conditions)) return null;
   return (
     <div
       css={css`

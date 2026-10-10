@@ -5,7 +5,6 @@ import { useReservations, useRooms } from 'apis';
 import { useResettableState } from 'hooks';
 import { useErrorMessageContext } from 'pages/RoomBookingPage/contexts';
 import { useReservationSearchParams } from '../../hooks';
-import { getValidationError, hasTimeRange } from '../../utils';
 import { AvailableRoomList, NoAvailbleRoom } from './AvailableRoomList';
 import { ReservationBookButton } from './ReservationBookButton';
 
@@ -35,7 +34,6 @@ export function ReservationRoomList() {
     })
     .sort((a, b) => a.floor - b.floor || a.name.localeCompare(b.name));
 
-  if (getValidationError(conditions) || hasTimeRange(conditions)) return null;
   return (
     <div
       css={css`

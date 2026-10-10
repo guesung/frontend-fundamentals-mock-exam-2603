@@ -18,5 +18,5 @@ type HasTimeRangeParams = {
 };
 
 export function hasTimeRange({ endTime, startTime }: HasTimeRangeParams) {
-  return endTime === '' || startTime === '';
+  return endTime !== '' && startTime !== '';
 }
