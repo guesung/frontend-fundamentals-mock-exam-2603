@@ -28,23 +28,9 @@ export function MyReservation() {
       </div>
       <Spacing size={16} />
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<MyReservationList.Loading />}>
         <MyReservationList />
       </Suspense>
     </div>
   );
 }
-
-function Loading() {
-  return (
-    <div
-      css={css`
-        width: 1px;
-        height: 200px;
-        background: ${colors.grey50};
-      `}
-    ></div>
-  );
-}
-
-MyReservation.Loading = Loading;

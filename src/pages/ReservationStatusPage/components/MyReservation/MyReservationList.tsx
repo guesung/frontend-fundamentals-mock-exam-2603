@@ -50,3 +50,17 @@ function MyReservationEmpty() {
     </div>
   );
 }
+
+function MyReservationLoading() {
+  return (
+    <div
+      css={css`
+        width: 1px;
+        height: 200px;
+        background: ${colors.grey50};
+      `}
+    ></div>
+  );
+}
+
+MyReservationList.Loading = MyReservationLoading;

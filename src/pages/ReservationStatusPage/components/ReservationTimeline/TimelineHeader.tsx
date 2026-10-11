@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 import { Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { HOUR_LABELS } from '../../constants';
 import { getTimelinePercentage } from '../../utils';
 import { ROOM_NAME_WIDTH } from './constants';
+import { HOUR_LABELS } from 'constants/time';
 
 export function TimelineHeader() {
   return (

@@ -17,5 +17,6 @@ export function useReservations({ date }: UseReservationsParams) {
   return useQuery({
     queryKey: ['reservations', date],
     queryFn: () => getReservations(date),
+    keepPreviousData: true,
   });
 }
