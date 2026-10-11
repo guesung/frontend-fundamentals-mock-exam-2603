@@ -1,33 +1,50 @@
 import { css } from '@emotion/react';
 import { ListRow, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
+import { useReservations, useRooms } from 'apis';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
+import { useReservationConditions } from 'pages/RoomBookingPage/hooks';
+
 import { Room } from 'types';
+import { filterAvailableRoomList, sortRoomList } from './utils';
 
 interface AvailableRoomListProps {
-  roomList: Room[];
   selectedRoomId: string | null;
   onRoomClick: (id: string) => void;
 }
 
-export function AvailableRoomList({ roomList, selectedRoomId, onRoomClick }: AvailableRoomListProps) {
+export function AvailableRoomList({ selectedRoomId, onRoomClick }: AvailableRoomListProps) {
+  const { conditions } = useReservationConditions();
+
+  const { data: rooms = [] } = useRooms();
+  const { data: reservations = [] } = useReservations({ date: conditions.date });
+
+  const availableRoomList = filterAvailableRoomList(rooms, conditions, reservations);
+  const sortedAvailableRoomList = sortRoomList(availableRoomList);
+
   return (
-    <div
-      css={css`
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      `}
-    >
-      {roomList.map(room => (
-        <AvailableRoomItem
-          key={room.id}
-          room={room}
-          onRoomClick={onRoomClick}
-          isSelected={selectedRoomId === room.id}
-        />
-      ))}
-    </div>
+    <>
+      {sortedAvailableRoomList.length > 0 ? (
+        <div
+          css={css`
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+          `}
+        >
+          {sortedAvailableRoomList.map(room => (
+            <AvailableRoomItem
+              key={room.id}
+              room={room}
+              onRoomClick={onRoomClick}
+              isSelected={selectedRoomId === room.id}
+            />
+          ))}
+        </div>
+      ) : (
+        <NoAvailbleRoom />
+      )}
+    </>
   );
 }
 

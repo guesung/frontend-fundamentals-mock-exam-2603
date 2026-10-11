@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import { Border, Spacing } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { ReservationHeader } from 'components/ReservationHeader';
-import { Suspense } from 'react';
 import { ReservationCondition, ReservationNavigation, ReservationRoomList, ValidationError } from './components';
 import { ReservationError } from './components/ReservationError';
 import { ErrorMessageContextProvider } from './contexts/ErrorMessageContextProvider';
@@ -34,11 +33,7 @@ export function RoomBookingPage() {
 
         <Spacing size={24} />
 
-        {isConditionsReady && (
-          <Suspense fallback={null}>
-            <ReservationRoomList />
-          </Suspense>
-        )}
+        {isConditionsReady && <ReservationRoomList />}
       </ErrorMessageContextProvider>
 
       <Spacing size={24} />
