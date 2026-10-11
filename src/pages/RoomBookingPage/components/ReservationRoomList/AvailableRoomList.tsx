@@ -5,12 +5,12 @@ import { EQUIPMENT_LABELS } from 'constants/equipment';
 import { Room } from 'types';
 
 interface AvailableRoomListProps {
-  availableRoomList: Room[];
+  roomList: Room[];
   selectedRoomId: string | null;
-  onAvilableRoomClick: (id: string) => void;
+  onRoomClick: (id: string) => void;
 }
 
-export function AvailableRoomList({ availableRoomList, selectedRoomId, onAvilableRoomClick }: AvailableRoomListProps) {
+export function AvailableRoomList({ roomList, selectedRoomId, onRoomClick }: AvailableRoomListProps) {
   return (
     <div
       css={css`
@@ -19,50 +19,63 @@ export function AvailableRoomList({ availableRoomList, selectedRoomId, onAvilabl
         gap: 10px;
       `}
     >
-      {availableRoomList.map(room => {
-        const isSelected = selectedRoomId === room.id;
+      {roomList.map(room => (
+        <AvailableRoomItem
+          key={room.id}
+          room={room}
+          onRoomClick={onRoomClick}
+          isSelected={selectedRoomId === room.id}
+        />
+      ))}
+    </div>
+  );
+}
 
-        return (
-          <div
-            key={room.id}
-            onClick={() => onAvilableRoomClick(room.id)}
-            role="button"
-            aria-pressed={isSelected}
-            aria-label={room.name}
-            css={css`
-              cursor: pointer;
-              padding: 14px 16px;
-              border-radius: 14px;
-              border: 2px solid ${isSelected ? colors.blue500 : colors.grey200};
-              background: ${isSelected ? colors.blue50 : colors.white};
-              transition: all 0.15s;
-              &:hover {
-                border-color: ${isSelected ? colors.blue500 : colors.grey300};
-              }
-            `}
-          >
-            <ListRow
-              contents={
-                <ListRow.Text2Rows
-                  top={room.name}
-                  topProps={{ typography: 't6', fontWeight: 'bold', color: colors.grey900 }}
-                  bottom={`${room.floor}층 · ${room.capacity}명 · ${room.equipment
-                    .map((e: string) => EQUIPMENT_LABELS[e])
-                    .join(', ')}`}
-                  bottomProps={{ typography: 't7', color: colors.grey600 }}
-                />
-              }
-              right={
-                isSelected ? (
-                  <Text typography="t7" fontWeight="bold" color={colors.blue500}>
-                    선택됨
-                  </Text>
-                ) : undefined
-              }
-            />
-          </div>
-        );
-      })}
+interface AvailableRoomItemProps {
+  room: Room;
+  onRoomClick: (id: string) => void;
+  isSelected: boolean;
+}
+
+export function AvailableRoomItem({ room, onRoomClick, isSelected }: AvailableRoomItemProps) {
+  return (
+    <div
+      key={room.id}
+      onClick={() => onRoomClick(room.id)}
+      role="button"
+      aria-pressed={isSelected}
+      aria-label={room.name}
+      css={css`
+        cursor: pointer;
+        padding: 14px 16px;
+        border-radius: 14px;
+        border: 2px solid ${isSelected ? colors.blue500 : colors.grey200};
+        background: ${isSelected ? colors.blue50 : colors.white};
+        transition: all 0.15s;
+        &:hover {
+          border-color: ${isSelected ? colors.blue500 : colors.grey300};
+        }
+      `}
+    >
+      <ListRow
+        contents={
+          <ListRow.Text2Rows
+            top={room.name}
+            topProps={{ typography: 't6', fontWeight: 'bold', color: colors.grey900 }}
+            bottom={`${room.floor}층 · ${room.capacity}명 · ${room.equipment
+              .map((e: string) => EQUIPMENT_LABELS[e])
+              .join(', ')}`}
+            bottomProps={{ typography: 't7', color: colors.grey600 }}
+          />
+        }
+        right={
+          isSelected && (
+            <Text typography="t7" fontWeight="bold" color={colors.blue500}>
+              선택됨
+            </Text>
+          )
+        }
+      />
     </div>
   );
 }

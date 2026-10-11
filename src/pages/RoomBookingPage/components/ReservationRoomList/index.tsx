@@ -48,8 +48,8 @@ export function ReservationRoomList() {
 
       {sortedAvailableRoomList.length > 0 ? (
         <AvailableRoomList
-          availableRoomList={sortedAvailableRoomList}
-          onAvilableRoomClick={id => {
+          roomList={sortedAvailableRoomList}
+          onRoomClick={id => {
             setErrorMessage(null);
             setSelectedRoomId(id);
           }}
