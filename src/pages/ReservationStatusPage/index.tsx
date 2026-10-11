@@ -42,11 +42,7 @@ export function ReservationStatusPage() {
           <MessageContextProvider>
             <MessageBanner />
 
-            <ErrorBoundary fallback={null}>
-              <Suspense fallback={<MyReservation.Loading />}>
-                <MyReservation />
-              </Suspense>
-            </ErrorBoundary>
+            <MyReservation />
           </MessageContextProvider>
 
           <Spacing size={24} />

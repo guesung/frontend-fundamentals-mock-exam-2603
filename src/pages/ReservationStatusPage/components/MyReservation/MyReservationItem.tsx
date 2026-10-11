@@ -19,7 +19,9 @@ export function MyReservationItem({ reservation, room }: MyReservationItemProps)
   const handleCancel: MouseEventHandler<HTMLElement> = event => {
     event.stopPropagation();
 
-    if (!window.confirm('정말 취소하시겠습니까?')) return;
+    if (!window.confirm('정말 취소하시겠습니까?')) {
+      return;
+    }
 
     mutate(reservation.id, {
       onSuccess: () => {
