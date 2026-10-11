@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 import { Select, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { TIME_SLOTS } from 'pages/ReservationStatusPage/constants';
 import { useReservationConditions } from '../../hooks';
+import { TIME_SLOTS } from 'constants/time';
 
 export function EndTimeSelect() {
   const { conditions, conditionsSetter } = useReservationConditions();

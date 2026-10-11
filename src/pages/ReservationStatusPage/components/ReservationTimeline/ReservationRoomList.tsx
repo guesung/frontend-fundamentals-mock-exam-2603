@@ -38,7 +38,7 @@ export function ReservationRoomList() {
                 name={room.name}
                 isActive={activeReservationId === reservation.id}
                 onReservationItemClick={() => toggleReservation(reservation.id)}
-                onReservationItemCancle={() => setActiveReservationId(null)}
+                onReservationItemCancel={() => setActiveReservationId(null)}
               />
             ))}
         </TimelineRoom>

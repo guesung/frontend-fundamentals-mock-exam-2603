@@ -1,4 +1,4 @@
-import { TIMELINE_START, TOTAL_MINUTES } from '../constants';
+import { TIMELINE_START, TOTAL_MINUTES } from 'constants/time';
 
 /**
  *

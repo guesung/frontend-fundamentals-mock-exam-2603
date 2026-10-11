@@ -10,7 +10,7 @@ interface ReservationItemProps {
   name: string;
   isActive: boolean;
   onReservationItemClick: () => void;
-  onReservationItemCancle: () => void;
+  onReservationItemCancel: () => void;
 }
 
 export function ReservationItem({
@@ -18,14 +18,14 @@ export function ReservationItem({
   name,
   isActive,
   onReservationItemClick,
-  onReservationItemCancle,
+  onReservationItemCancel,
 }: ReservationItemProps) {
   const { ref } = useOutsideClick<HTMLDivElement>(
     () => {
       if (!isActive) {
         return;
       }
-      onReservationItemCancle();
+      onReservationItemCancel();
     },
     {
       ignoreId: 'tooltip',
