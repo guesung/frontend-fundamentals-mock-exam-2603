@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useReservations, useRooms } from 'apis';
 import { useReservationDate } from 'hooks/useReservationDate';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Room } from 'types';
 import { ReservationItem } from './ReservationItem';
 import { TimelineRoom } from './TimelineRoom';
@@ -18,6 +18,19 @@ export function ReservationRoomList() {
   const toggleReservation = (id: string) => {
     setActiveReservationId(prev => (prev === id ? null : id));
   };
+
+  useEffect(() => {
+    function onToolTipOutsideClick(event: PointerEvent) {
+      const targetElement = event.target as HTMLElement;
+
+      if (!targetElement.dataset.reservationId) {
+        setActiveReservationId(null);
+      }
+    }
+
+    window.addEventListener('click', onToolTipOutsideClick);
+    return () => window.removeEventListener('click', onToolTipOutsideClick);
+  }, []);
 
   return (
     <div

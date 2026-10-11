@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import { colors } from '_tosslib/constants/colors';
 import { EQUIPMENT_LABELS } from 'constants/equipment';
-import { useOutsideClick } from 'hooks/index';
 import { Reservation } from 'types';
 import { getTimelinePercentage, getTimelineWidth } from '../../utils';
 
@@ -13,25 +12,7 @@ interface ReservationItemProps {
   onReservationItemCancel: () => void;
 }
 
-export function ReservationItem({
-  reservation,
-  name,
-  isActive,
-  onReservationItemClick,
-  onReservationItemCancel,
-}: ReservationItemProps) {
-  const { ref } = useOutsideClick<HTMLDivElement>(
-    () => {
-      if (!isActive) {
-        return;
-      }
-      onReservationItemCancel();
-    },
-    {
-      ignoreId: 'tooltip',
-    }
-  );
-
+export function ReservationItem({ reservation, name, isActive, onReservationItemClick }: ReservationItemProps) {
   return (
     <div
       css={css`
@@ -42,7 +23,7 @@ export function ReservationItem({
       `}
     >
       <div
-        id="tooltip"
+        data-reservation-id={`reservation-tooltip-${reservation.id}`}
         role="button"
         aria-label={`${name} ${reservation.start}-${reservation.end} 예약 상세`}
         onClick={onReservationItemClick}
@@ -61,7 +42,6 @@ export function ReservationItem({
       />
       {isActive && (
         <div
-          ref={ref}
           role="tooltip"
           css={css`
             position: absolute;
