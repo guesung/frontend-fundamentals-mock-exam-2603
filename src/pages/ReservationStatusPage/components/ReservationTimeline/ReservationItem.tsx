@@ -23,7 +23,7 @@ export function ReservationItem({ reservation, name, isActive, onReservationItem
       `}
     >
       <div
-        data-reservation-id={`reservation-tooltip-${reservation.id}`}
+        data-name="reservation-item"
         role="button"
         aria-label={`${name} ${reservation.start}-${reservation.end} 예약 상세`}
         onClick={onReservationItemClick}
@@ -43,6 +43,7 @@ export function ReservationItem({ reservation, name, isActive, onReservationItem
       {isActive && (
         <div
           role="tooltip"
+          data-name="tooltip"
           css={css`
             position: absolute;
             top: 100%;

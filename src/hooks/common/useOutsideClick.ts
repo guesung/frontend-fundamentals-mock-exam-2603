@@ -1,28 +1,21 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
-interface UseOutsideClickOptions {
-  ignoreId: string;
+interface UseOutsideClickParams {
+  callbackFn: () => void;
+  selectors: string[];
 }
 
-export function useOutsideClick<T extends HTMLElement>(callackFn: () => void, { ignoreId }: UseOutsideClickOptions) {
-  const ref = useRef<T>(null);
-
+export function useOutsideClick({ callbackFn, selectors }: UseOutsideClickParams) {
   useEffect(() => {
-    function handleOutsideClick(event: PointerEvent) {
-      const targetNode = event.target as HTMLElement;
+    function onToolTipOutsideClick(event: PointerEvent) {
+      const targetElement = event.target as HTMLElement;
 
-      if (targetNode.id === ignoreId) {
-        return;
-      }
-
-      if (!ref.current?.contains(targetNode)) {
-        callackFn();
+      if (selectors.every(selector => !targetElement.closest(selector))) {
+        callbackFn();
       }
     }
 
-    window.addEventListener('click', handleOutsideClick);
-    return () => window.removeEventListener('click', handleOutsideClick);
-  }, [callackFn, ignoreId]);
-
-  return { ref };
+    window.addEventListener('click', onToolTipOutsideClick);
+    return () => window.removeEventListener('click', onToolTipOutsideClick);
+  }, [callbackFn, selectors]);
 }

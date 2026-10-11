@@ -1,11 +1,12 @@
 import { css } from '@emotion/react';
+import { colors } from '_tosslib/constants/colors';
 import { useReservations, useRooms } from 'apis';
 import { useReservationDate } from 'hooks/useReservationDate';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Room } from 'types';
 import { ReservationItem } from './ReservationItem';
 import { TimelineRoom } from './TimelineRoom';
-import { colors } from '_tosslib/constants/colors';
+import { useOutsideClick } from 'hooks/index';
 
 export function ReservationRoomList() {
   const [activeReservationId, setActiveReservationId] = useState<string | null>(null);
@@ -19,18 +20,12 @@ export function ReservationRoomList() {
     setActiveReservationId(prev => (prev === id ? null : id));
   };
 
-  useEffect(() => {
-    function onToolTipOutsideClick(event: PointerEvent) {
-      const targetElement = event.target as HTMLElement;
-
-      if (!targetElement.dataset.reservationId) {
-        setActiveReservationId(null);
-      }
-    }
-
-    window.addEventListener('click', onToolTipOutsideClick);
-    return () => window.removeEventListener('click', onToolTipOutsideClick);
-  }, []);
+  useOutsideClick({
+    callbackFn: () => {
+      setActiveReservationId(null);
+    },
+    selectors: ['[data-name="tooltip"]', '[data-name="reservation-item"]'],
+  });
 
   return (
     <div
