@@ -2,17 +2,17 @@ import { css } from '@emotion/react';
 import { Border, Spacing } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { ReservationHeader } from 'components/ReservationHeader';
+import { Suspense } from 'react';
 import { ReservationCondition, ReservationNavigation, ReservationRoomList, ValidationError } from './components';
 import { ReservationError } from './components/ReservationError';
 import { ErrorMessageContextProvider } from './contexts/ErrorMessageContextProvider';
 import { useReservationConditions } from './hooks';
-import { getValidationError, hasTimeRange } from './utils';
-import { Suspense } from 'react';
+import { getValidationError } from './utils';
 
 export function RoomBookingPage() {
   const { reservationFilterKey, conditions } = useReservationConditions();
 
-  const isConditionsReady = hasTimeRange(conditions) && !getValidationError(conditions);
+  const isConditionsReady = !getValidationError(conditions);
 
   return (
     <div

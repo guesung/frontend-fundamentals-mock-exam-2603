@@ -7,7 +7,9 @@ import { getValidationError, hasTimeRange } from '../utils';
 export function ValidationError() {
   const { conditions } = useReservationConditions();
 
-  if (!hasTimeRange(conditions)) return null;
+  if (!hasTimeRange(conditions)) {
+    return null;
+  }
   return (
     <div
       css={css`
