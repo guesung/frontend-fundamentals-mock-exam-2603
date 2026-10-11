@@ -33,11 +33,7 @@ export function ReservationStatusPage() {
           <Border size={8} />
           <Spacing size={24} />
 
-          <ErrorBoundary fallback={null}>
-            <Suspense fallback={<ReservationTimeline.Loading />}>
-              <ReservationTimeline />
-            </Suspense>
-          </ErrorBoundary>
+          <ReservationTimeline />
 
           <Spacing size={24} />
           <Border size={8} />

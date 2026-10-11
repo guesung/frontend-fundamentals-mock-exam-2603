@@ -1,26 +1,12 @@
 import { css } from '@emotion/react';
 import { Spacing, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { useReservations, useRooms } from 'apis';
-import { useReservationDate } from 'hooks/useReservationDate';
-import { useState } from 'react';
-import { Room } from 'types';
-import { ReservationItem } from './ReservationItem';
+import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { TimelineHeader } from './TimelineHeader';
-import { TimelineRoom } from './TimelineRoom';
+import { ReservationRoomList } from './ReservationRoomList';
 
 export function ReservationTimeline() {
-  const [activeReservationId, setActiveReservationId] = useState<string | null>(null);
-
-  const { date } = useReservationDate();
-
-  const { data: rooms = [] } = useRooms();
-  const { data: reservations = [] } = useReservations({ date });
-
-  const toggleReservation = (id: string) => {
-    setActiveReservationId(prev => (prev === id ? null : id));
-  };
-
   return (
     <div
       css={css`
@@ -44,49 +30,12 @@ export function ReservationTimeline() {
 
         <Spacing size={4} />
 
-        {/* <div ref={ref}>테스트</div> */}
-
-        <div
-          css={css`
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-          `}
-        >
-          {rooms?.map((room: Room) => (
-            <TimelineRoom key={room.id} name={room.name}>
-              {reservations
-                .filter(reservation => reservation.roomId === room.id)
-                .map(reservation => (
-                  <ReservationItem
-                    key={reservation.id}
-                    reservation={reservation}
-                    name={room.name}
-                    isActive={activeReservationId === reservation.id}
-                    onReservationItemClick={() => toggleReservation(reservation.id)}
-                    onReservationItemCancle={() => setActiveReservationId(null)}
-                  />
-                ))}
-            </TimelineRoom>
-          ))}
-        </div>
+        <ErrorBoundary fallback={null}>
+          <Suspense fallback={<ReservationRoomList.Loading />}>
+            <ReservationRoomList />
+          </Suspense>
+        </ErrorBoundary>
       </div>
     </div>
   );
 }
-
-function Loading() {
-  return (
-    <div
-      css={css`
-        width: 100%;
-        height: 380px;
-        padding: 0 24px;
-        box-sizing: border-box;
-        background: ${colors.grey50};
-      `}
-    ></div>
-  );
-}
-
-ReservationTimeline.Loading = Loading;

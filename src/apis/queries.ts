@@ -14,7 +14,7 @@ interface UseReservationsParams {
 }
 
 export function useReservations({ date }: UseReservationsParams) {
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: ['reservations', date],
     queryFn: () => getReservations(date),
   });
