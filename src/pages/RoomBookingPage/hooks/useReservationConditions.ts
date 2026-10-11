@@ -4,7 +4,9 @@ import { Conditions } from '../types/conditions';
 
 interface UseReservationConditionsReturns {
   conditions: Conditions;
-  conditionsSetter: Record<keyof Conditions, (newValue: any) => void>;
+  conditionsSetter: {
+    [K in keyof Conditions]: (newValue: Conditions[K]) => void;
+  };
   reservationFilterKey: string;
 }
 
