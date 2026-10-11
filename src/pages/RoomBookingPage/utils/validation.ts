@@ -1,9 +1,6 @@
 import { Conditions } from '../types';
 
 export function getValidationError(conditions: Conditions) {
-  if (!hasTimeRange(conditions)) {
-    return;
-  }
   if (conditions.endTime <= conditions.startTime) {
     return '종료 시간은 시작 시간보다 늦어야 합니다.';
   }

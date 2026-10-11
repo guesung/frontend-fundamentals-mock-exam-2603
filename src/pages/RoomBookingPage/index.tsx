@@ -6,12 +6,12 @@ import { ReservationCondition, ReservationNavigation, ReservationRoomList, Valid
 import { ReservationError } from './components/ReservationError';
 import { ErrorMessageContextProvider } from './contexts/ErrorMessageContextProvider';
 import { useReservationConditions } from './hooks';
-import { getValidationError } from './utils';
+import { getValidationError, hasTimeRange } from './utils';
 
 export function RoomBookingPage() {
   const { reservationFilterKey, conditions } = useReservationConditions();
 
-  const isConditionsReady = !getValidationError(conditions);
+  const isConditionsReady = hasTimeRange(conditions) && !getValidationError(conditions);
 
   return (
     <div

@@ -10,6 +10,7 @@ export function ValidationError() {
   if (!hasTimeRange(conditions)) {
     return null;
   }
+
   return (
     <div
       css={css`
