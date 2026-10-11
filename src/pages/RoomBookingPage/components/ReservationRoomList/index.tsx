@@ -20,9 +20,8 @@ export function ReservationRoomList() {
   const { data: rooms = [] } = useRooms();
   const { data: reservations = [] } = useReservations({ date: conditions.date });
 
-  const availableRoomList = filterAvailableRoomList(rooms, conditions, reservations).sort(
-    (a, b) => a.floor - b.floor || a.name.localeCompare(b.name)
-  );
+  const availableRoomList = filterAvailableRoomList(rooms, conditions, reservations);
+  const sortedAvailableRoomList = sortRoomList(availableRoomList);
 
   return (
     <div
@@ -41,15 +40,15 @@ export function ReservationRoomList() {
           예약 가능 회의실
         </Text>
         <Text typography="t7" fontWeight="medium" color={colors.grey500}>
-          {availableRoomList.length}개
+          {sortedAvailableRoomList.length}개
         </Text>
       </div>
 
       <Spacing size={16} />
 
-      {availableRoomList.length > 0 ? (
+      {sortedAvailableRoomList.length > 0 ? (
         <AvailableRoomList
-          availableRoomList={availableRoomList}
+          availableRoomList={sortedAvailableRoomList}
           onAvilableRoomClick={id => {
             setErrorMessage(null);
             setSelectedRoomId(id);
@@ -67,7 +66,7 @@ export function ReservationRoomList() {
   );
 }
 
-function filterAvailableRoomList(rooms: Room[], conditions: Conditions, reservations: Reservation[]) {
+function filterAvailableRoomList(rooms: Room[], conditions: Conditions, reservations: Reservation[]): Room[] {
   return rooms.filter(room => {
     const isCapacityAvailable = room.capacity >= conditions.attendees;
     const isAllEquipmentAvailable = conditions.equipment.every(eq => room.equipment.includes(eq));
@@ -81,4 +80,8 @@ function filterAvailableRoomList(rooms: Room[], conditions: Conditions, reservat
 
     return isCapacityAvailable && isAllEquipmentAvailable && isPreferredFloorAvailable && !hasConflict;
   });
+}
+
+function sortRoomList(rooms: Room[]): Room[] {
+  return [...rooms].sort((a, b) => a.floor - b.floor || a.name.localeCompare(b.name));
 }

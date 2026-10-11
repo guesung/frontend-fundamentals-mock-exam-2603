@@ -9,18 +9,18 @@ interface UseReservationConditionsReturns {
 }
 
 export function useReservationConditions(): UseReservationConditionsReturns {
-  const [date, setDate] = useSearchParamsState<string>('date', { defaultValue: formatDate(new Date()) });
-  const [startTime, setStartTime] = useSearchParamsState<string>('startTime', { defaultValue: '' });
-  const [endTime, setEndTime] = useSearchParamsState<string>('endTime', { defaultValue: '' });
-  const [attendees, setAttendees] = useSearchParamsState<number>('attendees', {
+  const [date, setDate] = useSearchParamsState<Conditions['date']>('date', { defaultValue: formatDate(new Date()) });
+  const [startTime, setStartTime] = useSearchParamsState<Conditions['startTime']>('startTime', { defaultValue: '' });
+  const [endTime, setEndTime] = useSearchParamsState<Conditions['endTime']>('endTime', { defaultValue: '' });
+  const [attendees, setAttendees] = useSearchParamsState<Conditions['attendees']>('attendees', {
     defaultValue: 1,
     parser: attendees => Number(attendees),
   });
-  const [equipment, setEquipment] = useSearchParamsState<string[]>('equipment', {
+  const [equipment, setEquipment] = useSearchParamsState<Conditions['equipment']>('equipment', {
     defaultValue: [],
     parser: equipment => (equipment ? equipment?.split(',') : []),
   });
-  const [preferredFloor, setPreferredFloor] = useSearchParamsState<number | null>('preferredFloor', {
+  const [preferredFloor, setPreferredFloor] = useSearchParamsState<Conditions['preferredFloor']>('preferredFloor', {
     defaultValue: null,
     parser: preferredFloor => Number(preferredFloor),
   });
