@@ -33,6 +33,9 @@ export function MyReservationItem({ reservation, room }: MyReservationItemProps)
     });
   };
 
+  if (!room) {
+    return null;
+  }
   return (
     <div
       key={reservation.id}
@@ -46,7 +49,7 @@ export function MyReservationItem({ reservation, room }: MyReservationItemProps)
       <ListRow
         contents={
           <ListRow.Text2Rows
-            top={room?.name ?? room?.id ?? ''}
+            top={room.name ?? room.id ?? ''}
             topProps={{ typography: 't6', fontWeight: 'bold', color: colors.grey900 }}
             bottom={`${reservation.date} ${reservation.start}~${reservation.end} · ${reservation.attendees}명 · ${
               reservation.equipment.map((e: string) => EQUIPMENT_LABELS[e]).join(', ') || '장비 없음'
