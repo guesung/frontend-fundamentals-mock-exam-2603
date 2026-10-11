@@ -7,6 +7,7 @@ import { useReservationConditions } from 'pages/RoomBookingPage/hooks';
 
 import { Room } from 'types';
 import { filterAvailableRoomList, sortRoomList } from './utils';
+import { hasTimeRange } from 'pages/RoomBookingPage/utils';
 
 interface AvailableRoomListProps {
   selectedRoomId: string | null;
@@ -22,6 +23,9 @@ export function AvailableRoomList({ selectedRoomId, onRoomClick }: AvailableRoom
   const availableRoomList = filterAvailableRoomList(rooms, conditions, reservations);
   const sortedAvailableRoomList = sortRoomList(availableRoomList);
 
+  if (!hasTimeRange(conditions)) {
+    return null;
+  }
   return (
     <>
       {sortedAvailableRoomList.length > 0 ? (
