@@ -4,10 +4,9 @@ import { colors } from '_tosslib/constants/colors';
 import { useRooms } from 'apis';
 import { Room } from 'types';
 import { useReservationConditions } from '../../hooks';
+import { Suspense } from 'react';
 
 export function PreferredFloorSelect() {
-  const { data: rooms = [] } = useRooms();
-
   const { conditions, conditionsSetter } = useReservationConditions();
 
   return (
@@ -31,16 +30,29 @@ export function PreferredFloorSelect() {
         aria-label="선호 층"
       >
         <option value="all">전체</option>
-        {getFloors(rooms).map(floor => (
-          <option key={floor} value={floor}>
-            {floor}층
-          </option>
-        ))}
+
+        <Suspense fallback={null}>
+          <PreferredFloorOptions />
+        </Suspense>
       </Select>
     </div>
   );
 }
 
-function getFloors(rooms: Room[]) {
-  return [...new Set(rooms.map(r => r.floor))].sort((a, b) => a - b);
+function PreferredFloorOptions() {
+  const { data: rooms = [] } = useRooms();
+
+  function getFloors(rooms: Room[]) {
+    return [...new Set(rooms.map(r => r.floor))].sort((a, b) => a - b);
+  }
+
+  return (
+    <>
+      {getFloors(rooms).map(floor => (
+        <option key={floor} value={floor}>
+          {floor}층
+        </option>
+      ))}
+    </>
+  );
 }

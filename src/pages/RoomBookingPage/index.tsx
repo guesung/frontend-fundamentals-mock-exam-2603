@@ -30,9 +30,7 @@ export function RoomBookingPage() {
 
         <Spacing size={24} />
 
-        <Suspense fallback={null}>
-          <ReservationCondition />
-        </Suspense>
+        <ReservationCondition />
 
         <Spacing size={24} />
 
