@@ -7,6 +7,8 @@ import { useErrorMessageContext } from '../../contexts';
 import { AvailableRoomList, NoAvailbleRoom } from './AvailableRoomList';
 import { ReservationBookButton } from './ReservationBookButton';
 import { useReservationConditions } from '../../hooks/useReservationConditions';
+import { Reservation, Room } from 'types';
+import { Conditions } from '../../types';
 
 export function ReservationRoomList() {
   const { conditions, reservationFilterKey } = useReservationConditions();
@@ -18,21 +20,9 @@ export function ReservationRoomList() {
   const { data: rooms = [] } = useRooms();
   const { data: reservations = [] } = useReservations({ date: conditions.date });
 
-  const availableRoomList = rooms
-    .filter(room => {
-      const isCapacityAvailable = room.capacity >= conditions.attendees;
-      const isAllEquipmentAvailable = conditions.equipment.every(eq => room.equipment.includes(eq));
-      const isPreferredFloorAvailable = conditions.preferredFloor === null || room.floor === conditions.preferredFloor;
-      const hasConflict = reservations.some(
-        reservation =>
-          reservation.roomId === room.id &&
-          reservation.start < conditions.endTime &&
-          reservation.end > conditions.startTime
-      );
-
-      return isCapacityAvailable && isAllEquipmentAvailable && isPreferredFloorAvailable && !hasConflict;
-    })
-    .sort((a, b) => a.floor - b.floor || a.name.localeCompare(b.name));
+  const availableRoomList = filterAvailableRoomList(rooms, conditions, reservations).sort(
+    (a, b) => a.floor - b.floor || a.name.localeCompare(b.name)
+  );
 
   return (
     <div
@@ -75,4 +65,20 @@ export function ReservationRoomList() {
       <ReservationBookButton selectedRoomId={selectedRoomId} resetSelectedRoomId={() => setSelectedRoomId(null)} />
     </div>
   );
+}
+
+function filterAvailableRoomList(rooms: Room[], conditions: Conditions, reservations: Reservation[]) {
+  return rooms.filter(room => {
+    const isCapacityAvailable = room.capacity >= conditions.attendees;
+    const isAllEquipmentAvailable = conditions.equipment.every(eq => room.equipment.includes(eq));
+    const isPreferredFloorAvailable = conditions.preferredFloor === null || room.floor === conditions.preferredFloor;
+    const hasConflict = reservations.some(
+      reservation =>
+        reservation.roomId === room.id &&
+        reservation.start < conditions.endTime &&
+        reservation.end > conditions.startTime
+    );
+
+    return isCapacityAvailable && isAllEquipmentAvailable && isPreferredFloorAvailable && !hasConflict;
+  });
 }

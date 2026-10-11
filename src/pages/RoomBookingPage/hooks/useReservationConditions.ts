@@ -1,7 +1,14 @@
 import { useSearchParamsState } from 'hooks';
 import { formatDate } from 'utils/date';
+import { Conditions } from '../types/conditions';
 
-export function useReservationConditions() {
+interface UseReservationConditionsReturns {
+  conditions: Conditions;
+  conditionsSetter: Record<keyof Conditions, (newValue: any) => void>;
+  reservationFilterKey: string;
+}
+
+export function useReservationConditions(): UseReservationConditionsReturns {
   const [date, setDate] = useSearchParamsState<string>('date', { defaultValue: formatDate(new Date()) });
   const [startTime, setStartTime] = useSearchParamsState<string>('startTime', { defaultValue: '' });
   const [endTime, setEndTime] = useSearchParamsState<string>('endTime', { defaultValue: '' });

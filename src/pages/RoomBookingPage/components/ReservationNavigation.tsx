@@ -2,9 +2,7 @@ import { css } from '@emotion/react';
 import { colors } from '_tosslib/constants/colors';
 import { useNavigate } from 'react-router-dom';
 
-interface ReservationNavigationProps {}
-
-export function ReservationNavigation({}: ReservationNavigationProps) {
+export function ReservationNavigation() {
   const navigate = useNavigate();
 
   return (
