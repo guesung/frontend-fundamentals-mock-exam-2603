@@ -6,8 +6,8 @@ import { Reservation, Room } from 'types';
 import { MyReservationItem } from './MyReservationItem';
 
 export function MyReservationList() {
-  const { data: rooms = [] } = useRooms();
-  const { data: myReservationList = [] } = useMyReservationList();
+  const { data: rooms } = useRooms();
+  const { data: myReservationList } = useMyReservationList();
 
   return (
     <>

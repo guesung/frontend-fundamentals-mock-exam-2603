@@ -41,6 +41,7 @@ const Select = ({ className, ...rest }: Props) => {
           position: absolute;
           top: 14px;
           right: 16px;
+          pointer-events: none;
         `}
       />
     </div>

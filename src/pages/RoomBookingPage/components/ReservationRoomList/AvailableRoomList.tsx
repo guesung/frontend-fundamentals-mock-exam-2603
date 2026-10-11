@@ -16,7 +16,7 @@ interface AvailableRoomListProps {
 export function AvailableRoomList({ selectedRoomId, onRoomClick }: AvailableRoomListProps) {
   const { conditions } = useReservationConditions();
 
-  const { data: rooms = [] } = useRooms();
+  const { data: rooms } = useRooms();
   const { data: reservations = [] } = useReservations({ date: conditions.date });
 
   const availableRoomList = filterAvailableRoomList(rooms, conditions, reservations);

@@ -12,7 +12,7 @@ export function ReservationRoomList() {
 
   const { date } = useReservationDate();
 
-  const { data: rooms = [] } = useRooms();
+  const { data: rooms } = useRooms();
   const { data: reservations = [] } = useReservations({ date });
 
   const toggleReservation = (id: string) => {

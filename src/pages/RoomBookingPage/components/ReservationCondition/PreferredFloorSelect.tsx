@@ -40,7 +40,7 @@ export function PreferredFloorSelect() {
 }
 
 function PreferredFloorOptions() {
-  const { data: rooms = [] } = useRooms();
+  const { data: rooms } = useRooms();
 
   function getFloors(rooms: Room[]) {
     return [...new Set(rooms.map(r => r.floor))].sort((a, b) => a - b);
