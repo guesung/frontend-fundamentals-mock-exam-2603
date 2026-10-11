@@ -1,7 +1,7 @@
 import { Conditions } from '../types';
 
 export function getValidationError(conditions: Conditions) {
-  if (hasTimeRange(conditions)) {
+  if (!hasTimeRange(conditions)) {
     return;
   }
   if (conditions.endTime <= conditions.startTime) {

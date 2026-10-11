@@ -4170,6 +4170,11 @@ react-dom@^17.0.1:
     object-assign "^4.1.1"
     scheduler "^0.20.2"
 
+react-error-boundary@^6.1.6:
+  version "6.1.6"
+  resolved "https://registry.yarnpkg.com/react-error-boundary/-/react-error-boundary-6.1.6.tgz#1bdecd011681682db9112c204f8f5c5aad813318"
+  integrity sha512-CDXPnXDGyFIbkwaaJ6u+xgsRmJhSi6YdgUDW1vnyKHfXp1a9pfAlM+ZET2CDu80/A+8iRcmXN0NSY9BCCoWP5A==
+
 react-hook-form@^7.71.2:
   version "7.71.2"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.71.2.tgz#a5f1d2b855be9ecf1af6e74df9b80f54beae7e35"
@@ -4929,7 +4934,7 @@ tsutils@^3.21.0:
   dependencies:
     tslib "^1.8.1"
 
-type-check@^0.4.0, type-check@~0.4.0:
+type-check@^0.4.0, "type-check@tsx .", type-check@~0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/type-check/-/type-check-0.4.0.tgz#07b8203bfa7056c0657050e3ccd2c37730bab8f1"
   integrity sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==

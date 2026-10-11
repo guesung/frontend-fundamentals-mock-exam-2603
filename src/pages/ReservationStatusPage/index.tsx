@@ -12,47 +12,56 @@ import {
 } from './components';
 import { MessageContextProvider } from './contexts';
 import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 
 export function ReservationStatusPage() {
   return (
-    <div
-      css={css`
-        background: ${colors.white};
-        padding-bottom: 40px;
-      `}
-    >
-      <ReservationHeader>회의실 예약</ReservationHeader>
+    <ErrorBoundary fallback={null}>
+      <Suspense fallback={null}>
+        <div
+          css={css`
+            background: ${colors.white};
+            padding-bottom: 40px;
+          `}
+        >
+          <ReservationHeader>회의실 예약</ReservationHeader>
 
-      <Spacing size={24} />
+          <Spacing size={24} />
 
-      <ReservationDateSelector />
-      <Spacing size={24} />
-      <Border size={8} />
-      <Spacing size={24} />
+          <ReservationDateSelector />
+          <Spacing size={24} />
+          <Border size={8} />
+          <Spacing size={24} />
 
-      <Suspense fallback={<ReservationTimeline.Loading />}>
-        <ReservationTimeline />
+          <ErrorBoundary fallback={null}>
+            <Suspense fallback={<ReservationTimeline.Loading />}>
+              <ReservationTimeline />
+            </Suspense>
+          </ErrorBoundary>
+
+          <Spacing size={24} />
+          <Border size={8} />
+          <Spacing size={24} />
+
+          <MessageContextProvider>
+            <MessageBanner />
+
+            <ErrorBoundary fallback={null}>
+              <Suspense fallback={<MyReservation.Loading />}>
+                <MyReservation />
+              </Suspense>
+            </ErrorBoundary>
+          </MessageContextProvider>
+
+          <Spacing size={24} />
+          <Border size={8} />
+          <Spacing size={24} />
+
+          <ReservationButton />
+
+          <Spacing size={24} />
+        </div>
       </Suspense>
-
-      <Spacing size={24} />
-      <Border size={8} />
-      <Spacing size={24} />
-
-      <MessageContextProvider>
-        <MessageBanner />
-
-        <Suspense fallback={<MyReservation.Loading />}>
-          <MyReservation />
-        </Suspense>
-      </MessageContextProvider>
-
-      <Spacing size={24} />
-      <Border size={8} />
-      <Spacing size={24} />
-
-      <ReservationButton />
-
-      <Spacing size={24} />
-    </div>
+    </ErrorBoundary>
   );
 }
