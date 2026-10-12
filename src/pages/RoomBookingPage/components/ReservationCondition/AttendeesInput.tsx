@@ -2,9 +2,12 @@ import { css } from '@emotion/react';
 import { Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { useReservationConditions } from '../../hooks';
+import { useState } from 'react';
 
 export function AttendeesInput() {
   const { conditions, conditionsSetter } = useReservationConditions();
+
+  const [isEmpty, setIsEmpty] = useState(false);
 
   return (
     <div
@@ -21,12 +24,19 @@ export function AttendeesInput() {
       <input
         // type="number"
         min={1}
-        value={conditions.attendees}
+        value={isEmpty ? '' : conditions.attendees}
         onChange={e => {
           const value = e.target.value;
           const isNaNInput = Number.isNaN(Number(value));
           if (isNaNInput) {
             return;
+          }
+
+          if (value === '') {
+            setIsEmpty(true);
+            return;
+          } else {
+            setIsEmpty(false);
           }
 
           conditionsSetter.attendees(Number(value));

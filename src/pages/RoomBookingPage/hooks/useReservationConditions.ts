@@ -16,6 +16,7 @@ export function useReservationConditions(): UseReservationConditionsReturns {
   const [endTime, setEndTime] = useSearchParamsState<Conditions['endTime']>('endTime', { defaultValue: '' });
   const [attendees, setAttendees] = useSearchParamsState<Conditions['attendees']>('attendees', {
     defaultValue: 1,
+    parser: attendees => Number(attendees),
   });
   const [equipment, setEquipment] = useSearchParamsState<Conditions['equipment']>('equipment', {
     defaultValue: [],
