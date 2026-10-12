@@ -11,10 +11,6 @@ export function useSearchParamsState<T>(
 ) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  if (key === 'attendees') {
-    console.log(searchParams.get(key), parser(searchParams.get(key)));
-  }
-
   const value = searchParams.get(key) ? parser(searchParams.get(key)) : defaultValue;
 
   const setValue = (newValue: T) => {

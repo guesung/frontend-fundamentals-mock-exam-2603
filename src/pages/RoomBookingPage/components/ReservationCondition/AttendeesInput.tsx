@@ -19,11 +19,17 @@ export function AttendeesInput() {
         참석 인원
       </Text>
       <input
-        type="number"
+        // type="number"
         min={1}
         value={conditions.attendees}
         onChange={e => {
-          conditionsSetter.attendees(Math.max(1, Number(e.target.value)));
+          const value = e.target.value;
+          const isNaNInput = Number.isNaN(Number(value));
+          if (isNaNInput) {
+            return;
+          }
+
+          conditionsSetter.attendees(Number(value));
         }}
         aria-label="참석 인원"
         css={css`
