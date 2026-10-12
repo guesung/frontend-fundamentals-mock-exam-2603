@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 import { Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { useMyReservationList, useRooms } from 'apis/queries';
 import { Reservation, Room } from 'types';
 import { MyReservationItem } from './MyReservationItem';
+import { useMyReservationList, useRooms } from 'apis';
 
 export function MyReservationList() {
   const { data: rooms } = useRooms();

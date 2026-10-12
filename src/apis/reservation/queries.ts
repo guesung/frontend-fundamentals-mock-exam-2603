@@ -1,12 +1,13 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { getMyReservations, getReservations, getRooms } from './apis';
+import { QUERY_KEYS } from './queryKeys';
 
 export function useMyReservationList() {
-  return useSuspenseQuery({ queryKey: ['myReservations'], queryFn: getMyReservations });
+  return useSuspenseQuery({ queryKey: QUERY_KEYS.myReservationList(), queryFn: getMyReservations });
 }
 
 export function useRooms() {
-  return useSuspenseQuery({ queryKey: ['rooms'], queryFn: () => getRooms() });
+  return useSuspenseQuery({ queryKey: QUERY_KEYS.rooms(), queryFn: () => getRooms() });
 }
 
 interface UseReservationsParams {
@@ -15,7 +16,7 @@ interface UseReservationsParams {
 
 export function useReservations({ date }: UseReservationsParams) {
   return useQuery({
-    queryKey: ['reservations', date],
+    queryKey: QUERY_KEYS.reservations(date),
     queryFn: () => getReservations(date),
     keepPreviousData: true,
   });
