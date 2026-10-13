@@ -5,6 +5,8 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { TimelineHeader } from './TimelineHeader';
 import { ReservationRoomList } from './ReservationRoomList';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
+import { ErrorView } from 'components/ErrorView';
 
 export function ReservationTimeline() {
   return (
@@ -30,11 +32,18 @@ export function ReservationTimeline() {
 
         <Spacing size={4} />
 
-        <ErrorBoundary fallback={null}>
-          <Suspense fallback={<ReservationRoomList.Loading />}>
-            <ReservationRoomList />
-          </Suspense>
-        </ErrorBoundary>
+        <QueryErrorResetBoundary>
+          {({ reset }) => (
+            <ErrorBoundary
+              onReset={reset}
+              fallbackRender={({ resetErrorBoundary }) => <ErrorView resetErrorBoundary={resetErrorBoundary} />}
+            >
+              <Suspense fallback={<ReservationRoomList.Loading />}>
+                <ReservationRoomList />
+              </Suspense>
+            </ErrorBoundary>
+          )}
+        </QueryErrorResetBoundary>
       </div>
     </div>
   );

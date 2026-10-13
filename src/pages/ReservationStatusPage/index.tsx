@@ -3,6 +3,8 @@ import { Border, Spacing } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 
 import { ReservationHeader } from 'components';
+import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import {
   MessageBanner,
   MyReservation,
@@ -11,49 +13,56 @@ import {
   ReservationTimeline,
 } from './components';
 import { MessageContextProvider } from './contexts';
-import { Suspense } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
+import { ErrorView } from 'components/ErrorView';
 
 export function ReservationStatusPage() {
   return (
-    <ErrorBoundary fallback={null}>
-      <Suspense fallback={null}>
-        <div
-          css={css`
-            background: ${colors.white};
-            padding-bottom: 40px;
-          `}
+    <QueryErrorResetBoundary>
+      {({ reset }) => (
+        <ErrorBoundary
+          onReset={reset}
+          fallbackRender={({ resetErrorBoundary }) => <ErrorView resetErrorBoundary={resetErrorBoundary} />}
         >
-          <ReservationHeader>회의실 예약</ReservationHeader>
+          <Suspense fallback={null}>
+            <div
+              css={css`
+                background: ${colors.white};
+                padding-bottom: 40px;
+              `}
+            >
+              <ReservationHeader>회의실 예약</ReservationHeader>
 
-          <Spacing size={24} />
+              <Spacing size={24} />
 
-          <ReservationDateSelector />
-          <Spacing size={24} />
-          <Border size={8} />
-          <Spacing size={24} />
+              <ReservationDateSelector />
+              <Spacing size={24} />
+              <Border size={8} />
+              <Spacing size={24} />
 
-          <ReservationTimeline />
+              <ReservationTimeline />
 
-          <Spacing size={24} />
-          <Border size={8} />
-          <Spacing size={24} />
+              <Spacing size={24} />
+              <Border size={8} />
+              <Spacing size={24} />
 
-          <MessageContextProvider>
-            <MessageBanner />
+              <MessageContextProvider>
+                <MessageBanner />
 
-            <MyReservation />
-          </MessageContextProvider>
+                <MyReservation />
+              </MessageContextProvider>
 
-          <Spacing size={24} />
-          <Border size={8} />
-          <Spacing size={24} />
+              <Spacing size={24} />
+              <Border size={8} />
+              <Spacing size={24} />
 
-          <ReservationButton />
+              <ReservationButton />
 
-          <Spacing size={24} />
-        </div>
-      </Suspense>
-    </ErrorBoundary>
+              <Spacing size={24} />
+            </div>
+          </Suspense>
+        </ErrorBoundary>
+      )}
+    </QueryErrorResetBoundary>
   );
 }
